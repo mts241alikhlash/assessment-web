@@ -1,0 +1,10 @@
+packages:
+  - .
+
+allowBuilds:
+  esbuild: true
+  maplibre-gl: true
+  vue-demi: true
+
+minimumReleaseAgeExclude:
+  - '@mts241alikhlash/*'
