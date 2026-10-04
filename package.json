@@ -6,7 +6,7 @@
     "node": ">=24.21.0 <25",
     "pnpm": ">=11.25.0 <12"
   },
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "241 Assessment: assessment items, scores, report cards, class attendance, and the teacher dashboard",
   "type": "module",
   "scripts": {
@@ -36,8 +36,8 @@
     "@fullcalendar/vue3": "^6.1.20",
     "@internationalized/date": "^3.12.3",
     "@lucide/vue": "^1.34.0",
-    "@mts241alikhlash/ui": "^0.1.0",
-    "@mts241alikhlash/web-shared": "^0.1.0",
+    "@mts241alikhlash/ui": "^1.0.0",
+    "@mts241alikhlash/web-shared": "^1.0.0",
     "@tailwindcss/vite": "^4.3.0",
     "@tanstack/vue-query": "^5.101.4",
     "@tanstack/vue-table": "^8.21.3",

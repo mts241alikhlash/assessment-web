@@ -31,11 +31,11 @@ importers:
         specifier: ^1.34.0
         version: 1.40.0(vue@3.5.42(typescript@5.9.3))
       '@mts241alikhlash/ui':
-        specifier: ^0.1.0
-        version: 0.1.0(@unovis/ts@1.7.0)(debug@4.4.3)(vue-router@5.3.1(@vue/compiler-sfc@3.5.42)(esbuild@0.28.2)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.42(typescript@5.9.3)))(rolldown@1.2.7)(rollup@4.63.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(yaml@2.9.1))(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))
+        specifier: ^1.0.0
+        version: 1.0.0(@unovis/ts@1.7.0)(debug@4.4.3)(vue-router@5.3.1(@vue/compiler-sfc@3.5.42)(esbuild@0.28.2)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.42(typescript@5.9.3)))(rolldown@1.2.7)(rollup@4.63.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(yaml@2.9.1))(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))
       '@mts241alikhlash/web-shared':
-        specifier: ^0.1.0
-        version: 0.1.0(debug@4.4.3)(lucide-vue-next@0.577.0(vue@3.5.42(typescript@5.9.3)))(vue-router@5.3.1(@vue/compiler-sfc@3.5.42)(esbuild@0.28.2)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.42(typescript@5.9.3)))(rolldown@1.2.7)(rollup@4.63.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(yaml@2.9.1))(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))
+        specifier: ^1.0.0
+        version: 1.0.0(debug@4.4.3)(lucide-vue-next@0.577.0(vue@3.5.42(typescript@5.9.3)))(vue-router@5.3.1(@vue/compiler-sfc@3.5.42)(esbuild@0.28.2)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.42(typescript@5.9.3)))(rolldown@1.2.7)(rollup@4.63.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(yaml@2.9.1))(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))
       '@tailwindcss/vite':
         specifier: ^4.3.0
         version: 4.3.3(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(yaml@2.9.1))
@@ -655,13 +655,13 @@ packages:
   '@maplibre/vt-pbf@4.3.2':
     resolution: {integrity: sha512-j6p0AdjvAR19Z3XaCysle7A4ZSo08tYOzxD0Y9NQylwPAkwJJeYub5b2eVucdeDh7erhv69DahoLOevDRERRUw==}
 
-  '@mts241alikhlash/ui@0.1.0':
-    resolution: {integrity: sha512-+KN3BU+ZjYu+hQVC0lZSztCu44AkEGxlh2aiDNhDtW6XWyxA6hFeZqI+r7n7hpLY3dv9PSFBZpse6qnjqYgNDw==, tarball: https://npm.pkg.github.com/download/@mts241alikhlash/ui/0.1.0/dc435a127f67b02cd40ee5b0c68fe5a13a9b040b}
+  '@mts241alikhlash/ui@1.0.0':
+    resolution: {integrity: sha512-rXr+rhIvv+44HqsUEndRqZlzAhv5hXOjMooTxnqQYsRIuoHi0k18VO3BNBNXOonmj3wjOZnN/R/1yZK+UVoKJg==, tarball: https://npm.pkg.github.com/download/@mts241alikhlash/ui/1.0.0/80e93113f3166ec20a7309e10fc88b5356a600a0}
     peerDependencies:
       vue: ^3.5.41
 
-  '@mts241alikhlash/web-shared@0.1.0':
-    resolution: {integrity: sha512-0XCdWtxNyHj0fu546dSOhKvW2y6doH1ChLLC1mkur0GmKy6rP9WS7a6hD8y9GlA5xl5a8Y+5HkGBkzfNXnBVVA==, tarball: https://npm.pkg.github.com/download/@mts241alikhlash/web-shared/0.1.0/519614ea51b07ac12e4b1409dea35c626659fc4c}
+  '@mts241alikhlash/web-shared@1.0.0':
+    resolution: {integrity: sha512-j1wpctXBsrHZlOX18u8Oxr35w3koFbGOIpvMsyd1qH6DSiqCfCPr/kOZ/jrHqu97GGvy6pExV4aMyjxxPD0J8A==, tarball: https://npm.pkg.github.com/download/@mts241alikhlash/web-shared/1.0.0/4f61d2da867b6ff746b8c96fdb4b5912257127c0}
     peerDependencies:
       lucide-vue-next: ^0.577.0
       vue: ^3.5.41
@@ -3569,10 +3569,10 @@ snapshots:
       '@types/geojson': 7946.0.16
       pbf: 5.1.2
 
-  '@mts241alikhlash/ui@0.1.0(@unovis/ts@1.7.0)(debug@4.4.3)(vue-router@5.3.1(@vue/compiler-sfc@3.5.42)(esbuild@0.28.2)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.42(typescript@5.9.3)))(rolldown@1.2.7)(rollup@4.63.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(yaml@2.9.1))(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))':
+  '@mts241alikhlash/ui@1.0.0(@unovis/ts@1.7.0)(debug@4.4.3)(vue-router@5.3.1(@vue/compiler-sfc@3.5.42)(esbuild@0.28.2)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.42(typescript@5.9.3)))(rolldown@1.2.7)(rollup@4.63.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(yaml@2.9.1))(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))':
     dependencies:
       '@internationalized/date': 3.12.4
-      '@mts241alikhlash/web-shared': 0.1.0(debug@4.4.3)(lucide-vue-next@0.577.0(vue@3.5.42(typescript@5.9.3)))(vue-router@5.3.1(@vue/compiler-sfc@3.5.42)(esbuild@0.28.2)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.42(typescript@5.9.3)))(rolldown@1.2.7)(rollup@4.63.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(yaml@2.9.1))(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))
+      '@mts241alikhlash/web-shared': 1.0.0(debug@4.4.3)(lucide-vue-next@0.577.0(vue@3.5.42(typescript@5.9.3)))(vue-router@5.3.1(@vue/compiler-sfc@3.5.42)(esbuild@0.28.2)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.42(typescript@5.9.3)))(rolldown@1.2.7)(rollup@4.63.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(yaml@2.9.1))(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))
       '@tanstack/vue-table': 8.21.3(vue@3.5.42(typescript@5.9.3))
       '@unovis/vue': 1.7.0(@unovis/ts@1.7.0)(vue@3.5.42(typescript@5.9.3))
       '@vueuse/core': 14.4.0(vue@3.5.42(typescript@5.9.3))
@@ -3595,7 +3595,7 @@ snapshots:
       - supports-color
       - vue-router
 
-  '@mts241alikhlash/web-shared@0.1.0(debug@4.4.3)(lucide-vue-next@0.577.0(vue@3.5.42(typescript@5.9.3)))(vue-router@5.3.1(@vue/compiler-sfc@3.5.42)(esbuild@0.28.2)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.42(typescript@5.9.3)))(rolldown@1.2.7)(rollup@4.63.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(yaml@2.9.1))(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))':
+  '@mts241alikhlash/web-shared@1.0.0(debug@4.4.3)(lucide-vue-next@0.577.0(vue@3.5.42(typescript@5.9.3)))(vue-router@5.3.1(@vue/compiler-sfc@3.5.42)(esbuild@0.28.2)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.42(typescript@5.9.3)))(rolldown@1.2.7)(rollup@4.63.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(yaml@2.9.1))(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))':
     dependencies:
       axios: 1.20.0(debug@4.4.3)
       clsx: 2.1.1
