@@ -19,7 +19,7 @@ import { toast } from 'vue-sonner'
 import { getIndonesianErrorMessage } from '@mts241alikhlash/web-shared/utils/error-handler'
 import AuthLogo from '../components/AuthLogo.vue'
 import LoginHero from '../components/LoginHero.vue'
-import { CheckCircle2, AlertTriangle, Loader2 } from 'lucide-vue-next'
+import { CheckCircle2, AlertTriangle, Loader2 } from '@lucide/vue'
 
 const router = useRouter()
 const route = useRoute()

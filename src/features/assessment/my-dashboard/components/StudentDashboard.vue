@@ -20,7 +20,7 @@ import {
   GraduationCap,
   UserCheck,
   UserX,
-} from 'lucide-vue-next'
+} from '@lucide/vue'
 import TodayLessonsCard from './TodayLessonsCard.vue'
 import type { MyStudentDashboard } from '../types'
 

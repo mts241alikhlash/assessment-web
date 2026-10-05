@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FilterOption } from '@mts241alikhlash/web-shared/types/filter.types'
 import { ref, computed } from 'vue'
-import { Filter } from 'lucide-vue-next'
+import { Filter } from '@lucide/vue'
 import { DatePicker } from '@mts241alikhlash/ui'
 import { Button } from '@mts241alikhlash/ui/button'
 import { Label } from '@mts241alikhlash/ui/label'

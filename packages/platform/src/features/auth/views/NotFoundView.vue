@@ -5,7 +5,7 @@ import { useAuthStore } from '../stores/authStore'
 import { authConfig } from '../config'
 import { Button } from '@mts241alikhlash/ui/button'
 import { Card, CardContent } from '@mts241alikhlash/ui/card'
-import { AlertTriangle } from 'lucide-vue-next'
+import { AlertTriangle } from '@lucide/vue'
 
 const router = useRouter()
 const authStore = useAuthStore()

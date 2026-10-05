@@ -4,7 +4,7 @@ import {
   FileText,
   LayoutDashboard,
   ListChecks,
-} from 'lucide-vue-next'
+} from '@lucide/vue'
 
 export type {
   SubMenuItem,

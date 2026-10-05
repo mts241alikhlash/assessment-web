@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from '@mts241alikhlash/ui/card'
 import { Skeleton } from '@mts241alikhlash/ui/skeleton'
-import { CalendarOff, Clock, DoorClosed } from 'lucide-vue-next'
+import { CalendarOff, Clock, DoorClosed } from '@lucide/vue'
 import type { MyDashboardLesson } from '../types'
 
 const props = defineProps<{

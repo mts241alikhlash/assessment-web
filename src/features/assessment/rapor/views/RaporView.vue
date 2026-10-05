@@ -8,7 +8,7 @@ import {
   ToggleLeft,
   ToggleRight,
   Download,
-} from 'lucide-vue-next'
+} from '@lucide/vue'
 import { DataTable } from '@mts241alikhlash/ui'
 import { Button } from '@mts241alikhlash/ui/button'
 import { Card, CardHeader, CardTitle } from '@mts241alikhlash/ui/card'

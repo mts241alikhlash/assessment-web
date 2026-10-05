@@ -16,7 +16,7 @@ import {
   TabsTrigger,
 } from '@mts241alikhlash/ui/tabs'
 import { Button } from '@mts241alikhlash/ui/button'
-import { Camera, Loader2, Trash2 } from 'lucide-vue-next'
+import { Camera, Loader2, Trash2 } from '@lucide/vue'
 import { Avatar, AvatarImage, AvatarFallback } from '@mts241alikhlash/ui/avatar'
 
 import PersonalInfoTab from '../components/PersonalInfoTab.vue'

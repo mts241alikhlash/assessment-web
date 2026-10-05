@@ -8,7 +8,7 @@ import {
   CalendarDays,
   CalendarCheck,
   ShieldCheck,
-} from 'lucide-vue-next'
+} from '@lucide/vue'
 
 const props = defineProps<{
   loading: boolean

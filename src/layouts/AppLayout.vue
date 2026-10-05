@@ -37,7 +37,7 @@ import {
   useAuthSession,
 } from '@/features/platform/auth'
 import { useMenuVisibility } from '@/composables/useMenuVisibility'
-import { LogOut, Search, Settings, UserRound } from 'lucide-vue-next'
+import { LogOut, Search, Settings, UserRound } from '@lucide/vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { BreadcrumbItemType } from '@mts241alikhlash/web-shared/types/breadcrumb.types'
 import { provideBreadcrumbs } from '@mts241alikhlash/web-shared/composables/useBreadcrumbs'

@@ -3,7 +3,7 @@ import { useRoute } from 'vue-router'
 import { useAuthSession, useRoleGuard } from '@/features/platform/auth'
 import { useProfile } from './useProfile'
 import { useProfileSheets } from './useProfileSheets'
-import { PencilLine } from 'lucide-vue-next'
+import { PencilLine } from '@lucide/vue'
 import type {
   ProfileUpdatePayload,
   RawProfileData,

@@ -10,7 +10,7 @@ import {
 import { Input } from '@mts241alikhlash/ui/input'
 import { Button } from '@mts241alikhlash/ui/button'
 import { Skeleton } from '@mts241alikhlash/ui/skeleton'
-import { Loader2, Save, Search, Users } from 'lucide-vue-next'
+import { Loader2, Save, Search, Users } from '@lucide/vue'
 import { computed, ref } from 'vue'
 import type { StudentScoreRosterItem } from '../types'
 

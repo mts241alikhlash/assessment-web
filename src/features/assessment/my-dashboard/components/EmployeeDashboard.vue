@@ -20,7 +20,7 @@ import {
   PencilLine,
   School,
   Users,
-} from 'lucide-vue-next'
+} from '@lucide/vue'
 import { DataTable } from '@mts241alikhlash/ui'
 import { createTodayLessonColumns } from './todayLessonColumns'
 import type {

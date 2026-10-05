@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { Card, CardContent } from '@mts241alikhlash/ui/card'
 import { Progress } from '@mts241alikhlash/ui'
 import { Badge } from '@mts241alikhlash/ui/badge'
-import { Users, TrendingUp, TrendingDown, Minus } from 'lucide-vue-next'
+import { Users, TrendingUp, TrendingDown, Minus } from '@lucide/vue'
 import type { AttendanceRecapItem } from '../types'
 
 const props = defineProps<{
