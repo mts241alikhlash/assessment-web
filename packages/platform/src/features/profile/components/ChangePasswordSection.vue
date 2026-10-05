@@ -15,7 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@mts241alikhlash/ui/form'
-import { Loader2 } from 'lucide-vue-next'
+import { Loader2 } from '@lucide/vue'
 
 const isSubmitting = ref(false)
 

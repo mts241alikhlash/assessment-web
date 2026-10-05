@@ -29,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@mts241alikhlash/ui/select'
-import { Loader2, Save } from 'lucide-vue-next'
+import { Loader2, Save } from '@lucide/vue'
 import { onMounted, computed, ref, watch } from 'vue'
 import { useRoleGuard } from '@/features/platform/auth'
 

@@ -10,7 +10,7 @@ import {
 } from '@mts241alikhlash/ui/dialog'
 import { Input } from '@mts241alikhlash/ui/input'
 import { Badge } from '@mts241alikhlash/ui/badge'
-import { CheckCircle2, Loader2, RotateCcw } from 'lucide-vue-next'
+import { CheckCircle2, Loader2, RotateCcw } from '@lucide/vue'
 import { computed, watch } from 'vue'
 import { useAssessmentWeights } from '../composables/useAssessmentWeights'
 import { ASSESSMENT_TYPE_LABELS, ASSESSMENT_TYPE_ORDER } from '../types'

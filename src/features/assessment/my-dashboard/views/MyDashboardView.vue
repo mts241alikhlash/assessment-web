@@ -11,7 +11,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '@mts241alikhlash/ui/tabs'
-import { AlertCircle, LayoutDashboard } from 'lucide-vue-next'
+import { AlertCircle, LayoutDashboard } from '@lucide/vue'
 import StudentDashboard from '../components/StudentDashboard.vue'
 import EmployeeDashboard from '../components/EmployeeDashboard.vue'
 import { useMyDashboard } from '../composables/useMyDashboard'

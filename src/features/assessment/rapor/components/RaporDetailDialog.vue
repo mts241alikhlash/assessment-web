@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@mts241alikhlash/ui/dialog'
-import { Loader2 } from 'lucide-vue-next'
+import { Loader2 } from '@lucide/vue'
 import { useRapor } from '../composables/useRapor'
 import type { RaporData, RaporDetailData, RaporScoreRow } from '../types'
 

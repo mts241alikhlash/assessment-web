@@ -2,7 +2,7 @@ import { h } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
 import { Badge } from '@mts241alikhlash/ui/badge'
 import { Button } from '@mts241alikhlash/ui/button'
-import { Eye } from 'lucide-vue-next'
+import { Eye } from '@lucide/vue'
 import type { RaporData } from '../types'
 
 export const createMyRaporColumns = (

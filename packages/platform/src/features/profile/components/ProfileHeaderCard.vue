@@ -2,7 +2,7 @@
 import type { Component } from 'vue'
 import { Button } from '@mts241alikhlash/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@mts241alikhlash/ui/avatar'
-import { Camera } from 'lucide-vue-next'
+import { Camera } from '@lucide/vue'
 
 const props = defineProps<{
   fullName: string

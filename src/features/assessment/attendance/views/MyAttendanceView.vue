@@ -16,7 +16,7 @@ import {
   FileText,
   UserCheck,
   UserX,
-} from 'lucide-vue-next'
+} from '@lucide/vue'
 import { computed, onMounted, ref } from 'vue'
 import { toast } from 'vue-sonner'
 import { getIndonesianErrorMessage } from '@mts241alikhlash/web-shared/utils/error-handler'

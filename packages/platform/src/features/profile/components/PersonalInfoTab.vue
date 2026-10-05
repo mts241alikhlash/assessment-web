@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, watch, onMounted } from 'vue'
-import { Loader2 } from 'lucide-vue-next'
+import { Loader2 } from '@lucide/vue'
 import { Input } from '@mts241alikhlash/ui/input'
 import { Button } from '@mts241alikhlash/ui/button'
 import {

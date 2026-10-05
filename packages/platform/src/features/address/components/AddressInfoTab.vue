@@ -2,7 +2,7 @@
 import { reactive, watch } from 'vue'
 import { Input } from '@mts241alikhlash/ui/input'
 import { Button } from '@mts241alikhlash/ui/button'
-import { Loader2 } from 'lucide-vue-next'
+import { Loader2 } from '@lucide/vue'
 import { useAddress } from '../composables/useAddress'
 import type { AddressData, AddressRecord, AddressSavePayload } from '../types'
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
-import { LayoutGrid } from 'lucide-vue-next'
+import { LayoutGrid } from '@lucide/vue'
 import { Button } from '@mts241alikhlash/ui/button'
 import {
   DropdownMenu,

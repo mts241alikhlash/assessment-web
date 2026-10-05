@@ -11,7 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@mts241alikhlash/ui/form'
-import { Eye, EyeOff } from 'lucide-vue-next'
+import { Eye, EyeOff } from '@lucide/vue'
 
 import { authConfig } from '../config'
 import { authApi } from '../api/authApi'

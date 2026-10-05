@@ -18,7 +18,7 @@ import {
   useSidebar,
 } from '@mts241alikhlash/ui/sidebar'
 import type { MenuItem, MenuSection, SubMenuItem } from '@/config/menuConfig'
-import { ChevronRight } from 'lucide-vue-next'
+import { ChevronRight } from '@lucide/vue'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{
