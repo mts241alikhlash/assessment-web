@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { SearchInput } from '@mts241alikhlash/ui'
 import {
   Table,
   TableBody,
@@ -10,7 +11,7 @@ import {
 import { Input } from '@mts241alikhlash/ui/input'
 import { Button } from '@mts241alikhlash/ui/button'
 import { Skeleton } from '@mts241alikhlash/ui/skeleton'
-import { Loader2, Save, Search, Users } from '@lucide/vue'
+import { Loader2, Save, Users } from '@lucide/vue'
 import { computed, ref } from 'vue'
 import type { StudentScoreRosterItem } from '../types'
 
@@ -80,17 +81,12 @@ function updateRowNote(index: number, note: string) {
         <strong class="text-foreground tabular-nums">{{ rows.length }}</strong>
         siswa sudah dinilai
       </p>
-      <div class="relative w-full sm:ml-auto sm:w-64">
-        <Search
-          class="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground"
-        />
-        <Input
-          v-model="searchQuery"
-          placeholder="Cari nama / NIS..."
-          class="h-9 pl-8 text-sm"
-          :disabled="rows.length === 0"
-        />
-      </div>
+      <SearchInput
+        v-model="searchQuery"
+        label="Cari nama / NIS"
+        :disabled="rows.length === 0"
+        class="sm:ml-auto"
+      />
     </div>
 
     <div class="border rounded-md bg-background overflow-x-auto">

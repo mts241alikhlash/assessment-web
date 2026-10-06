@@ -31,8 +31,8 @@ importers:
         specifier: ^1.52.0
         version: 1.52.0(vue@3.5.42(typescript@5.9.3))
       '@mts241alikhlash/ui':
-        specifier: ^1.1.0
-        version: 1.1.0(@unovis/ts@1.7.0)(debug@4.4.3)(vue-router@5.3.1(@vue/compiler-sfc@3.5.42)(esbuild@0.28.2)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.42(typescript@5.9.3)))(rolldown@1.2.7)(rollup@4.63.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(yaml@2.9.1))(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))
+        specifier: ^1.2.0
+        version: 1.2.0(@unovis/ts@1.7.0)(debug@4.4.3)(vue-router@5.3.1(@vue/compiler-sfc@3.5.42)(esbuild@0.28.2)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.42(typescript@5.9.3)))(rolldown@1.2.7)(rollup@4.63.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(yaml@2.9.1))(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))
       '@mts241alikhlash/web-shared':
         specifier: ^1.1.0
         version: 1.1.0(debug@4.4.3)(vue-router@5.3.1(@vue/compiler-sfc@3.5.42)(esbuild@0.28.2)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.42(typescript@5.9.3)))(rolldown@1.2.7)(rollup@4.63.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(yaml@2.9.1))(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))
@@ -652,8 +652,8 @@ packages:
   '@maplibre/vt-pbf@4.3.2':
     resolution: {integrity: sha512-j6p0AdjvAR19Z3XaCysle7A4ZSo08tYOzxD0Y9NQylwPAkwJJeYub5b2eVucdeDh7erhv69DahoLOevDRERRUw==}
 
-  '@mts241alikhlash/ui@1.1.0':
-    resolution: {integrity: sha512-PtYFZY8/hY+os+PZDWApavKsnhGKkPC9MIkaOpCFTtNpNb37oDVzKt8cNCNMFZ6jFCD2L6DKC/iEJsG3Qs6PNQ==, tarball: https://npm.pkg.github.com/download/@mts241alikhlash/ui/1.1.0/d4f9f3ea022f8601dd226df13b4595514e3877b0}
+  '@mts241alikhlash/ui@1.2.0':
+    resolution: {integrity: sha512-wzreJEAqBnhREi++00lEOusj+sC5JF64XyiQGcryoMkNRJwjkQK4jT6yAXA7d8wm+hws7YWpBd0K2g0BgVukCg==, tarball: https://npm.pkg.github.com/download/@mts241alikhlash/ui/1.2.0/c72b146c8d5e6fa34611e01bf4b49eda51c3aa9e}
     peerDependencies:
       vue: ^3.5.41
 
@@ -3550,7 +3550,7 @@ snapshots:
       '@types/geojson': 7946.0.16
       pbf: 5.1.2
 
-  '@mts241alikhlash/ui@1.1.0(@unovis/ts@1.7.0)(debug@4.4.3)(vue-router@5.3.1(@vue/compiler-sfc@3.5.42)(esbuild@0.28.2)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.42(typescript@5.9.3)))(rolldown@1.2.7)(rollup@4.63.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(yaml@2.9.1))(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))':
+  '@mts241alikhlash/ui@1.2.0(@unovis/ts@1.7.0)(debug@4.4.3)(vue-router@5.3.1(@vue/compiler-sfc@3.5.42)(esbuild@0.28.2)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.42(typescript@5.9.3)))(rolldown@1.2.7)(rollup@4.63.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(yaml@2.9.1))(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))':
     dependencies:
       '@internationalized/date': 3.12.4
       '@lucide/vue': 1.52.0(vue@3.5.42(typescript@5.9.3))
