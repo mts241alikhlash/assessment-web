@@ -167,13 +167,14 @@ const searchGroups = computed(() => {
                       >
                         <BreadcrumbPage
                           v-if="index === resolvedBreadcrumbs.length - 1"
-                          class="text-primary font-medium"
+                          class="block max-w-48 truncate font-medium text-primary sm:max-w-xs"
                         >
                           {{ item.title }}
                         </BreadcrumbPage>
                         <BreadcrumbLink
                           v-else-if="item.href"
                           :href="item.href"
+                          class="block max-w-40 truncate"
                         >
                           {{ item.title }}
                         </BreadcrumbLink>

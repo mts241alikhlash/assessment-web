@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted } from 'vue'
+import { ref, reactive, watch, onMounted, useId } from 'vue'
 import { Loader2 } from '@lucide/vue'
 import { Input } from '@mts241alikhlash/ui/input'
+import { FloatingLabelField } from '@mts241alikhlash/ui/form'
 import { Button } from '@mts241alikhlash/ui/button'
 import {
   Select,
@@ -36,6 +37,7 @@ const emit = defineEmits<{
 
 const religions = ref<{ id: string; name: string }[]>([])
 const bloodTypes = ref<{ id: string; name: string }[]>([])
+const fieldId = useId()
 
 const form = reactive({
   name: '',
@@ -121,248 +123,226 @@ function handleSubmit() {
       class="space-y-4 animate-in fade-in-50 duration-200"
       @submit.prevent="handleSubmit"
     >
-      <div class="space-y-6">
-        <div class="space-y-2">
-          <h4 class="text-sm font-bold tracking-tight text-foreground">
-            Identitas
-          </h4>
-          <div class="grid gap-5 md:grid-cols-2">
-            <div class="space-y-1.5">
-              <label class="text-xs font-semibold text-foreground">
-                Nama Lengkap
-                <span
-                  v-if="isEditable"
-                  class="text-destructive"
-                  >*</span
-                >
-              </label>
-              <Input
-                v-model="form.name"
-                placeholder="John Doe"
-                maxlength="100"
-                :disabled="!isEditable"
-                class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
-                required
-              />
-            </div>
+      <div class="grid gap-5 md:grid-cols-2">
+        <FloatingLabelField
+          label="Nama Lengkap"
+          :for="`${fieldId}-name`"
+          :required="isEditable"
+          :floating="!isEditable || !!form.name"
+        >
+          <Input
+            :id="`${fieldId}-name`"
+            v-model="form.name"
+            maxlength="100"
+            :disabled="!isEditable"
+            class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
+            required
+          />
+        </FloatingLabelField>
 
-            <div class="space-y-1.5">
-              <label class="text-xs font-semibold text-foreground">
-                NIK
-                <span
-                  v-if="isEditable"
-                  class="text-destructive"
-                  >*</span
-                >
-              </label>
-              <Input
-                v-model="form.nik"
-                placeholder="16 digit NIK"
-                maxlength="16"
-                :disabled="!isEditable"
-                class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
-                required
-              />
-            </div>
+        <FloatingLabelField
+          label="NIK"
+          :for="`${fieldId}-nik`"
+          :required="isEditable"
+          :floating="!isEditable || !!form.nik"
+        >
+          <Input
+            :id="`${fieldId}-nik`"
+            v-model="form.nik"
+            maxlength="16"
+            :disabled="!isEditable"
+            class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
+            required
+          />
+        </FloatingLabelField>
 
-            <div class="space-y-1.5">
-              <label class="text-xs font-semibold text-foreground"
-                >No. Kartu Keluarga</label
+        <FloatingLabelField
+          label="No. Kartu Keluarga"
+          :for="`${fieldId}-kk`"
+          :floating="!isEditable || !!form.kk"
+        >
+          <Input
+            :id="`${fieldId}-kk`"
+            v-model="form.kk"
+            maxlength="16"
+            :disabled="!isEditable"
+            class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
+          />
+        </FloatingLabelField>
+
+        <FloatingLabelField
+          label="NPWP"
+          :for="`${fieldId}-npwp`"
+          :floating="!isEditable || !!form.npwp"
+        >
+          <Input
+            :id="`${fieldId}-npwp`"
+            v-model="form.npwp"
+            maxlength="20"
+            :disabled="!isEditable"
+            class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
+          />
+        </FloatingLabelField>
+        <FloatingLabelField
+          label="Tempat Lahir"
+          :for="`${fieldId}-birth-place`"
+          :required="isEditable"
+          :floating="!isEditable || !!form.birthPlace"
+        >
+          <Input
+            :id="`${fieldId}-birth-place`"
+            v-model="form.birthPlace"
+            maxlength="100"
+            :disabled="!isEditable"
+            class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
+            required
+          />
+        </FloatingLabelField>
+
+        <FloatingLabelField
+          label="Tanggal Lahir"
+          :for="`${fieldId}-birth-date`"
+          :required="isEditable"
+          floating
+        >
+          <DatePicker
+            :id="`${fieldId}-birth-date`"
+            v-model="form.birthDate"
+            :disabled="!isEditable"
+          />
+        </FloatingLabelField>
+
+        <FloatingLabelField
+          label="Jenis Kelamin"
+          :for="`${fieldId}-gender`"
+          :required="isEditable"
+          floating
+        >
+          <Select
+            v-model="form.gender"
+            :disabled="!isEditable"
+          >
+            <SelectTrigger
+              :id="`${fieldId}-gender`"
+              class="w-full disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="MALE">Laki-laki</SelectItem>
+              <SelectItem value="FEMALE">Perempuan</SelectItem>
+            </SelectContent>
+          </Select>
+        </FloatingLabelField>
+
+        <FloatingLabelField
+          label="Agama"
+          :for="`${fieldId}-religion`"
+          floating
+        >
+          <Select
+            v-model="form.religionId"
+            :disabled="!isEditable"
+          >
+            <SelectTrigger
+              :id="`${fieldId}-religion`"
+              class="w-full disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Tidak Tahu / Kosong</SelectItem>
+              <SelectItem
+                v-for="r in religions"
+                :key="r.id"
+                :value="r.id"
               >
-              <Input
-                v-model="form.kk"
-                placeholder="16 digit No. KK"
-                maxlength="16"
-                :disabled="!isEditable"
-                class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
-              />
-            </div>
+                {{ r.name }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </FloatingLabelField>
 
-            <div class="space-y-1.5">
-              <label class="text-xs font-semibold text-foreground">NPWP</label>
-              <Input
-                v-model="form.npwp"
-                placeholder="NPWP"
-                maxlength="20"
-                :disabled="!isEditable"
-                class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div class="space-y-2">
-          <h4 class="text-sm font-bold tracking-tight text-foreground">
-            Biodata
-          </h4>
-          <div class="grid gap-5 md:grid-cols-2">
-            <div class="space-y-1.5">
-              <label class="text-xs font-semibold text-foreground">
-                Tempat Lahir
-                <span
-                  v-if="isEditable"
-                  class="text-destructive"
-                  >*</span
-                >
-              </label>
-              <Input
-                v-model="form.birthPlace"
-                placeholder="Mis. Jakarta"
-                maxlength="100"
-                :disabled="!isEditable"
-                class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
-                required
-              />
-            </div>
-
-            <div class="space-y-1.5">
-              <label class="text-xs font-semibold text-foreground">
-                Tanggal Lahir
-                <span
-                  v-if="isEditable"
-                  class="text-destructive"
-                  >*</span
-                >
-              </label>
-              <DatePicker
-                v-model="form.birthDate"
-                :disabled="!isEditable"
-              />
-            </div>
-
-            <div class="space-y-1.5">
-              <label class="text-xs font-semibold text-foreground">
-                Jenis Kelamin
-                <span
-                  v-if="isEditable"
-                  class="text-destructive"
-                  >*</span
-                >
-              </label>
-              <Select
-                v-model="form.gender"
-                :disabled="!isEditable"
+        <FloatingLabelField
+          label="Golongan Darah"
+          :for="`${fieldId}-blood-type`"
+          floating
+        >
+          <Select
+            v-model="form.bloodTypeId"
+            :disabled="!isEditable"
+          >
+            <SelectTrigger
+              :id="`${fieldId}-blood-type`"
+              class="w-full disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Tidak Tahu / Kosong</SelectItem>
+              <SelectItem
+                v-for="b in bloodTypes"
+                :key="b.id"
+                :value="b.id"
               >
-                <SelectTrigger
-                  class="w-full disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
-                >
-                  <SelectValue placeholder="Pilih Jenis Kelamin" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="MALE">Laki-laki</SelectItem>
-                  <SelectItem value="FEMALE">Perempuan</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+                {{ b.name }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </FloatingLabelField>
 
-            <div class="space-y-1.5">
-              <label class="text-xs font-semibold text-foreground">Agama</label>
-              <Select
-                v-model="form.religionId"
-                :disabled="!isEditable"
-              >
-                <SelectTrigger
-                  class="w-full disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
-                >
-                  <SelectValue placeholder="Pilih Agama" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Tidak Tahu / Kosong</SelectItem>
-                  <SelectItem
-                    v-for="r in religions"
-                    :key="r.id"
-                    :value="r.id"
-                  >
-                    {{ r.name }}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+        <FloatingLabelField
+          label="Status Pernikahan"
+          :for="`${fieldId}-marital-status`"
+          floating
+        >
+          <Select
+            v-model="form.maritalStatus"
+            :disabled="!isEditable"
+          >
+            <SelectTrigger
+              :id="`${fieldId}-marital-status`"
+              class="w-full disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Tidak Tahu / Kosong</SelectItem>
+              <SelectItem value="SINGLE">Belum Menikah</SelectItem>
+              <SelectItem value="MARRIED">Menikah</SelectItem>
+              <SelectItem value="DIVORCED">Cerai Hidup</SelectItem>
+              <SelectItem value="WIDOWED">Cerai Mati</SelectItem>
+            </SelectContent>
+          </Select>
+        </FloatingLabelField>
+        <FloatingLabelField
+          label="Email Pribadi"
+          :for="`${fieldId}-email`"
+          :floating="!isEditable || !!form.email"
+        >
+          <Input
+            :id="`${fieldId}-email`"
+            v-model="form.email"
+            type="email"
+            maxlength="255"
+            :disabled="!isEditable"
+            class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
+          />
+        </FloatingLabelField>
 
-            <div class="space-y-1.5">
-              <label class="text-xs font-semibold text-foreground"
-                >Golongan Darah</label
-              >
-              <Select
-                v-model="form.bloodTypeId"
-                :disabled="!isEditable"
-              >
-                <SelectTrigger
-                  class="w-full disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
-                >
-                  <SelectValue placeholder="Pilih Golongan Darah" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Tidak Tahu / Kosong</SelectItem>
-                  <SelectItem
-                    v-for="b in bloodTypes"
-                    :key="b.id"
-                    :value="b.id"
-                  >
-                    {{ b.name }}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div class="space-y-1.5">
-              <label class="text-xs font-semibold text-foreground"
-                >Status Pernikahan</label
-              >
-              <Select
-                v-model="form.maritalStatus"
-                :disabled="!isEditable"
-              >
-                <SelectTrigger
-                  class="w-full disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
-                >
-                  <SelectValue placeholder="Pilih Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Tidak Tahu / Kosong</SelectItem>
-                  <SelectItem value="SINGLE">Belum Menikah</SelectItem>
-                  <SelectItem value="MARRIED">Menikah</SelectItem>
-                  <SelectItem value="DIVORCED">Cerai Hidup</SelectItem>
-                  <SelectItem value="WIDOWED">Cerai Mati</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
-
-        <div class="space-y-2">
-          <h4 class="text-sm font-bold tracking-tight text-foreground">
-            Kontak
-          </h4>
-          <div class="grid gap-5 md:grid-cols-2">
-            <div class="space-y-1.5">
-              <label class="text-xs font-semibold text-foreground"
-                >Email Pribadi</label
-              >
-              <Input
-                v-model="form.email"
-                type="email"
-                placeholder="example@mail.com"
-                maxlength="255"
-                :disabled="!isEditable"
-                class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
-              />
-            </div>
-
-            <div class="space-y-1.5">
-              <label class="text-xs font-semibold text-foreground"
-                >Nomor Telepon/HP</label
-              >
-              <Input
-                v-model="form.phone"
-                placeholder="0812xxxx"
-                maxlength="15"
-                :disabled="!isEditable"
-                class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
-              />
-            </div>
-          </div>
-        </div>
+        <FloatingLabelField
+          label="Nomor Telepon/HP"
+          :for="`${fieldId}-phone`"
+          :floating="!isEditable || !!form.phone"
+        >
+          <Input
+            :id="`${fieldId}-phone`"
+            v-model="form.phone"
+            maxlength="15"
+            :disabled="!isEditable"
+            class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
+          />
+        </FloatingLabelField>
       </div>
 
       <div

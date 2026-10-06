@@ -115,8 +115,8 @@ function formatType(type: string): string {
               <span
                 :class="
                   detailData.isPublished
-                    ? 'inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20'
-                    : 'inline-flex items-center rounded-full bg-yellow-50 px-2 py-0.5 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20'
+                    ? 'inline-flex items-center rounded-md bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20'
+                    : 'inline-flex items-center rounded-md bg-yellow-50 px-2 py-0.5 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20'
                 "
               >
                 {{ detailData.isPublished ? 'Published' : 'Draft' }}
@@ -204,7 +204,7 @@ function formatType(type: string): string {
                   </td>
                   <td class="px-3 py-2">
                     <span
-                      class="rounded-full px-2 py-0.5 text-xs font-medium"
+                      class="rounded-md px-2 py-0.5 text-xs font-medium"
                       :class="
                         subject.isComplete
                           ? 'bg-emerald-100 text-emerald-700'

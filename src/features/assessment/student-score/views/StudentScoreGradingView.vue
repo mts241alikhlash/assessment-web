@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import { BackButton } from '@mts241alikhlash/ui'
 import StudentScoreInputTable from '../components/StudentScoreInputTable.vue'
 import { useStudentScore } from '../composables/useStudentScore'
 import { useBreadcrumbs } from '@mts241alikhlash/web-shared/composables/useBreadcrumbs'
 import { Alert, AlertDescription } from '@mts241alikhlash/ui/alert'
-import { Button } from '@mts241alikhlash/ui/button'
 import { Card, CardHeader, CardTitle } from '@mts241alikhlash/ui/card'
 import { useRoleGuard } from '@/features/platform/auth'
-import { AlertCircle, ArrowLeft } from '@lucide/vue'
+import { AlertCircle } from '@lucide/vue'
 import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
@@ -64,14 +64,10 @@ onMounted(() => {
       >
         <div>
           <div class="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              class="size-8"
+            <BackButton
+              label="Kembali ke daftar penilaian"
               @click="router.push('/assessment/items')"
-            >
-              <ArrowLeft class="size-4" />
-            </Button>
+            />
             <CardTitle class="text-2xl font-bold tracking-tight">
               {{ assessmentItem?.name ?? 'Nilai Siswa' }}
             </CardTitle>
