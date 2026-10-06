@@ -36,7 +36,7 @@
     "@fullcalendar/vue3": "^6.1.20",
     "@internationalized/date": "^3.12.3",
     "@lucide/vue": "^1.52.0",
-    "@mts241alikhlash/ui": "^1.2.0",
+    "@mts241alikhlash/ui": "^1.3.1",
     "@mts241alikhlash/web-shared": "^1.1.0",
     "@tailwindcss/vite": "^4.3.0",
     "@tanstack/vue-query": "^5.101.4",

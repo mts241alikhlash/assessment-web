@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { reactive, watch } from 'vue'
+import { reactive, watch, useId } from 'vue'
 import { Input } from '@mts241alikhlash/ui/input'
+import { FloatingLabelField } from '@mts241alikhlash/ui/form'
 import { Button } from '@mts241alikhlash/ui/button'
 import { Loader2 } from '@lucide/vue'
 import { useAddress } from '../composables/useAddress'
@@ -17,6 +18,7 @@ const emit = defineEmits<{
 }>()
 
 const { isSaving } = useAddress()
+const fieldId = useId()
 
 const form = reactive({
   street: '',
@@ -72,138 +74,136 @@ function handleSubmit() {
       @submit.prevent="handleSubmit"
     >
       <div class="grid gap-5 md:grid-cols-2">
-        <div class="space-y-1.5 md:col-span-2">
-          <label class="text-xs font-semibold text-foreground">
-            Jalan / Dusun
-            <span
-              v-if="isEditable"
-              class="text-destructive"
-              >*</span
-            >
-          </label>
+        <FloatingLabelField
+          label="Jalan / Dusun"
+          :for="`${fieldId}-street`"
+          :required="isEditable"
+          :floating="!isEditable || !!form.street"
+          class="md:col-span-2"
+        >
           <Input
+            :id="`${fieldId}-street`"
             v-model="form.street"
-            placeholder="Nama Jalan, Gedung, No. Rumah"
             :disabled="!isEditable"
             class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
             required
           />
-        </div>
+        </FloatingLabelField>
 
-        <div class="space-y-1.5">
-          <label class="text-xs font-semibold text-foreground">RT</label>
+        <FloatingLabelField
+          label="RT"
+          :for="`${fieldId}-rt`"
+          :floating="!isEditable || !!form.rt"
+        >
           <Input
+            :id="`${fieldId}-rt`"
             v-model="form.rt"
-            placeholder="RT"
             maxlength="5"
             :disabled="!isEditable"
             class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
           />
-        </div>
+        </FloatingLabelField>
 
-        <div class="space-y-1.5">
-          <label class="text-xs font-semibold text-foreground">RW</label>
+        <FloatingLabelField
+          label="RW"
+          :for="`${fieldId}-rw`"
+          :floating="!isEditable || !!form.rw"
+        >
           <Input
+            :id="`${fieldId}-rw`"
             v-model="form.rw"
-            placeholder="RW"
             maxlength="5"
             :disabled="!isEditable"
             class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
           />
-        </div>
+        </FloatingLabelField>
 
-        <div class="space-y-1.5">
-          <label class="text-xs font-semibold text-foreground">
-            Desa / Kelurahan
-            <span
-              v-if="isEditable"
-              class="text-destructive"
-              >*</span
-            >
-          </label>
+        <FloatingLabelField
+          label="Desa / Kelurahan"
+          :for="`${fieldId}-village`"
+          :required="isEditable"
+          :floating="!isEditable || !!form.village"
+        >
           <Input
+            :id="`${fieldId}-village`"
             v-model="form.village"
-            placeholder="Nama Desa atau Kelurahan"
             :disabled="!isEditable"
             class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
             required
           />
-        </div>
+        </FloatingLabelField>
 
-        <div class="space-y-1.5">
-          <label class="text-xs font-semibold text-foreground">
-            Kecamatan
-            <span
-              v-if="isEditable"
-              class="text-destructive"
-              >*</span
-            >
-          </label>
+        <FloatingLabelField
+          label="Kecamatan"
+          :for="`${fieldId}-district`"
+          :required="isEditable"
+          :floating="!isEditable || !!form.district"
+        >
           <Input
+            :id="`${fieldId}-district`"
             v-model="form.district"
-            placeholder="Nama Kecamatan"
             :disabled="!isEditable"
             class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
             required
           />
-        </div>
+        </FloatingLabelField>
 
-        <div class="space-y-1.5">
-          <label class="text-xs font-semibold text-foreground">
-            Kabupaten / Kota
-            <span
-              v-if="isEditable"
-              class="text-destructive"
-              >*</span
-            >
-          </label>
+        <FloatingLabelField
+          label="Kabupaten / Kota"
+          :for="`${fieldId}-city`"
+          :required="isEditable"
+          :floating="!isEditable || !!form.city"
+        >
           <Input
+            :id="`${fieldId}-city`"
             v-model="form.city"
-            placeholder="Nama Kabupaten atau Kota"
             :disabled="!isEditable"
             class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
             required
           />
-        </div>
+        </FloatingLabelField>
 
-        <div class="space-y-1.5">
-          <label class="text-xs font-semibold text-foreground">
-            Provinsi
-            <span
-              v-if="isEditable"
-              class="text-destructive"
-              >*</span
-            >
-          </label>
+        <FloatingLabelField
+          label="Provinsi"
+          :for="`${fieldId}-province`"
+          :required="isEditable"
+          :floating="!isEditable || !!form.province"
+        >
           <Input
+            :id="`${fieldId}-province`"
             v-model="form.province"
-            placeholder="Nama Provinsi"
             :disabled="!isEditable"
             class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
             required
           />
-        </div>
+        </FloatingLabelField>
 
-        <div class="space-y-1.5">
-          <label class="text-xs font-semibold text-foreground">Negara</label>
+        <FloatingLabelField
+          label="Negara"
+          :for="`${fieldId}-country`"
+          floating
+        >
           <Input
+            :id="`${fieldId}-country`"
             v-model="form.country"
-            placeholder="Negara"
             disabled
             class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
           />
-        </div>
+        </FloatingLabelField>
 
-        <div class="space-y-1.5">
-          <label class="text-xs font-semibold text-foreground">Kode Pos</label>
+        <FloatingLabelField
+          label="Kode Pos"
+          :for="`${fieldId}-postal-code`"
+          :floating="!isEditable || !!form.postalCode"
+        >
           <Input
+            :id="`${fieldId}-postal-code`"
             v-model="form.postalCode"
-            placeholder="Kode Pos"
             maxlength="10"
             :disabled="!isEditable"
             class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
           />
-        </div>
+        </FloatingLabelField>
       </div>
 
       <div
