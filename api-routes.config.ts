@@ -10,6 +10,7 @@ export const SERVICE_PREFIXES = {
     '/school-units',
     '/religions',
     '/blood-types',
+    '/regions',
   ],
 
   assessment: [

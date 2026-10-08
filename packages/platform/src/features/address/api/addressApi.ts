@@ -3,9 +3,15 @@ import type {
   ApiPaginatedResponse,
 } from '@mts241alikhlash/web-shared/types/api'
 import api from '@mts241alikhlash/web-shared/utils/api'
-import type { AddressSavePayload, AddressRecord } from '../types'
+import type { AddressSavePayload, AddressRecord, RegionNode } from '../types'
 
 export const addressApi = {
+  getProvinces: () =>
+    api.get<ApiSingleResponse<RegionNode[]>>('/regions/provinces'),
+  getRegionChildren: (code: string) =>
+    api.get<ApiSingleResponse<RegionNode[]>>(
+      `/regions/${encodeURIComponent(code)}/children`,
+    ),
   getAddressesByUserId: (userId: string) => {
     return api.get<ApiSingleResponse<AddressRecord>>(
       `/profiles/${userId}/addresses`,

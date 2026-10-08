@@ -6,6 +6,10 @@ export interface AddressSavePayload {
   district: string
   city: string
   province: string
+  provinceCode?: string | null
+  regencyCode?: string | null
+  districtCode?: string | null
+  villageCode?: string | null
   postalCode?: string | null
   country: string
   isPrimary?: boolean
