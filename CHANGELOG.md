@@ -1,5 +1,11 @@
 # assessment-web
 
+## 1.4.0
+
+### Minor Changes
+
+- fbd9360: The profile address editor now selects official administrative regions and saves their codes.
+
 ## 1.3.0
 
 ### Minor Changes
