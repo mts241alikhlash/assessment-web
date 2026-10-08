@@ -8,8 +8,14 @@ import {
   UNROUTED_PREFIXES,
 } from './api-routes.config.ts'
 
-const referenceDataRoot = path.resolve(import.meta.dirname, 'packages/reference-data/src')
-const platformRoot = path.resolve(import.meta.dirname, 'packages/platform/src/features')
+const referenceDataRoot = path.resolve(
+  import.meta.dirname,
+  'packages/reference-data/src',
+)
+const platformRoot = path.resolve(
+  import.meta.dirname,
+  'packages/platform/src/features',
+)
 
 const IDENTITY_URL = process.env.IDENTITY_SERVICE_URL ?? 'http://localhost:3000'
 const ACADEMIC_URL = process.env.ACADEMIC_SERVICE_URL ?? 'http://localhost:3200'
@@ -62,6 +68,9 @@ const unroutedProxy: ProxyTable = Object.fromEntries(
 )
 
 export default defineConfig(({ mode }) => ({
+  optimizeDeps: {
+    include: ['@unovis/ts > striptags'],
+  },
   plugins: [vue(), tailwindcss()],
   resolve: {
     tsconfigPaths: true,
