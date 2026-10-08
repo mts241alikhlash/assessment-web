@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { reactive, watch, useId } from 'vue'
+import { computed, reactive, ref, watch, useId } from 'vue'
 import { Input } from '@mts241alikhlash/ui/input'
 import { FloatingLabelField } from '@mts241alikhlash/ui/form'
 import { Button } from '@mts241alikhlash/ui/button'
 import { Loader2 } from '@lucide/vue'
+import RegionSelect from './RegionSelect.vue'
 import { useAddress } from '../composables/useAddress'
 import type { AddressData, AddressRecord, AddressSavePayload } from '../types'
+import type { RegionCodes, RegionNames } from '../types'
 
 const props = defineProps<{
   data: AddressData
@@ -28,6 +30,10 @@ const form = reactive({
   district: '',
   city: '',
   province: '',
+  provinceCode: '',
+  regencyCode: '',
+  districtCode: '',
+  villageCode: '',
   country: 'Indonesia',
   postalCode: '',
 })
@@ -44,6 +50,10 @@ watch(
       form.district = addr.district ?? ''
       form.city = addr.city ?? ''
       form.province = addr.province ?? ''
+      form.provinceCode = addr.provinceCode ?? ''
+      form.regencyCode = addr.regencyCode ?? ''
+      form.districtCode = addr.districtCode ?? ''
+      form.villageCode = addr.villageCode ?? ''
       form.country = addr.country ?? 'Indonesia'
       form.postalCode = addr.postalCode ?? ''
     }
@@ -51,8 +61,36 @@ watch(
   { immediate: true },
 )
 
+const regionError = ref('')
+const REGION_KEYS = [
+  'provinceCode',
+  'regencyCode',
+  'districtCode',
+  'villageCode',
+] as const
+const regionCodes = computed<RegionCodes>(() => ({
+  provinceCode: form.provinceCode,
+  regencyCode: form.regencyCode,
+  districtCode: form.districtCode,
+  villageCode: form.villageCode,
+}))
+
+function setRegionCodes(codes: RegionCodes) {
+  Object.assign(form, codes)
+  regionError.value = ''
+}
+
+function setRegionNames(names: RegionNames) {
+  Object.assign(form, names)
+}
+
 function handleSubmit() {
   if (!props.isEditable) return
+  if (!REGION_KEYS.every((key) => form[key])) {
+    regionError.value =
+      'Pilih provinsi, kabupaten/kota, kecamatan, dan desa/kelurahan'
+    return
+  }
   emit('save', {
     street: form.street,
     rt: form.rt === '' ? null : form.rt,
@@ -61,6 +99,10 @@ function handleSubmit() {
     district: form.district,
     city: form.city,
     province: form.province,
+    provinceCode: form.provinceCode,
+    regencyCode: form.regencyCode,
+    districtCode: form.districtCode,
+    villageCode: form.villageCode,
     country: form.country,
     postalCode: form.postalCode === '' ? null : form.postalCode,
   })
@@ -118,65 +160,75 @@ function handleSubmit() {
           />
         </FloatingLabelField>
 
-        <FloatingLabelField
-          label="Desa / Kelurahan"
-          :for="`${fieldId}-village`"
-          :required="isEditable"
-          :floating="!isEditable || !!form.village"
-        >
-          <Input
-            :id="`${fieldId}-village`"
-            v-model="form.village"
-            :disabled="!isEditable"
-            class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
-            required
-          />
-        </FloatingLabelField>
+        <template v-if="isEditable">
+          <div class="space-y-2 md:col-span-2">
+            <RegionSelect
+              :model-value="regionCodes"
+              @update:model-value="setRegionCodes"
+              @update:names="setRegionNames"
+            />
+            <p
+              v-if="regionError"
+              role="alert"
+              class="text-sm text-destructive"
+            >
+              {{ regionError }}
+            </p>
+          </div>
+        </template>
+        <template v-else>
+          <FloatingLabelField
+            label="Desa / Kelurahan"
+            :for="`${fieldId}-village`"
+            floating
+          >
+            <Input
+              :id="`${fieldId}-village`"
+              v-model="form.village"
+              disabled
+              class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
+            />
+          </FloatingLabelField>
 
-        <FloatingLabelField
-          label="Kecamatan"
-          :for="`${fieldId}-district`"
-          :required="isEditable"
-          :floating="!isEditable || !!form.district"
-        >
-          <Input
-            :id="`${fieldId}-district`"
-            v-model="form.district"
-            :disabled="!isEditable"
-            class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
-            required
-          />
-        </FloatingLabelField>
+          <FloatingLabelField
+            label="Kecamatan"
+            :for="`${fieldId}-district`"
+            floating
+          >
+            <Input
+              :id="`${fieldId}-district`"
+              v-model="form.district"
+              disabled
+              class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
+            />
+          </FloatingLabelField>
 
-        <FloatingLabelField
-          label="Kabupaten / Kota"
-          :for="`${fieldId}-city`"
-          :required="isEditable"
-          :floating="!isEditable || !!form.city"
-        >
-          <Input
-            :id="`${fieldId}-city`"
-            v-model="form.city"
-            :disabled="!isEditable"
-            class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
-            required
-          />
-        </FloatingLabelField>
+          <FloatingLabelField
+            label="Kabupaten / Kota"
+            :for="`${fieldId}-city`"
+            floating
+          >
+            <Input
+              :id="`${fieldId}-city`"
+              v-model="form.city"
+              disabled
+              class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
+            />
+          </FloatingLabelField>
 
-        <FloatingLabelField
-          label="Provinsi"
-          :for="`${fieldId}-province`"
-          :required="isEditable"
-          :floating="!isEditable || !!form.province"
-        >
-          <Input
-            :id="`${fieldId}-province`"
-            v-model="form.province"
-            :disabled="!isEditable"
-            class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
-            required
-          />
-        </FloatingLabelField>
+          <FloatingLabelField
+            label="Provinsi"
+            :for="`${fieldId}-province`"
+            floating
+          >
+            <Input
+              :id="`${fieldId}-province`"
+              v-model="form.province"
+              disabled
+              class="disabled:opacity-100 disabled:bg-muted/20 disabled:cursor-default disabled:text-foreground disabled:border-border/80"
+            />
+          </FloatingLabelField>
+        </template>
 
         <FloatingLabelField
           label="Negara"

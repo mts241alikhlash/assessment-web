@@ -18,6 +18,7 @@ import {
 } from '@mts241alikhlash/ui/form'
 import { Input } from '@mts241alikhlash/ui/input'
 import { ScrollArea } from '@mts241alikhlash/ui/scroll-area'
+import RegionSelect from './RegionSelect.vue'
 import { useAddress } from '../composables/useAddress'
 import type { EditAddressProps } from '../types'
 
@@ -30,7 +31,15 @@ const emit = defineEmits<{
 
 const { isSaving, saveAddress } = useAddress()
 
-const { open, existingAddress, onSubmit } = useAddressForm({
+const {
+  open,
+  existingAddress,
+  onSubmit,
+  regionCodes,
+  regionErrors,
+  setRegionCodes,
+  setRegionNames,
+} = useAddressForm({
   props,
   emit,
   saveAddress,
@@ -112,80 +121,14 @@ const { open, existingAddress, onSubmit } = useAddressForm({
                 </FormItem>
               </FormField>
 
-              <FormField
-                v-slot="{ componentField }"
-                name="village"
-              >
-                <FormItem class="content-start">
-                  <FormLabel
-                    >Desa / Kelurahan
-                    <span class="text-destructive">*</span></FormLabel
-                  >
-                  <FormControl>
-                    <Input
-                      placeholder="Nama Desa atau Kelurahan"
-                      v-bind="componentField"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-
-              <FormField
-                v-slot="{ componentField }"
-                name="district"
-              >
-                <FormItem class="content-start">
-                  <FormLabel
-                    >Kecamatan
-                    <span class="text-destructive">*</span></FormLabel
-                  >
-                  <FormControl>
-                    <Input
-                      placeholder="Nama Kecamatan"
-                      v-bind="componentField"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-
-              <FormField
-                v-slot="{ componentField }"
-                name="city"
-              >
-                <FormItem class="content-start">
-                  <FormLabel
-                    >Kabupaten / Kota
-                    <span class="text-destructive">*</span></FormLabel
-                  >
-                  <FormControl>
-                    <Input
-                      placeholder="Nama Kabupaten atau Kota"
-                      v-bind="componentField"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-
-              <FormField
-                v-slot="{ componentField }"
-                name="province"
-              >
-                <FormItem class="content-start">
-                  <FormLabel
-                    >Provinsi <span class="text-destructive">*</span></FormLabel
-                  >
-                  <FormControl>
-                    <Input
-                      placeholder="Nama Provinsi"
-                      v-bind="componentField"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
+              <div class="md:col-span-2">
+                <RegionSelect
+                  :model-value="regionCodes"
+                  :errors="regionErrors"
+                  @update:model-value="setRegionCodes"
+                  @update:names="setRegionNames"
+                />
+              </div>
 
               <FormField
                 v-slot="{ componentField }"
