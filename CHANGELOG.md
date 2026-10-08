@@ -1,5 +1,15 @@
 # assessment-web
 
+## 1.4.0
+
+### Minor Changes
+
+- fbd9360: The profile address editor now selects official administrative regions and saves their codes.
+
+### Patch Changes
+
+- 40c2cec: The Vite dev server pre-bundles the Unovis `striptags` dependency so pages with charts load in the browser. Development only.
+
 ## 1.3.0
 
 ### Minor Changes
