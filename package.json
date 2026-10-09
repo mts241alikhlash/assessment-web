@@ -6,7 +6,7 @@
     "node": ">=24.21.0 <25",
     "pnpm": ">=11.25.0 <12"
   },
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "241 Assessment: assessment items, scores, report cards, class attendance, and the teacher dashboard",
   "type": "module",
   "scripts": {
