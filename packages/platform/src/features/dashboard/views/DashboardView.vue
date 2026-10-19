@@ -118,15 +118,12 @@ onMounted(() => {
 <template>
   <div class="p-4 md:p-6 lg:p-8">
     <Card
+      gap="none"
       class="overflow-hidden rounded-2xl shadow-sm shadow-black/5 ring-1 ring-black/4"
     >
-      <CardHeader
-        class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b px-6 py-5"
-      >
+      <CardHeader standard>
         <div>
-          <CardTitle class="text-2xl font-bold tracking-tight">
-            Dashboard
-          </CardTitle>
+          <CardTitle size="lg"> Dashboard </CardTitle>
         </div>
         <Button
           variant="outline"
@@ -143,7 +140,10 @@ onMounted(() => {
         </Button>
       </CardHeader>
 
-      <div class="p-6 space-y-6">
+      <CardContent
+        variant="standard"
+        class="space-y-6"
+      >
         <div
           class="rounded-xl border bg-gradient-to-br from-primary/5 via-muted/30 to-background p-4 sm:p-5 shadow-2xs"
         >
@@ -226,7 +226,10 @@ onMounted(() => {
             class="shadow-2xs border transition-all duration-200 hover:shadow-md hover:border-blue-500/40 cursor-pointer group relative overflow-hidden"
             @click="navigateTo('/student')"
           >
-            <CardContent class="p-4 sm:p-5">
+            <CardContent
+              variant="standard"
+              class="sm:p-5"
+            >
               <div
                 v-if="loading"
                 class="space-y-3"
@@ -269,7 +272,10 @@ onMounted(() => {
             class="shadow-2xs border transition-all duration-200 hover:shadow-md hover:border-emerald-500/40 cursor-pointer group relative overflow-hidden"
             @click="navigateTo('/teacher')"
           >
-            <CardContent class="p-4 sm:p-5">
+            <CardContent
+              variant="standard"
+              class="sm:p-5"
+            >
               <div
                 v-if="loading"
                 class="space-y-3"
@@ -312,7 +318,10 @@ onMounted(() => {
             class="shadow-2xs border transition-all duration-200 hover:shadow-md hover:border-teal-500/40 cursor-pointer group relative overflow-hidden"
             @click="navigateTo('/learning/teaching-assignment')"
           >
-            <CardContent class="p-4 sm:p-5">
+            <CardContent
+              variant="standard"
+              class="sm:p-5"
+            >
               <div
                 v-if="loading"
                 class="space-y-3"
@@ -355,7 +364,10 @@ onMounted(() => {
             class="shadow-2xs border transition-all duration-200 hover:shadow-md hover:border-amber-500/40 cursor-pointer group relative overflow-hidden"
             @click="navigateTo('/academic/classroom')"
           >
-            <CardContent class="p-4 sm:p-5">
+            <CardContent
+              variant="standard"
+              class="sm:p-5"
+            >
               <div
                 v-if="loading"
                 class="space-y-3"
@@ -398,7 +410,10 @@ onMounted(() => {
             class="shadow-2xs border transition-all duration-200 hover:shadow-md hover:border-rose-500/40 cursor-pointer group relative overflow-hidden col-span-2 sm:col-span-1"
             @click="navigateTo('/learning/subject')"
           >
-            <CardContent class="p-4 sm:p-5">
+            <CardContent
+              variant="standard"
+              class="sm:p-5"
+            >
               <div
                 v-if="loading"
                 class="space-y-3"
@@ -438,34 +453,37 @@ onMounted(() => {
           </Card>
         </div>
 
-        <Card class="shadow-2xs border">
-          <CardHeader class="border-b px-5 py-4">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2.5">
-                <div
-                  class="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary"
+        <Card
+          gap="none"
+          class="shadow-2xs border"
+        >
+          <CardHeader standard>
+            <div class="flex items-center gap-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <div
+                    class="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary"
+                  >
+                    <ClipboardCheck class="size-4" />
+                  </div>
+                  <div>
+                    <CardTitle size="md"> Kehadiran Siswa Hari Ini </CardTitle>
+                    <p class="text-[11px] text-muted-foreground">
+                      Rekap status kehadiran seluruh kelas hari ini
+                    </p>
+                  </div>
+                </div>
+                <Badge
+                  v-if="attendanceRate !== null"
+                  variant="outline"
+                  class="text-xs font-semibold px-2.5 py-0.5 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
                 >
-                  <ClipboardCheck class="size-4" />
-                </div>
-                <div>
-                  <CardTitle class="text-sm font-semibold">
-                    Kehadiran Siswa Hari Ini
-                  </CardTitle>
-                  <p class="text-[11px] text-muted-foreground">
-                    Rekap status kehadiran seluruh kelas hari ini
-                  </p>
-                </div>
+                  {{ attendanceRate }}% Kehadiran
+                </Badge>
               </div>
-              <Badge
-                v-if="attendanceRate !== null"
-                variant="outline"
-                class="text-xs font-semibold px-2.5 py-0.5 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
-              >
-                {{ attendanceRate }}% Kehadiran
-              </Badge>
             </div>
           </CardHeader>
-          <CardContent class="p-5">
+          <CardContent variant="standard">
             <div
               v-if="loading"
               class="grid grid-cols-2 gap-3 sm:grid-cols-5"
@@ -583,27 +601,32 @@ onMounted(() => {
         </Card>
 
         <div class="grid gap-6 lg:grid-cols-2">
-          <Card class="shadow-2xs border">
-            <CardHeader class="border-b px-5 py-4">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2.5">
-                  <div
-                    class="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary"
-                  >
-                    <BarChart3 class="size-4" />
-                  </div>
-                  <div>
-                    <CardTitle class="text-sm font-semibold">
-                      Distribusi Siswa per Tingkat
-                    </CardTitle>
-                    <p class="text-[11px] text-muted-foreground">
-                      Komposisi siswa berdasarkan jenjang kelas
-                    </p>
+          <Card
+            gap="none"
+            class="shadow-2xs border"
+          >
+            <CardHeader standard>
+              <div class="flex items-center gap-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2.5">
+                    <div
+                      class="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary"
+                    >
+                      <BarChart3 class="size-4" />
+                    </div>
+                    <div>
+                      <CardTitle size="md">
+                        Distribusi Siswa per Tingkat
+                      </CardTitle>
+                      <p class="text-[11px] text-muted-foreground">
+                        Komposisi siswa berdasarkan jenjang kelas
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </CardHeader>
-            <CardContent class="p-5">
+            <CardContent variant="standard">
               <div
                 v-if="loading"
                 class="space-y-3"
@@ -661,27 +684,30 @@ onMounted(() => {
             </CardContent>
           </Card>
 
-          <Card class="shadow-2xs border">
-            <CardHeader class="border-b px-5 py-4">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2.5">
-                  <div
-                    class="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary"
-                  >
-                    <CalendarDays class="size-4" />
-                  </div>
-                  <div>
-                    <CardTitle class="text-sm font-semibold">
-                      Kegiatan Mendatang
-                    </CardTitle>
-                    <p class="text-[11px] text-muted-foreground">
-                      Jadwal agenda kalender pendidikan terdekat
-                    </p>
+          <Card
+            gap="none"
+            class="shadow-2xs border"
+          >
+            <CardHeader standard>
+              <div class="flex items-center gap-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2.5">
+                    <div
+                      class="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary"
+                    >
+                      <CalendarDays class="size-4" />
+                    </div>
+                    <div>
+                      <CardTitle size="md"> Kegiatan Mendatang </CardTitle>
+                      <p class="text-[11px] text-muted-foreground">
+                        Jadwal agenda kalender pendidikan terdekat
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </CardHeader>
-            <CardContent class="p-5">
+            <CardContent variant="standard">
               <div
                 v-if="loading"
                 class="space-y-3"
@@ -752,25 +778,30 @@ onMounted(() => {
         </div>
 
         <div class="grid gap-6 lg:grid-cols-2">
-          <Card class="shadow-2xs border">
-            <CardHeader class="border-b px-5 py-4">
-              <div class="flex items-center gap-2.5">
-                <div
-                  class="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary"
-                >
-                  <Users class="size-4" />
-                </div>
-                <div>
-                  <CardTitle class="text-sm font-semibold">
-                    Distribusi Pegawai per Jabatan
-                  </CardTitle>
-                  <p class="text-[11px] text-muted-foreground">
-                    Komposisi tenaga pendidik dan kependidikan
-                  </p>
+          <Card
+            gap="none"
+            class="shadow-2xs border"
+          >
+            <CardHeader standard>
+              <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2.5">
+                  <div
+                    class="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary"
+                  >
+                    <Users class="size-4" />
+                  </div>
+                  <div>
+                    <CardTitle size="md">
+                      Distribusi Pegawai per Jabatan
+                    </CardTitle>
+                    <p class="text-[11px] text-muted-foreground">
+                      Komposisi tenaga pendidik dan kependidikan
+                    </p>
+                  </div>
                 </div>
               </div>
             </CardHeader>
-            <CardContent class="p-5">
+            <CardContent variant="standard">
               <div
                 v-if="loading"
                 class="space-y-2.5"
@@ -817,25 +848,28 @@ onMounted(() => {
             </CardContent>
           </Card>
 
-          <Card class="shadow-2xs border">
-            <CardHeader class="border-b px-5 py-4">
-              <div class="flex items-center gap-2.5">
-                <div
-                  class="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary"
-                >
-                  <Megaphone class="size-4" />
-                </div>
-                <div>
-                  <CardTitle class="text-sm font-semibold">
-                    Pengumuman Terbaru
-                  </CardTitle>
-                  <p class="text-[11px] text-muted-foreground">
-                    Warta dan informasi resmi sekolah
-                  </p>
+          <Card
+            gap="none"
+            class="shadow-2xs border"
+          >
+            <CardHeader standard>
+              <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2.5">
+                  <div
+                    class="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary"
+                  >
+                    <Megaphone class="size-4" />
+                  </div>
+                  <div>
+                    <CardTitle size="md"> Pengumuman Terbaru </CardTitle>
+                    <p class="text-[11px] text-muted-foreground">
+                      Warta dan informasi resmi sekolah
+                    </p>
+                  </div>
                 </div>
               </div>
             </CardHeader>
-            <CardContent class="p-5">
+            <CardContent variant="standard">
               <div
                 v-if="loading"
                 class="space-y-2.5"
@@ -880,7 +914,7 @@ onMounted(() => {
             </CardContent>
           </Card>
         </div>
-      </div>
+      </CardContent>
     </Card>
   </div>
 </template>

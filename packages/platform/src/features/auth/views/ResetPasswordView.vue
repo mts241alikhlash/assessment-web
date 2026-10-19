@@ -8,13 +8,7 @@ import * as z from 'zod'
 import { authApi } from '../api/authApi'
 import { Button } from '@mts241alikhlash/ui/button'
 import { Input } from '@mts241alikhlash/ui/input'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@mts241alikhlash/ui/form'
+import { FormControl, FloatingField } from '@mts241alikhlash/ui/form'
 import { toast } from 'vue-sonner'
 import { getIndonesianErrorMessage } from '@mts241alikhlash/web-shared/utils/error-handler'
 import AuthLogo from '../components/AuthLogo.vue'
@@ -153,43 +147,37 @@ const onSubmit = handleSubmit(async (values) => {
               </p>
             </div>
 
-            <FormField
+            <FloatingField
               v-slot="{ componentField }"
               name="password"
+              label="Password Baru"
             >
-              <FormItem>
-                <FormLabel for="password"> Password Baru </FormLabel>
+              <div class="content-start">
                 <FormControl>
                   <Input
                     id="password"
                     type="password"
-                    placeholder="Minimal 8 karakter"
                     v-bind="componentField"
                   />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
+              </div>
+            </FloatingField>
 
-            <FormField
+            <FloatingField
               v-slot="{ componentField }"
               name="confirmPassword"
+              label="Konfirmasi Password"
             >
-              <FormItem>
-                <FormLabel for="confirmPassword">
-                  Konfirmasi Password
-                </FormLabel>
+              <div class="content-start">
                 <FormControl>
                   <Input
                     id="confirmPassword"
                     type="password"
-                    placeholder="Masukkan ulang password baru"
                     v-bind="componentField"
                   />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
+              </div>
+            </FloatingField>
 
             <Button
               type="submit"

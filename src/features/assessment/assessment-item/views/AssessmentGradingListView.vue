@@ -147,14 +147,11 @@ onMounted(fetchRelatedData)
 <template>
   <div class="p-4 md:p-6 lg:p-8">
     <Card
+      gap="none"
       class="overflow-hidden rounded-2xl shadow-sm shadow-black/5 ring-1 ring-black/4"
     >
-      <CardHeader
-        class="flex flex-row items-center justify-between border-b px-6 py-5"
-      >
-        <CardTitle class="text-2xl font-bold tracking-tight">
-          Penilaian
-        </CardTitle>
+      <CardHeader standard>
+        <CardTitle size="lg"> Penilaian </CardTitle>
       </CardHeader>
 
       <div class="space-y-6 p-6">

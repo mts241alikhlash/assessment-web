@@ -135,14 +135,11 @@ onMounted(async () => {
     class="p-4 md:p-6 lg:p-8"
   >
     <Card
+      gap="none"
       class="overflow-hidden rounded-2xl shadow-sm shadow-black/5 ring-1 ring-black/4"
     >
-      <CardHeader
-        class="flex flex-row items-center justify-between border-b px-6 py-5"
-      >
-        <CardTitle class="text-2xl font-bold tracking-tight">
-          Input Kehadiran
-        </CardTitle>
+      <CardHeader standard>
+        <CardTitle size="lg"> Input Kehadiran </CardTitle>
       </CardHeader>
 
       <div class="space-y-6 p-6">
@@ -259,7 +256,7 @@ onMounted(async () => {
 
       <CardFooter
         v-if="isFilterReady && inputRows.length > 0"
-        class="flex items-center justify-end border-t px-6 py-4 bg-muted/20"
+        standard
       >
         <p
           v-if="undecidedCount > 0"

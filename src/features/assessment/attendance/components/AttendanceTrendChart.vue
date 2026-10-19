@@ -42,9 +42,7 @@ const tooltipTemplate = componentToString(chartConfig, ChartTooltipContent, {
 <template>
   <Card class="shadow-none border rounded-xl">
     <CardHeader class="pb-3">
-      <CardTitle class="text-base font-semibold tracking-tight">
-        Tren Persentase Kehadiran
-      </CardTitle>
+      <CardTitle size="md"> Tren Persentase Kehadiran </CardTitle>
       <CardDescription class="text-xs text-muted-foreground">
         Perkembangan rata-rata tingkat kehadiran siswa per bulan sepanjang
         semester aktif

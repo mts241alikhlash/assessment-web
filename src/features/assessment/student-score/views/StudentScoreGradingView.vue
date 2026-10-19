@@ -57,18 +57,17 @@ onMounted(() => {
 <template>
   <div class="p-4 md:p-6 lg:p-8">
     <Card
+      gap="none"
       class="overflow-hidden rounded-2xl shadow-sm shadow-black/5 ring-1 ring-black/4"
     >
-      <CardHeader
-        class="flex flex-col items-start justify-between gap-2 border-b px-6 py-5 sm:flex-row sm:items-center"
-      >
+      <CardHeader standard>
         <div>
           <div class="flex items-center gap-2">
             <BackButton
               label="Kembali ke daftar penilaian"
               @click="router.push('/assessment/items')"
             />
-            <CardTitle class="text-2xl font-bold tracking-tight">
+            <CardTitle size="lg">
               {{ assessmentItem?.name ?? 'Nilai Siswa' }}
             </CardTitle>
           </div>

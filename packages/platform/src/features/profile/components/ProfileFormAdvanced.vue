@@ -1,12 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@mts241alikhlash/ui/form'
+import { FormControl, FloatingField } from '@mts241alikhlash/ui/form'
 import { Input } from '@mts241alikhlash/ui/input'
 import {
   Select,
@@ -39,46 +33,45 @@ onMounted(async () => {
 
 <template>
   <div class="grid gap-5 md:grid-cols-2 p-1">
-    <FormField
+    <FloatingField
       v-slot="{ componentField }"
       name="email"
+      label="Email"
     >
-      <FormItem class="content-start">
-        <FormLabel>Email</FormLabel>
+      <div class="content-start">
         <FormControl>
           <Input
             type="email"
-            placeholder="example@mail.com"
             maxlength="255"
             v-bind="componentField"
           />
         </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-    <FormField
+      </div>
+    </FloatingField>
+    <FloatingField
       v-slot="{ componentField }"
       name="phone"
+      label="No. Handphone"
     >
-      <FormItem class="content-start">
-        <FormLabel>No. Handphone</FormLabel>
+      <div class="content-start">
         <FormControl>
           <Input
-            placeholder="0812xxxx"
             maxlength="15"
             v-bind="componentField"
           />
         </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-    <FormField
-      v-slot="{ componentField }"
+      </div>
+    </FloatingField>
+    <FloatingField
+      v-slot="{ value, handleChange }"
       name="bloodTypeId"
+      label="Golongan Darah"
     >
-      <FormItem class="content-start">
-        <FormLabel>Golongan Darah</FormLabel>
-        <Select v-bind="componentField">
+      <div class="content-start">
+        <Select
+          :model-value="value"
+          @update:model-value="handleChange"
+        >
           <FormControl>
             <SelectTrigger class="w-full">
               <SelectValue placeholder="Pilih Gol. Darah" />
@@ -95,16 +88,18 @@ onMounted(async () => {
             </SelectItem>
           </SelectContent>
         </Select>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-    <FormField
-      v-slot="{ componentField }"
+      </div>
+    </FloatingField>
+    <FloatingField
+      v-slot="{ value, handleChange }"
       name="religionId"
+      label="Agama"
     >
-      <FormItem class="content-start">
-        <FormLabel>Agama</FormLabel>
-        <Select v-bind="componentField">
+      <div class="content-start">
+        <Select
+          :model-value="value"
+          @update:model-value="handleChange"
+        >
           <FormControl>
             <SelectTrigger class="w-full">
               <SelectValue placeholder="Pilih Agama" />
@@ -121,16 +116,18 @@ onMounted(async () => {
             </SelectItem>
           </SelectContent>
         </Select>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-    <FormField
-      v-slot="{ componentField }"
+      </div>
+    </FloatingField>
+    <FloatingField
+      v-slot="{ value, handleChange }"
       name="maritalStatus"
+      label="Status Pernikahan"
     >
-      <FormItem class="content-start">
-        <FormLabel>Status Pernikahan</FormLabel>
-        <Select v-bind="componentField">
+      <div class="content-start">
+        <Select
+          :model-value="value"
+          @update:model-value="handleChange"
+        >
           <FormControl>
             <SelectTrigger class="w-full">
               <SelectValue placeholder="Pilih Status" />
@@ -144,40 +141,35 @@ onMounted(async () => {
             <SelectItem value="WIDOWED"> Cerai Mati </SelectItem>
           </SelectContent>
         </Select>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-    <FormField
+      </div>
+    </FloatingField>
+    <FloatingField
       v-slot="{ componentField }"
       name="kk"
+      label="No. Kartu Keluarga (KK)"
     >
-      <FormItem class="content-start">
-        <FormLabel>No. Kartu Keluarga (KK)</FormLabel>
+      <div class="content-start">
         <FormControl>
           <Input
-            placeholder="16 digit"
             maxlength="16"
             v-bind="componentField"
           />
         </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-    <FormField
+      </div>
+    </FloatingField>
+    <FloatingField
       v-slot="{ componentField }"
       name="npwp"
+      label="NPWP"
     >
-      <FormItem class="content-start">
-        <FormLabel>NPWP</FormLabel>
+      <div class="content-start">
         <FormControl>
           <Input
-            placeholder="Format NPWP"
             maxlength="20"
             v-bind="componentField"
           />
         </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
+      </div>
+    </FloatingField>
   </div>
 </template>

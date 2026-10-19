@@ -21,13 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@mts241alikhlash/ui/select'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@mts241alikhlash/ui/form'
+import { FormControl, FloatingField } from '@mts241alikhlash/ui/form'
 import { AlertCircle, Loader2 } from '@lucide/vue'
 
 const props = defineProps<{
@@ -92,33 +86,29 @@ const itemForm = useAssessmentItemForm({
           class="space-y-4 px-6 py-4"
           @submit.prevent="itemForm.onSubmit"
         >
-          <FormField
+          <FloatingField
             v-slot="{ value, handleChange }"
             name="name"
+            label="Nama Tugas"
+            required
           >
-            <FormItem>
-              <FormLabel
-                >Nama Tugas <span class="text-destructive">*</span></FormLabel
-              >
+            <div class="content-start">
               <FormControl>
                 <Input
                   :model-value="value"
-                  placeholder="Contoh: Ulangan Harian Bab 3"
                   @update:model-value="handleChange"
                 />
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          </FormField>
+            </div>
+          </FloatingField>
 
-          <FormField
+          <FloatingField
             v-slot="{ value, handleChange }"
             name="type"
+            label="Tipe"
+            required
           >
-            <FormItem>
-              <FormLabel
-                >Tipe <span class="text-destructive">*</span></FormLabel
-              >
+            <div class="content-start">
               <Select
                 :model-value="value"
                 @update:model-value="handleChange"
@@ -138,17 +128,16 @@ const itemForm = useAssessmentItemForm({
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <FormMessage />
-            </FormItem>
-          </FormField>
+            </div>
+          </FloatingField>
 
           <div class="grid gap-4 sm:grid-cols-2">
-            <FormField
+            <FloatingField
               v-slot="{ value, handleChange }"
               name="weight"
+              label="Bobot (%)"
             >
-              <FormItem>
-                <FormLabel>Bobot (%)</FormLabel>
+              <div class="content-start">
                 <FormControl>
                   <Input
                     type="number"
@@ -157,16 +146,15 @@ const itemForm = useAssessmentItemForm({
                     @update:model-value="(v) => handleChange(Number(v))"
                   />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
+              </div>
+            </FloatingField>
 
-            <FormField
+            <FloatingField
               v-slot="{ value, handleChange }"
               name="maxScore"
+              label="Skor Maksimal"
             >
-              <FormItem>
-                <FormLabel>Skor Maksimal</FormLabel>
+              <div class="content-start">
                 <FormControl>
                   <Input
                     type="number"
@@ -176,9 +164,8 @@ const itemForm = useAssessmentItemForm({
                     @update:model-value="(v) => handleChange(Number(v))"
                   />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
+              </div>
+            </FloatingField>
           </div>
 
           <Alert

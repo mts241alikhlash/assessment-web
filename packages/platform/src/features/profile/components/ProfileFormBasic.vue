@@ -1,12 +1,6 @@
 <script setup lang="ts">
 import { DatePicker } from '@mts241alikhlash/ui'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@mts241alikhlash/ui/form'
+import { FormControl, FloatingField } from '@mts241alikhlash/ui/form'
 import { Input } from '@mts241alikhlash/ui/input'
 import {
   Select,
@@ -24,49 +18,47 @@ defineProps<{
 
 <template>
   <div class="grid gap-5 md:grid-cols-2 p-1">
-    <FormField
+    <FloatingField
       v-slot="{ componentField }"
       name="name"
+      label="Nama Lengkap"
+      required
     >
-      <FormItem class="md:col-span-2 content-start">
-        <FormLabel
-          >Nama Lengkap <span class="text-destructive">*</span></FormLabel
-        >
+      <div class="md:col-span-2 content-start">
         <FormControl>
           <Input
-            placeholder="John Doe"
             maxlength="100"
             v-bind="componentField"
           />
         </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-    <FormField
+      </div>
+    </FloatingField>
+    <FloatingField
       v-slot="{ componentField }"
       name="nik"
+      label="NIK (16 digit)"
+      required
     >
-      <FormItem class="content-start">
-        <FormLabel>NIK <span class="text-destructive">*</span></FormLabel>
+      <div class="content-start">
         <FormControl>
           <Input
-            placeholder="16 digit NIK"
             maxlength="16"
             v-bind="componentField"
           />
         </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-    <FormField
-      v-slot="{ componentField }"
+      </div>
+    </FloatingField>
+    <FloatingField
+      v-slot="{ value, handleChange }"
       name="gender"
+      label="Jenis Kelamin"
+      required
     >
-      <FormItem class="content-start">
-        <FormLabel
-          >Jenis Kelamin <span class="text-destructive">*</span></FormLabel
+      <div class="content-start">
+        <Select
+          :model-value="value"
+          @update:model-value="handleChange"
         >
-        <Select v-bind="componentField">
           <FormControl>
             <SelectTrigger class="w-full">
               <SelectValue placeholder="Pilih Jenis Kelamin" />
@@ -77,45 +69,38 @@ defineProps<{
             <SelectItem value="FEMALE"> Perempuan </SelectItem>
           </SelectContent>
         </Select>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-    <FormField
+      </div>
+    </FloatingField>
+    <FloatingField
       v-slot="{ componentField }"
       name="birthPlace"
+      label="Tempat Lahir"
+      required
     >
-      <FormItem class="content-start">
-        <FormLabel
-          >Tempat Lahir <span class="text-destructive">*</span></FormLabel
-        >
+      <div class="content-start">
         <FormControl>
           <Input
-            placeholder="Mis. Jakarta"
             maxlength="100"
             v-bind="componentField"
           />
         </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-    <FormField
-      v-slot="{ value, setValue }"
+      </div>
+    </FloatingField>
+    <FloatingField
+      v-slot="{ value, handleChange }"
       name="birthDate"
+      label="Tanggal Lahir"
+      required
     >
-      <FormItem class="content-start">
-        <FormLabel
-          >Tanggal Lahir <span class="text-destructive">*</span></FormLabel
-        >
+      <div class="content-start">
         <FormControl>
           <DatePicker
             :model-value="value"
             placeholder="Pilih tanggal lahir"
-            :has-error="!!form.errors.value.birthDate"
-            @update:model-value="setValue"
+            @update:model-value="handleChange"
           />
         </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
+      </div>
+    </FloatingField>
   </div>
 </template>

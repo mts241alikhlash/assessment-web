@@ -56,7 +56,7 @@ const hiddenUngraded = computed(
   <div class="space-y-6">
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <Card class="shadow-none">
-        <CardContent class="p-4">
+        <CardContent variant="standard">
           <div
             v-if="loading"
             class="space-y-3"
@@ -89,7 +89,7 @@ const hiddenUngraded = computed(
       </Card>
 
       <Card class="shadow-none">
-        <CardContent class="p-4">
+        <CardContent variant="standard">
           <div
             v-if="loading"
             class="space-y-3"
@@ -122,7 +122,7 @@ const hiddenUngraded = computed(
       </Card>
 
       <Card class="shadow-none">
-        <CardContent class="p-4">
+        <CardContent variant="standard">
           <div
             v-if="loading"
             class="space-y-3"
@@ -155,11 +155,19 @@ const hiddenUngraded = computed(
       </Card>
     </div>
 
-    <Card class="shadow-none">
-      <CardHeader class="border-b px-5 py-3.5">
-        <div class="flex items-center gap-2">
-          <Clock class="size-4 text-muted-foreground" />
-          <CardTitle class="text-sm font-semibold"> Jadwal Hari Ini </CardTitle>
+    <Card
+      gap="none"
+      class="shadow-none"
+    >
+      <CardHeader
+        standard
+        class="py-3.5"
+      >
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2">
+            <Clock class="size-4 text-muted-foreground" />
+            <CardTitle size="md"> Jadwal Hari Ini </CardTitle>
+          </div>
         </div>
       </CardHeader>
       <CardContent class="pt-4 px-5 pb-5">
@@ -179,15 +187,18 @@ const hiddenUngraded = computed(
         v-if="data.supervisedClassrooms.length > 0"
         class="shadow-none"
       >
-        <CardHeader class="border-b px-5 py-3.5">
-          <div class="flex items-center gap-2">
-            <Users class="size-4 text-muted-foreground" />
-            <CardTitle class="text-sm font-semibold">
-              Perwalian Kelas
-            </CardTitle>
+        <CardHeader
+          standard
+          class="py-3.5"
+        >
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2">
+              <Users class="size-4 text-muted-foreground" />
+              <CardTitle size="md"> Perwalian Kelas </CardTitle>
+            </div>
           </div>
         </CardHeader>
-        <CardContent class="p-5">
+        <CardContent variant="standard">
           <ul class="space-y-2">
             <li
               v-for="classroom in data.supervisedClassrooms"
@@ -216,26 +227,32 @@ const hiddenUngraded = computed(
         </CardContent>
       </Card>
 
-      <Card class="shadow-none">
-        <CardHeader class="border-b px-5 py-3.5">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <PencilLine class="size-4 text-muted-foreground" />
-              <CardTitle class="text-sm font-semibold">
-                Penilaian Belum Selesai
-              </CardTitle>
+      <Card
+        gap="none"
+        class="shadow-none"
+      >
+        <CardHeader
+          standard
+          class="py-3.5"
+        >
+          <div class="flex items-center gap-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <PencilLine class="size-4 text-muted-foreground" />
+                <CardTitle size="md"> Penilaian Belum Selesai </CardTitle>
+              </div>
+              <RouterLink
+                v-if="canGrade && data.ungradedTotal > 0"
+                :to="{ name: 'assessment-grading' }"
+                class="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Lihat Semua
+                <ChevronRight class="size-3.5" />
+              </RouterLink>
             </div>
-            <RouterLink
-              v-if="canGrade && data.ungradedTotal > 0"
-              :to="{ name: 'assessment-grading' }"
-              class="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Lihat Semua
-              <ChevronRight class="size-3.5" />
-            </RouterLink>
           </div>
         </CardHeader>
-        <CardContent class="p-5">
+        <CardContent variant="standard">
           <div
             v-if="data.ungradedAssessments.length === 0"
             class="flex flex-col items-center gap-2 py-8 text-center text-sm text-muted-foreground"

@@ -101,7 +101,7 @@ const totalAttendance = computed(() =>
 <template>
   <div class="space-y-6">
     <Card class="shadow-none">
-      <CardContent class="p-4">
+      <CardContent variant="standard">
         <div
           v-if="loading"
           class="space-y-3"
@@ -149,16 +149,22 @@ const totalAttendance = computed(() =>
       />
 
       <div class="space-y-6">
-        <Card class="shadow-none">
-          <CardHeader class="border-b px-5 py-3.5">
-            <div class="flex items-center gap-2">
-              <UserCheck class="size-4 text-muted-foreground" />
-              <CardTitle class="text-sm font-semibold">
-                Rekap Kehadiran
-              </CardTitle>
+        <Card
+          gap="none"
+          class="shadow-none"
+        >
+          <CardHeader
+            standard
+            class="py-3.5"
+          >
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-2">
+                <UserCheck class="size-4 text-muted-foreground" />
+                <CardTitle size="md"> Rekap Kehadiran </CardTitle>
+              </div>
             </div>
           </CardHeader>
-          <CardContent class="p-5">
+          <CardContent variant="standard">
             <div
               v-if="loading"
               class="grid grid-cols-2 gap-3 sm:grid-cols-5"
@@ -204,26 +210,32 @@ const totalAttendance = computed(() =>
           </CardContent>
         </Card>
 
-        <Card class="shadow-none">
-          <CardHeader class="border-b px-5 py-3.5">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <ClipboardList class="size-4 text-muted-foreground" />
-                <CardTitle class="text-sm font-semibold">
-                  Nilai Terbaru
-                </CardTitle>
+        <Card
+          gap="none"
+          class="shadow-none"
+        >
+          <CardHeader
+            standard
+            class="py-3.5"
+          >
+            <div class="flex items-center gap-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <ClipboardList class="size-4 text-muted-foreground" />
+                  <CardTitle size="md"> Nilai Terbaru </CardTitle>
+                </div>
+                <RouterLink
+                  v-if="canOpenOwnScores"
+                  :to="{ name: 'my-scores' }"
+                  class="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Lihat Semua
+                  <ChevronRight class="size-3.5" />
+                </RouterLink>
               </div>
-              <RouterLink
-                v-if="canOpenOwnScores"
-                :to="{ name: 'my-scores' }"
-                class="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Lihat Semua
-                <ChevronRight class="size-3.5" />
-              </RouterLink>
             </div>
           </CardHeader>
-          <CardContent class="p-5">
+          <CardContent variant="standard">
             <div
               v-if="loading"
               class="space-y-2"

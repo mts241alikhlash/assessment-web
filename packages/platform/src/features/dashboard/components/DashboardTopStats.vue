@@ -41,7 +41,7 @@ const institutionStatusLabel = computed(() => {
 <template>
   <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
     <Card class="shadow-none">
-      <CardContent class="p-4">
+      <CardContent variant="standard">
         <div
           v-if="loading"
           class="space-y-2"
@@ -69,7 +69,7 @@ const institutionStatusLabel = computed(() => {
     </Card>
 
     <Card class="shadow-none">
-      <CardContent class="p-4">
+      <CardContent variant="standard">
         <div
           v-if="loading"
           class="space-y-2"
@@ -99,7 +99,7 @@ const institutionStatusLabel = computed(() => {
     </Card>
 
     <Card class="shadow-none">
-      <CardContent class="p-4">
+      <CardContent variant="standard">
         <div
           v-if="loading"
           class="space-y-2"
@@ -125,7 +125,7 @@ const institutionStatusLabel = computed(() => {
     </Card>
 
     <Card class="shadow-none">
-      <CardContent class="p-4">
+      <CardContent variant="standard">
         <div
           v-if="loading"
           class="space-y-2"
