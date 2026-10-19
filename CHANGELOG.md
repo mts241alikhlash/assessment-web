@@ -1,5 +1,11 @@
 # assessment-web
 
+## 1.4.2
+
+### Patch Changes
+
+- 5738f1f: Card, judul, dan isi memakai standar `@mts241alikhlash/ui` 1.8; field form memakai `FloatingField`; footer input kehadiran memakai `CardFooter standard`.
+
 ## 1.4.1
 
 ### Patch Changes
