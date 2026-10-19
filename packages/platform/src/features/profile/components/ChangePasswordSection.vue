@@ -8,13 +8,7 @@ import { toast } from 'vue-sonner'
 import { getIndonesianErrorMessage } from '@mts241alikhlash/web-shared/utils/error-handler'
 import { Button } from '@mts241alikhlash/ui/button'
 import { Input } from '@mts241alikhlash/ui/input'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@mts241alikhlash/ui/form'
+import { FormControl, FloatingField } from '@mts241alikhlash/ui/form'
 import { Loader2 } from '@lucide/vue'
 
 const isSubmitting = ref(false)
@@ -55,65 +49,53 @@ const onSubmit = handleSubmit(async (values) => {
       class="space-y-4"
       @submit.prevent="onSubmit"
     >
-      <FormField
+      <FloatingField
         v-slot="{ componentField }"
         name="currentPassword"
+        label="Password Saat Ini"
+        required
       >
-        <FormItem class="space-y-1.5">
-          <FormLabel class="text-xs font-semibold text-foreground">
-            Password Saat Ini
-            <span class="text-destructive">*</span>
-          </FormLabel>
+        <div class="space-y-1.5">
           <FormControl>
             <Input
               type="password"
-              placeholder="Masukkan password saat ini"
               v-bind="componentField"
             />
           </FormControl>
-          <FormMessage />
-        </FormItem>
-      </FormField>
+        </div>
+      </FloatingField>
 
-      <FormField
+      <FloatingField
         v-slot="{ componentField }"
         name="newPassword"
+        label="Password Baru"
+        required
       >
-        <FormItem class="space-y-1.5">
-          <FormLabel class="text-xs font-semibold text-foreground">
-            Password Baru
-            <span class="text-destructive">*</span>
-          </FormLabel>
+        <div class="space-y-1.5">
           <FormControl>
             <Input
               type="password"
-              placeholder="Masukkan password baru (minimal 8 karakter)"
               v-bind="componentField"
             />
           </FormControl>
-          <FormMessage />
-        </FormItem>
-      </FormField>
+        </div>
+      </FloatingField>
 
-      <FormField
+      <FloatingField
         v-slot="{ componentField }"
         name="confirmPassword"
+        label="Konfirmasi Password Baru"
+        required
       >
-        <FormItem class="space-y-1.5">
-          <FormLabel class="text-xs font-semibold text-foreground">
-            Konfirmasi Password Baru
-            <span class="text-destructive">*</span>
-          </FormLabel>
+        <div class="space-y-1.5">
           <FormControl>
             <Input
               type="password"
-              placeholder="Masukkan kembali password baru"
               v-bind="componentField"
             />
           </FormControl>
-          <FormMessage />
-        </FormItem>
-      </FormField>
+        </div>
+      </FloatingField>
 
       <div class="flex justify-end pt-4">
         <Button

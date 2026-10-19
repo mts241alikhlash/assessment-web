@@ -9,13 +9,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@mts241alikhlash/ui/sheet'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@mts241alikhlash/ui/form'
+import { FormControl, FloatingField } from '@mts241alikhlash/ui/form'
 import { Input } from '@mts241alikhlash/ui/input'
 import { ScrollArea } from '@mts241alikhlash/ui/scroll-area'
 import RegionSelect from './RegionSelect.vue'
@@ -68,58 +62,48 @@ const {
         <ScrollArea class="flex-1 min-h-0">
           <div class="p-6">
             <div class="grid gap-5 md:grid-cols-2">
-              <FormField
+              <FloatingField
                 v-slot="{ componentField }"
                 name="street"
+                label="Jalan / Dusun"
+                required
               >
-                <FormItem class="md:col-span-2 content-start">
-                  <FormLabel
-                    >Jalan / Dusun
-                    <span class="text-destructive">*</span></FormLabel
-                  >
+                <div class="md:col-span-2 content-start">
                   <FormControl>
-                    <Input
-                      placeholder="Nama Jalan, Gedung, No. Rumah"
-                      v-bind="componentField"
-                    />
+                    <Input v-bind="componentField" />
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
+                </div>
+              </FloatingField>
 
-              <FormField
+              <FloatingField
                 v-slot="{ componentField }"
                 name="rt"
+                label="RT"
               >
-                <FormItem class="content-start">
-                  <FormLabel>RT</FormLabel>
+                <div class="content-start">
                   <FormControl>
                     <Input
-                      placeholder="Contoh: 001"
                       maxlength="5"
                       v-bind="componentField"
                     />
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
+                </div>
+              </FloatingField>
 
-              <FormField
+              <FloatingField
                 v-slot="{ componentField }"
                 name="rw"
+                label="RW"
               >
-                <FormItem class="content-start">
-                  <FormLabel>RW</FormLabel>
+                <div class="content-start">
                   <FormControl>
                     <Input
-                      placeholder="Contoh: 002"
                       maxlength="5"
                       v-bind="componentField"
                     />
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
+                </div>
+              </FloatingField>
 
               <div class="md:col-span-2">
                 <RegionSelect
@@ -130,41 +114,36 @@ const {
                 />
               </div>
 
-              <FormField
+              <FloatingField
                 v-slot="{ componentField }"
                 name="country"
+                label="Negara"
+                required
               >
-                <FormItem class="content-start">
-                  <FormLabel
-                    >Negara <span class="text-destructive">*</span></FormLabel
-                  >
+                <div class="content-start">
                   <FormControl>
                     <Input
-                      placeholder="Negara"
                       disabled
                       v-bind="componentField"
                     />
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
+                </div>
+              </FloatingField>
 
-              <FormField
+              <FloatingField
                 v-slot="{ componentField }"
                 name="postalCode"
+                label="Kode Pos"
               >
-                <FormItem class="content-start">
-                  <FormLabel>Kode Pos</FormLabel>
+                <div class="content-start">
                   <FormControl>
                     <Input
-                      placeholder="Kode Pos"
                       maxlength="10"
                       v-bind="componentField"
                     />
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
+                </div>
+              </FloatingField>
             </div>
           </div>
         </ScrollArea>

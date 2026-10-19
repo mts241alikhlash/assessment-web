@@ -35,7 +35,7 @@ const deltaClass = computed(() => {
 <template>
   <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
     <Card class="shadow-none">
-      <CardContent class="p-4">
+      <CardContent variant="standard">
         <div class="flex items-start gap-3">
           <div
             class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10"
@@ -51,7 +51,7 @@ const deltaClass = computed(() => {
     </Card>
 
     <Card class="shadow-none">
-      <CardContent class="p-4">
+      <CardContent variant="standard">
         <div class="flex items-start justify-between gap-3">
           <div class="min-w-0 flex-1">
             <div class="flex items-center gap-2">
@@ -83,7 +83,7 @@ const deltaClass = computed(() => {
     </Card>
 
     <Card class="shadow-none">
-      <CardContent class="p-4">
+      <CardContent variant="standard">
         <div class="flex items-start gap-3">
           <div
             class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-rose-500/10"

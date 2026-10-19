@@ -8,13 +8,7 @@ import * as z from 'zod'
 import { authApi } from '../api/authApi'
 import { Button } from '@mts241alikhlash/ui/button'
 import { Input } from '@mts241alikhlash/ui/input'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@mts241alikhlash/ui/form'
+import { FormControl, FloatingField } from '@mts241alikhlash/ui/form'
 import { toast } from 'vue-sonner'
 import { getIndonesianErrorMessage } from '@mts241alikhlash/web-shared/utils/error-handler'
 import AuthLogo from '../components/AuthLogo.vue'
@@ -140,23 +134,21 @@ const onSubmit = handleSubmit(async (values) => {
               </p>
             </div>
 
-            <FormField
+            <FloatingField
               v-slot="{ componentField }"
               name="identifier"
+              label="ID Pengguna"
             >
-              <FormItem>
-                <FormLabel for="identifier"> ID Pengguna </FormLabel>
+              <div class="content-start">
                 <FormControl>
                   <Input
                     id="identifier"
                     type="text"
-                    placeholder="Masukkan NIS / NIP / Username"
                     v-bind="componentField"
                   />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
+              </div>
+            </FloatingField>
 
             <Button
               type="submit"

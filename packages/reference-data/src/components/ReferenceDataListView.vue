@@ -11,7 +11,12 @@ import { onMounted, ref } from 'vue'
 import { Plus } from '@lucide/vue'
 import { DataTable } from '@mts241alikhlash/ui'
 import { Button } from '@mts241alikhlash/ui/button'
-import { Card, CardHeader, CardTitle } from '@mts241alikhlash/ui/card'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from '@mts241alikhlash/ui/card'
 import { useReferenceDataCrud } from '../composables/useReferenceDataCrud'
 import { buildColumns } from './buildColumns'
 import ReferenceDataFormDialog from './ReferenceDataFormDialog.vue'
@@ -59,24 +64,22 @@ onMounted(() => {
 
 <template>
   <Card
+    gap="none"
     class="overflow-hidden rounded-2xl shadow-sm shadow-black/5 ring-1 ring-black/4"
   >
-    <CardHeader
-      class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b px-6 py-5 gap-4"
-    >
-      <CardTitle class="text-2xl font-bold tracking-tight">
+    <CardHeader standard>
+      <CardTitle size="lg">
         {{ config.entityLabel.plural }}
       </CardTitle>
       <Button
         v-if="config.permissions.canCreate"
-        class="w-full sm:w-auto"
         @click="isAddOpen = true"
       >
         <Plus class="mr-2 h-4 w-4" /> Tambah {{ config.entityLabel.singular }}
       </Button>
     </CardHeader>
 
-    <div class="p-6">
+    <CardContent variant="standard">
       <DataTable
         :columns="columns"
         :data="data as T[]"
@@ -85,7 +88,7 @@ onMounted(() => {
         :filter-column="firstTextFieldKey"
         :filter-placeholder="`Cari ${config.entityLabel.plural.toLowerCase()}...`"
       />
-    </div>
+    </CardContent>
   </Card>
 
   <ReferenceDataFormDialog

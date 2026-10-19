@@ -4,7 +4,12 @@ import { useRoleGuard } from '@/features/platform/auth'
 import { DashboardView } from '@/features/platform/dashboard'
 import { Alert, AlertDescription } from '@mts241alikhlash/ui/alert'
 import { Skeleton } from '@mts241alikhlash/ui/skeleton'
-import { Card, CardHeader, CardTitle } from '@mts241alikhlash/ui/card'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from '@mts241alikhlash/ui/card'
 import {
   Tabs,
   TabsContent,
@@ -62,19 +67,19 @@ onMounted(() => {
       class="p-4 md:p-6 lg:p-8"
     >
       <Card
+        gap="none"
         class="overflow-hidden rounded-2xl shadow-sm shadow-black/5 ring-1 ring-black/4"
       >
-        <CardHeader
-          class="flex flex-row items-center justify-between border-b px-6 py-5"
-        >
+        <CardHeader standard>
           <div>
-            <CardTitle class="text-2xl font-bold tracking-tight">
-              Dashboard
-            </CardTitle>
+            <CardTitle size="lg"> Dashboard </CardTitle>
           </div>
         </CardHeader>
 
-        <div class="p-6 space-y-6">
+        <CardContent
+          variant="standard"
+          class="space-y-6"
+        >
           <div
             v-if="isDeciding"
             class="space-y-6"
@@ -164,7 +169,7 @@ onMounted(() => {
               </TabsContent>
             </Tabs>
           </template>
-        </div>
+        </CardContent>
       </Card>
     </div>
   </div>

@@ -21,14 +21,22 @@ const isEmpty = computed(() => props.lessons.length === 0)
 </script>
 
 <template>
-  <Card class="shadow-none">
-    <CardHeader class="border-b px-5 py-3.5">
-      <div class="flex items-center gap-2">
-        <Clock class="size-4 text-muted-foreground" />
-        <CardTitle class="text-sm font-semibold"> Jadwal Hari Ini </CardTitle>
+  <Card
+    gap="none"
+    class="shadow-none"
+  >
+    <CardHeader
+      standard
+      class="py-3.5"
+    >
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2">
+          <Clock class="size-4 text-muted-foreground" />
+          <CardTitle size="md"> Jadwal Hari Ini </CardTitle>
+        </div>
       </div>
     </CardHeader>
-    <CardContent class="p-5">
+    <CardContent variant="standard">
       <div
         v-if="loading"
         class="space-y-2"

@@ -33,14 +33,11 @@ onMounted(() => void raporService.fetchMine())
 <template>
   <div class="p-4 md:p-5 lg:p-6">
     <Card
+      gap="none"
       class="overflow-hidden rounded-2xl shadow-sm shadow-black/5 ring-1 ring-black/4"
     >
-      <CardHeader
-        class="flex flex-row items-center justify-between border-b px-6 py-5"
-      >
-        <CardTitle class="text-2xl font-bold tracking-tight">
-          Rapor Saya
-        </CardTitle>
+      <CardHeader standard>
+        <CardTitle size="lg"> Rapor Saya </CardTitle>
 
         <div
           v-if="
@@ -57,7 +54,10 @@ onMounted(() => void raporService.fetchMine())
         </div>
       </CardHeader>
 
-      <div class="p-6 space-y-4">
+      <CardContent
+        variant="standard"
+        class="space-y-4"
+      >
         <Card
           v-if="!loading && rapors.length === 0"
           class="shadow-none"
@@ -76,7 +76,7 @@ onMounted(() => void raporService.fetchMine())
           item-label="rapor"
           hide-per-page
         />
-      </div>
+      </CardContent>
     </Card>
 
     <RaporDetailDialog

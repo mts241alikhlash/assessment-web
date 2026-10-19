@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { Button } from '@mts241alikhlash/ui/button'
-import { Card, CardHeader, CardTitle } from '@mts241alikhlash/ui/card'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from '@mts241alikhlash/ui/card'
 import AttendanceDetailDialog from '../components/AttendanceDetailDialog.vue'
 import {
   Select,
@@ -301,17 +306,17 @@ onMounted(() => void load())
 <template>
   <div class="p-4 md:p-5 lg:p-6">
     <Card
+      gap="none"
       class="overflow-hidden rounded-2xl shadow-sm shadow-black/5 ring-1 ring-black/4"
     >
-      <CardHeader
-        class="flex flex-row items-center justify-between border-b px-6 py-5 gap-4"
-      >
-        <CardTitle class="text-2xl font-bold tracking-tight">
-          Kehadiran Saya
-        </CardTitle>
+      <CardHeader standard>
+        <CardTitle size="lg"> Kehadiran Saya </CardTitle>
       </CardHeader>
 
-      <div class="p-6 space-y-6">
+      <CardContent
+        variant="standard"
+        class="space-y-6"
+      >
         <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
           <div
             v-for="item in statItems"
@@ -499,7 +504,7 @@ onMounted(() => void load())
             </div>
           </div>
         </div>
-      </div>
+      </CardContent>
     </Card>
 
     <AttendanceDetailDialog

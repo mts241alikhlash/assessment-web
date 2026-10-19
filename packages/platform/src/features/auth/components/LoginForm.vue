@@ -4,13 +4,7 @@ import { useLoginForm } from '../composables/useLoginForm'
 import { cn } from '@mts241alikhlash/web-shared/utils/utils'
 import { Button } from '@mts241alikhlash/ui/button'
 import { Input } from '@mts241alikhlash/ui/input'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@mts241alikhlash/ui/form'
+import { FormControl, FloatingField } from '@mts241alikhlash/ui/form'
 import { Eye, EyeOff } from '@lucide/vue'
 
 import { authConfig } from '../config'
@@ -42,34 +36,31 @@ const loginTitle = computed(() => authConfig.value.loginTitle)
           Masukkan kredensial Anda untuk melanjutkan
         </p>
       </div>
-      <FormField
+      <FloatingField
         v-slot="{ componentField }"
         name="identifier"
+        label="NIS / NIP / No. HP / Username"
       >
-        <FormItem>
-          <FormLabel for="identifier"> ID Pengguna </FormLabel>
+        <div class="content-start">
           <FormControl>
             <Input
               id="identifier"
               type="text"
-              placeholder="NIS / NIP / No. HP / Username"
               v-bind="componentField"
             />
           </FormControl>
-          <FormMessage />
-        </FormItem>
-      </FormField>
-      <FormField
+        </div>
+      </FloatingField>
+      <FloatingField
         v-slot="{ componentField }"
         name="password"
+        label="Password"
       >
-        <FormItem>
-          <FormLabel> Password </FormLabel>
+        <div class="content-start">
           <div class="relative">
             <FormControl>
               <Input
                 :type="showPassword ? 'text' : 'password'"
-                placeholder="Kata sandi"
                 class="pr-10"
                 v-bind="componentField"
               />
@@ -97,9 +88,8 @@ const loginTitle = computed(() => authConfig.value.loginTitle)
               Lupa Password?
             </router-link>
           </div>
-          <FormMessage />
-        </FormItem>
-      </FormField>
+        </div>
+      </FloatingField>
       <Button
         type="submit"
         :disabled="isSubmitting"
