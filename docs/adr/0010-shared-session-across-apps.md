@@ -25,7 +25,7 @@ What is per-origin is `localStorage`, which holds a *cache* of the signed-in use
 
 ## Why `/auth/me` and not `/profiles/me`
 
-Permissions used to be read from `/profiles/me` via `enrichUserWithProfile`, which is why login worked at all. That endpoint answers with the profile page's graph: social media, achievements, scholarships, educational histories, religion, blood type, avatar file, the teacher's addresses and positions and teaching assignments, the student's enrolments, their classroom, its grade, its supervisors, and each supervisor's own user and profile. Six levels deep.
+Permissions used to be read from `/profiles/me` via `enrichUserWithProfile`, which is why login worked at all. That endpoint answers with the profile page's graph: social media, achievements, scholarships, educational histories, religion, blood type, avatar file, the teacher's addresses and positions and teaching assignments, the student's enrollments, their classroom, its grade, its supervisors, and each supervisor's own user and profile. Six levels deep.
 
 Two reasons to move off it, neither of them about correctness today:
 
