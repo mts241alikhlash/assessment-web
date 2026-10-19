@@ -48,7 +48,7 @@ describe('no screen decides what to show from a role name', () => {
     expect(offenders).toEqual([])
   })
 
-  it('recognises the shape it is looking for', () => {
+  it('recognizes the shape it is looking for', () => {
     const branching = `const isEmployee = computed(() => roles.value.includes('EMPLOYEE'))`
     const permission = `const isAdmin = computed(() => can('schedules.update'))`
 

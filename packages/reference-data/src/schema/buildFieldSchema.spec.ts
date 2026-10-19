@@ -148,7 +148,7 @@ describe('buildFieldSchema, number fields', () => {
     expect(buildInitialValues(numberFields)).toEqual({ sequence: null })
   })
 
-  it('honours a stated default', () => {
+  it('honors a stated default', () => {
     const withDefault: ReferenceDataField[] = [
       { key: 'sequence', kind: 'number', label: 'Urutan', default: 1 },
     ]
