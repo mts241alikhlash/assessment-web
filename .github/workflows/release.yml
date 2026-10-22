@@ -25,7 +25,7 @@ jobs:
           version: 11.25.0
       - uses: actions/setup-node@v7
         with:
-          node-version: 24.21.0
+          node-version: 24.22.1
           cache: pnpm
       - name: Configure GitHub Packages access
         run: npm config set //npm.pkg.github.com/:_authToken "$NODE_AUTH_TOKEN"
@@ -61,7 +61,7 @@ jobs:
           version: 11.25.0
       - uses: actions/setup-node@v7
         with:
-          node-version: 24.21.0
+          node-version: 24.22.1
           cache: pnpm
       - name: Configure GitHub Packages access
         run: npm config set //npm.pkg.github.com/:_authToken "$NODE_AUTH_TOKEN"
@@ -89,7 +89,7 @@ jobs:
           version: 11.25.0
       - uses: actions/setup-node@v7
         with:
-          node-version: 24.21.0
+          node-version: 24.22.1
           cache: pnpm
       - name: Configure GitHub Packages access
         run: npm config set //npm.pkg.github.com/:_authToken "$NODE_AUTH_TOKEN"
