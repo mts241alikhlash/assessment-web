@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:24.21.0-alpine AS build
+FROM node:24.22.1-alpine AS build
 RUN corepack enable && corepack prepare pnpm@11.25.0 --activate
 WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
