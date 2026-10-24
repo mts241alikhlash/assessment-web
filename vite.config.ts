@@ -22,12 +22,14 @@ const ACADEMIC_URL = process.env.ACADEMIC_SERVICE_URL ?? 'http://localhost:3200'
 const ASSESSMENT_URL =
   process.env.ASSESSMENT_SERVICE_URL ?? 'http://localhost:4000'
 const STUDENT_URL = process.env.STUDENT_SERVICE_URL ?? 'http://localhost:3900'
+const EXAM_URL = process.env.EXAM_SERVICE_URL ?? 'http://localhost:4100'
 
 const SERVICE_URL = {
   identity: IDENTITY_URL,
   academic: ACADEMIC_URL,
   assessment: ASSESSMENT_URL,
   student: STUDENT_URL,
+  exam: EXAM_URL,
 } as const
 
 const proxyOptions = {
