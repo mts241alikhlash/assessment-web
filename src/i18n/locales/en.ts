@@ -11,6 +11,7 @@ export default {
     assessmentItems: 'Assessment Items',
     examQuestions: 'Questions',
     examQuestionReview: 'Question Approval',
+    examQuestionImport: 'Import Questions',
     studentScores: 'Student Scores',
     reportCard: 'Report Cards',
     attendance: 'Attendance',

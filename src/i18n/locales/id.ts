@@ -11,6 +11,7 @@ export default {
     assessmentItems: 'Butir Penilaian',
     examQuestions: 'Soal',
     examQuestionReview: 'Persetujuan Soal',
+    examQuestionImport: 'Impor Soal',
     studentScores: 'Nilai Siswa',
     reportCard: 'Rapor',
     attendance: 'Presensi',

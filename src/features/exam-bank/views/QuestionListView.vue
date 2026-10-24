@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { DataTable, SearchInput } from '@mts241alikhlash/ui'
 import { Button } from '@mts241alikhlash/ui/button'
@@ -21,18 +21,29 @@ import QuestionFilterFields from '../components/QuestionFilterFields.vue'
 import { useQuestionList } from '../composables/useQuestionList'
 import { examBankService } from '../services/examBankService'
 import { useExamBankStore } from '../stores/examBankStore'
-import type { QuestionSummary } from '../types'
+import { QUESTION_STATUSES, type QuestionSummary } from '../types'
+import { isUuid } from '../utils/uuid'
 
 const router = useRouter()
+const route = useRoute()
 const { hasPermission } = useAuthSession()
 const store = useExamBankStore()
 const { manageAll, subjectOptions, gradeOptions, authors } = storeToRefs(store)
 
 const search = ref('')
-const subjectId = ref('ALL')
-const gradeId = ref('ALL')
+function fromAddress(name: string, accept: (value: string) => boolean): string {
+  const value = route.query[name]
+  return typeof value === 'string' && accept(value) ? value : 'ALL'
+}
+
+const subjectId = ref(fromAddress('subjectId', isUuid))
+const gradeId = ref(fromAddress('gradeId', isUuid))
 const type = ref('ALL')
-const status = ref('ALL')
+const status = ref(
+  fromAddress('status', (value) =>
+    (QUESTION_STATUSES as readonly string[]).includes(value),
+  ),
+)
 const authorId = ref('ALL')
 const page = ref(1)
 const pageSize = ref(10)

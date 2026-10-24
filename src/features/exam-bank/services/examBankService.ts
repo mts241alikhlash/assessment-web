@@ -8,11 +8,13 @@ import { useExamBankStore } from '../stores/examBankStore'
 import type {
   ApprovalItem,
   ApprovalResult,
+  ImportResult,
   NamedOption,
   QuestionCreatePayload,
   QuestionDetail,
   QuestionStatus,
   QuestionUpdatePayload,
+  TemplateFormat,
 } from '../types'
 
 export type SaveResult =
@@ -164,6 +166,46 @@ export const examBankService = {
     } catch (err: unknown) {
       toast.error(getIndonesianErrorMessage(err, 'Gagal menyetujui soal.'))
       return null
+    }
+  },
+
+  async downloadTemplate(format: TemplateFormat): Promise<void> {
+    try {
+      const response = await examBankApi.downloadTemplate(format)
+      const url = URL.createObjectURL(response.data)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `template-soal.${format}`
+      link.click()
+      URL.revokeObjectURL(url)
+    } catch (err: unknown) {
+      toast.error(getIndonesianErrorMessage(err, 'Gagal mengunduh template.'))
+    }
+  },
+
+  async importQuestions(input: {
+    file: File
+    subjectId: string
+    gradeId: string
+    authorEmployeeId?: string
+  }): Promise<
+    { success: true; data: ImportResult } | { success: false; error: string }
+  > {
+    const form = new FormData()
+    form.append('file', input.file)
+    form.append('subjectId', input.subjectId)
+    form.append('gradeId', input.gradeId)
+    if (input.authorEmployeeId) {
+      form.append('authorEmployeeId', input.authorEmployeeId)
+    }
+    try {
+      const response = await examBankApi.importQuestions(form)
+      return { success: true, data: response.data.data }
+    } catch (err: unknown) {
+      return {
+        success: false,
+        error: getIndonesianErrorMessage(err, 'Gagal mengimpor soal.'),
+      }
     }
   },
 }

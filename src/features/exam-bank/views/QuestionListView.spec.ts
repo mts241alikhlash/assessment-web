@@ -13,8 +13,8 @@ import {
   rowActionProps,
 } from '@/test/dataTableCards'
 
-const { filters, loadReferences, loadAuthors, push, permissions } = vi.hoisted(
-  () => ({
+const { filters, loadReferences, loadAuthors, push, permissions, address } =
+  vi.hoisted(() => ({
     filters: {} as Record<
       'search' | 'subjectId' | 'gradeId' | 'type' | 'status' | 'authorId',
       Ref<string>
@@ -24,8 +24,8 @@ const { filters, loadReferences, loadAuthors, push, permissions } = vi.hoisted(
     loadAuthors: vi.fn<() => Promise<void>>(),
     push: vi.fn(),
     permissions: new Set<string>(),
-  }),
-)
+    address: { query: {} },
+  }))
 const listState = {
   questions: ref<QuestionSummary[]>([]),
   totalItems: ref(0),
@@ -41,7 +41,7 @@ vi.mock('@/features/platform/auth', () => ({
 }))
 vi.mock('vue-router', () => ({
   useRouter: () => ({ push }),
-  useRoute: () => ({ query: {} }),
+  useRoute: () => address,
 }))
 vi.mock('../services/examBankService', () => ({
   examBankService: {
@@ -155,6 +155,7 @@ function seed(all: boolean) {
 describe('QuestionListView', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
+    address.query = {}
     permissions.clear()
     ;['read', 'create', 'update', 'delete'].forEach((action) =>
       permissions.add(`exam-questions.${action}`),
@@ -252,5 +253,21 @@ describe('QuestionListView', () => {
     )
     expect(loadAuthors).toHaveBeenCalled()
     manager.unmount()
+  })
+
+  it('starts from the filters in the address, as the import page links to it', async () => {
+    seed(false)
+    address.query = {
+      status: 'DRAFT',
+      subjectId: '3d2a9b2e-6a4f-4b1c-9d0e-1f2a3b4c5d6e',
+      gradeId: 'bukan-uuid',
+    }
+    const wrapper = mount(QuestionListView, { global: { stubs } })
+    await flushPromises()
+
+    expect(filters.status.value).toBe('DRAFT')
+    expect(filters.subjectId.value).toBe('3d2a9b2e-6a4f-4b1c-9d0e-1f2a3b4c5d6e')
+    expect(filters.gradeId.value).toBe('ALL')
+    wrapper.unmount()
   })
 })
