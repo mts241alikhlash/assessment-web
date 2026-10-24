@@ -3,11 +3,12 @@ import 'katex/dist/katex.min.css'
 import { computed, nextTick, ref, watch } from 'vue'
 import { loadExamImage } from '../composables/useExamImage'
 import { renderMath } from '../utils/renderMath'
+import { sanitizeQuestionHtml } from '../utils/sanitizeHtml'
 
 const props = defineProps<{ html: string }>()
 
 const root = ref<HTMLElement | null>(null)
-const rendered = computed(() => renderMath(props.html))
+const rendered = computed(() => renderMath(sanitizeQuestionHtml(props.html)))
 
 async function showImages() {
   await nextTick()

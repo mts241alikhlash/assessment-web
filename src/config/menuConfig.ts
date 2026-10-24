@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   Library,
   ListChecks,
+  SquareCheckBig,
 } from '@lucide/vue'
 
 export type {
@@ -64,6 +65,13 @@ export const menuSections: MenuSection[] = [
         url: '/bank-soal',
         icon: Library,
         requiredPermission: 'exam-questions.read',
+      },
+      {
+        key: 'exam-question-review',
+        title: 'menu.examQuestionReview',
+        url: '/bank-soal/persetujuan',
+        icon: SquareCheckBig,
+        requiredPermission: 'exam-questions.approve',
       },
     ],
   },

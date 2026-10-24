@@ -31,6 +31,20 @@ export const examBankRoutes: RouteRecordRaw[] = [
     },
   },
   {
+    path: '/bank-soal/persetujuan',
+    name: 'ExamQuestionReview',
+    component: () => import('./views/QuestionReviewView.vue'),
+    meta: {
+      title: 'Persetujuan Soal',
+      requiresAuth: true,
+      requiredPermission: 'exam-questions.approve',
+      breadcrumbs: [
+        { title: 'Bank Soal', href: '#' },
+        { title: 'Persetujuan', href: '/bank-soal/persetujuan' },
+      ],
+    },
+  },
+  {
     path: '/bank-soal/:id',
     name: 'ExamQuestionEdit',
     component: () => import('./views/QuestionFormView.vue'),

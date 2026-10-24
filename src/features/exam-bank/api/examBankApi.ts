@@ -21,6 +21,8 @@ import type {
   TemplateFormat,
 } from '../types'
 
+const seg = encodeURIComponent
+
 export const examBankApi = {
   getScope: () =>
     api.get<ApiSingleResponse<QuestionScope>>('/exam-questions/scope'),
@@ -39,11 +41,11 @@ export const examBankApi = {
     }),
 
   getQuestion: (id: string) =>
-    api.get<ApiSingleResponse<QuestionDetail>>(`/exam-questions/${id}`),
+    api.get<ApiSingleResponse<QuestionDetail>>(`/exam-questions/${seg(id)}`),
 
   getVersions: (id: string) =>
     api.get<ApiSingleResponse<QuestionVersion[]>>(
-      `/exam-questions/${id}/versions`,
+      `/exam-questions/${seg(id)}/versions`,
     ),
 
   createQuestion: (payload: QuestionCreatePayload) =>
@@ -51,24 +53,26 @@ export const examBankApi = {
 
   updateQuestion: (id: string, payload: QuestionUpdatePayload) =>
     api.patch<ApiSingleResponse<QuestionDetail>>(
-      `/exam-questions/${id}`,
+      `/exam-questions/${seg(id)}`,
       payload,
     ),
 
-  deleteQuestion: (id: string) => api.delete(`/exam-questions/${id}`),
+  deleteQuestion: (id: string) => api.delete(`/exam-questions/${seg(id)}`),
 
   submitQuestion: (id: string) =>
-    api.post<ApiSingleResponse<QuestionDetail>>(`/exam-questions/${id}/submit`),
+    api.post<ApiSingleResponse<QuestionDetail>>(
+      `/exam-questions/${seg(id)}/submit`,
+    ),
 
   approveQuestion: (id: string, revision: number) =>
     api.post<ApiSingleResponse<QuestionDetail>>(
-      `/exam-questions/${id}/approve`,
+      `/exam-questions/${seg(id)}/approve`,
       { revision },
     ),
 
   returnQuestion: (id: string, note: string, revision: number) =>
     api.post<ApiSingleResponse<QuestionDetail>>(
-      `/exam-questions/${id}/return`,
+      `/exam-questions/${seg(id)}/return`,
       { note, revision },
     ),
 
@@ -87,7 +91,7 @@ export const examBankApi = {
   },
 
   getImage: (id: string) =>
-    api.get<Blob>(`/exam-files/${id}`, { responseType: 'blob' }),
+    api.get<Blob>(`/exam-files/${seg(id)}`, { responseType: 'blob' }),
 
   downloadTemplate: (format: TemplateFormat) =>
     api.get<Blob>('/exam-imports/template', {

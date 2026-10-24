@@ -1,4 +1,4 @@
-// @vitest-environment happy-dom
+// @vitest-environment jsdom
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { flushPromises, mount } from '@vue/test-utils'
 import QuestionHtml from './QuestionHtml.vue'
@@ -55,9 +55,15 @@ describe('QuestionHtml', () => {
   it('asks for the same picture only once', async () => {
     getImage.mockResolvedValue({ data: new Blob(['x']) })
     mount(QuestionHtml, {
-      props: { html: '<p><img data-file-id="a"><img data-file-id="a"></p>' },
+      props: {
+        html: '<p><img data-file-id="3d2a9b2e-6a4f-4b1c-9d0e-1f2a3b4c5d6e"><img data-file-id="3d2a9b2e-6a4f-4b1c-9d0e-1f2a3b4c5d6e"></p>',
+      },
     })
-    mount(QuestionHtml, { props: { html: '<p><img data-file-id="a"></p>' } })
+    mount(QuestionHtml, {
+      props: {
+        html: '<p><img data-file-id="3d2a9b2e-6a4f-4b1c-9d0e-1f2a3b4c5d6e"></p>',
+      },
+    })
     await flushPromises()
 
     expect(getImage).toHaveBeenCalledTimes(1)
@@ -66,12 +72,24 @@ describe('QuestionHtml', () => {
   it('says so when a picture cannot be loaded', async () => {
     getImage.mockRejectedValue(new Error('403'))
     const wrapper = mount(QuestionHtml, {
-      props: { html: '<p><img data-file-id="b"></p>' },
+      props: {
+        html: '<p><img data-file-id="3d2a9b2e-6a4f-4b1c-9d0e-1f2a3b4c5d6e"></p>',
+      },
     })
     await flushPromises()
 
     expect(wrapper.get('img').attributes('alt')).toBe(
       'Gambar tidak bisa dimuat',
     )
+  })
+
+  it('never asks the API for a file id that is not a UUID', async () => {
+    const wrapper = mount(QuestionHtml, {
+      props: { html: '<p>x<img data-file-id="../../users/me"></p>' },
+    })
+    await flushPromises()
+
+    expect(getImage).not.toHaveBeenCalled()
+    expect(wrapper.find('img').exists()).toBe(false)
   })
 })

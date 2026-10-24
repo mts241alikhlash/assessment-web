@@ -10,6 +10,7 @@ export default {
     dashboard: 'Dasbor',
     assessmentItems: 'Butir Penilaian',
     examQuestions: 'Soal',
+    examQuestionReview: 'Persetujuan Soal',
     studentScores: 'Nilai Siswa',
     reportCard: 'Rapor',
     attendance: 'Presensi',

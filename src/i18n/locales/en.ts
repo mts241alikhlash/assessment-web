@@ -10,6 +10,7 @@ export default {
     dashboard: 'Dashboard',
     assessmentItems: 'Assessment Items',
     examQuestions: 'Questions',
+    examQuestionReview: 'Question Approval',
     studentScores: 'Student Scores',
     reportCard: 'Report Cards',
     attendance: 'Attendance',

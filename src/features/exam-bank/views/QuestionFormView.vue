@@ -43,6 +43,7 @@ import type {
 import { QUESTION_TYPES, statusLabel, typeLabel } from '../types'
 import { emptyContent, validateDraft } from '../utils/questionDraft'
 import { plainExcerpt } from '../utils/plainText'
+import { isUuid } from '../utils/uuid'
 
 const route = useRoute()
 const router = useRouter()
@@ -50,9 +51,10 @@ const { hasPermission } = useAuthSession()
 const store = useExamBankStore()
 const { manageAll, subjectOptions } = storeToRefs(store)
 
-const id = computed(() =>
+const rawId = computed(() =>
   typeof route.params.id === 'string' ? route.params.id : null,
 )
+const id = computed(() => (isUuid(rawId.value) ? rawId.value : null))
 const isEdit = computed(() => id.value !== null)
 
 const subjectId = ref('')
@@ -138,6 +140,10 @@ watch(subjectId, async (next) => {
 })
 
 onMounted(async () => {
+  if (rawId.value !== null && id.value === null) {
+    await router.replace('/bank-soal')
+    return
+  }
   loading.value = true
   await examBankService.loadReferences()
   if (id.value) {

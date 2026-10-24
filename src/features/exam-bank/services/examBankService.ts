@@ -6,6 +6,8 @@ import { loadAssignments } from '@/features/lookup/teaching-assignment'
 import { examBankApi } from '../api/examBankApi'
 import { useExamBankStore } from '../stores/examBankStore'
 import type {
+  ApprovalItem,
+  ApprovalResult,
   NamedOption,
   QuestionCreatePayload,
   QuestionDetail,
@@ -126,6 +128,42 @@ export const examBankService = {
     } catch (err: unknown) {
       toast.error(getIndonesianErrorMessage(err, 'Gagal memuat daftar guru.'))
       return []
+    }
+  },
+
+  async approveQuestion(id: string, revision: number): Promise<boolean> {
+    try {
+      await examBankApi.approveQuestion(id, revision)
+      toast.success('Soal disetujui.')
+      return true
+    } catch (err: unknown) {
+      toast.error(getIndonesianErrorMessage(err, 'Gagal menyetujui soal.'))
+      return false
+    }
+  },
+
+  async returnQuestion(
+    id: string,
+    note: string,
+    revision: number,
+  ): Promise<boolean> {
+    try {
+      await examBankApi.returnQuestion(id, note, revision)
+      toast.success('Soal dikembalikan ke penulis.')
+      return true
+    } catch (err: unknown) {
+      toast.error(getIndonesianErrorMessage(err, 'Gagal mengembalikan soal.'))
+      return false
+    }
+  },
+
+  async approveMany(items: ApprovalItem[]): Promise<ApprovalResult[] | null> {
+    try {
+      const response = await examBankApi.approveMany(items)
+      return response.data?.data ?? []
+    } catch (err: unknown) {
+      toast.error(getIndonesianErrorMessage(err, 'Gagal menyetujui soal.'))
+      return null
     }
   },
 }

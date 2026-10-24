@@ -104,6 +104,8 @@ const stubs = {
   QuestionEditor: editor,
 }
 
+const QUESTION_ID = '3d2a9b2e-6a4f-4b1c-9d0e-1f2a3b4c5d6e'
+
 const detail = (overrides: Partial<QuestionDetail> = {}): QuestionDetail => {
   const current = {
     id: 'v1',
@@ -116,7 +118,7 @@ const detail = (overrides: Partial<QuestionDetail> = {}): QuestionDetail => {
     createdAt: '2026-10-24T08:00:00.000Z',
   }
   return {
-    id: 'q-1',
+    id: QUESTION_ID,
     subjectId: 'math',
     gradeId: 'g7',
     authorEmployeeId: 'emp-1',
@@ -182,7 +184,7 @@ describe('QuestionFormView', () => {
   })
 
   it('warns before saving a change to an approved question, and saves only after confirmation', async () => {
-    route.params = { id: 'q-1' }
+    route.params = { id: QUESTION_ID }
     loadQuestion.mockResolvedValue(
       detail({ status: 'APPROVED', approvedVersion: 1 }),
     )
@@ -204,7 +206,7 @@ describe('QuestionFormView', () => {
     await findButton(wrapper, 'Simpan versi baru')!.trigger('click')
     await flushPromises()
 
-    expect(updateQuestion).toHaveBeenCalledWith('q-1', {
+    expect(updateQuestion).toHaveBeenCalledWith(QUESTION_ID, {
       bodyHtml: '<p>Bumi bulat</p>',
       content: { answer: { value: true } },
       points: 1,
@@ -212,7 +214,7 @@ describe('QuestionFormView', () => {
   })
 
   it('saves a draft straight away, with no warning', async () => {
-    route.params = { id: 'q-1' }
+    route.params = { id: QUESTION_ID }
     loadQuestion.mockResolvedValue(detail())
     updateQuestion.mockResolvedValue({ success: true, data: detail() })
     const wrapper = mount(QuestionFormView, { global: { stubs } })
@@ -226,7 +228,7 @@ describe('QuestionFormView', () => {
   })
 
   it('shows the note of a returned question and lets the author submit it again', async () => {
-    route.params = { id: 'q-1' }
+    route.params = { id: QUESTION_ID }
     loadQuestion.mockResolvedValue(
       detail({
         status: 'RETURNED',
@@ -251,15 +253,24 @@ describe('QuestionFormView', () => {
     await findButton(wrapper, 'Ajukan untuk persetujuan')!.trigger('click')
     await flushPromises()
 
-    expect(submitQuestion).toHaveBeenCalledWith('q-1')
+    expect(submitQuestion).toHaveBeenCalledWith(QUESTION_ID)
   })
 
   it('goes back to the list when the question cannot be loaded', async () => {
-    route.params = { id: 'q-404' }
+    route.params = { id: '3d2a9b2e-6a4f-4b1c-9d0e-1f2a3b4c5d60' }
     loadQuestion.mockResolvedValue(null)
     mount(QuestionFormView, { global: { stubs } })
     await flushPromises()
 
+    expect(replace).toHaveBeenCalledWith('/bank-soal')
+  })
+
+  it('goes back to the list, without loading, when the id in the address is not a UUID', async () => {
+    route.params = { id: '../users/me' }
+    mount(QuestionFormView, { global: { stubs } })
+    await flushPromises()
+
+    expect(loadQuestion).not.toHaveBeenCalled()
     expect(replace).toHaveBeenCalledWith('/bank-soal')
   })
 })
