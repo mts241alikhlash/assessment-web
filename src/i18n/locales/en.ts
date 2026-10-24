@@ -3,11 +3,13 @@ export default {
     section: {
       overview: 'Overview',
       assessment: 'Assessment',
+      examBank: 'Question Bank',
       attendance: 'Class Attendance',
       mine: 'Mine',
     },
     dashboard: 'Dashboard',
     assessmentItems: 'Assessment Items',
+    examQuestions: 'Questions',
     studentScores: 'Student Scores',
     reportCard: 'Report Cards',
     attendance: 'Attendance',

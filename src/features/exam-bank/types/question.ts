@@ -94,6 +94,7 @@ export interface QuestionSummary {
   revision: number
   bodyHtml: string
   points: number
+  authorName: string | null
   createdAt: string
   updatedAt: string
 }

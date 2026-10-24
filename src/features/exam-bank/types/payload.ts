@@ -51,6 +51,22 @@ export interface QuestionScope {
   pairs: ScopePair[]
 }
 
+export interface QuestionAuthor {
+  id: string
+  name: string
+}
+
+export interface NamedOption {
+  id: string
+  name: string
+}
+
+export interface GradeRecord {
+  id: string
+  level: number
+  name: string | null
+}
+
 export interface ExamFile {
   id: string
   mimeType: string

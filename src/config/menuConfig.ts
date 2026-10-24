@@ -3,6 +3,7 @@ import {
   ClipboardList,
   FileText,
   LayoutDashboard,
+  Library,
   ListChecks,
 } from '@lucide/vue'
 
@@ -50,6 +51,19 @@ export const menuSections: MenuSection[] = [
         url: '/report-card',
         icon: FileText,
         requiredPermission: 'report-cards.read',
+      },
+    ],
+  },
+  {
+    key: 'exam-bank',
+    label: 'menu.section.examBank',
+    items: [
+      {
+        key: 'exam-questions',
+        title: 'menu.examQuestions',
+        url: '/bank-soal',
+        icon: Library,
+        requiredPermission: 'exam-questions.read',
       },
     ],
   },

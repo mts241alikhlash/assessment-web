@@ -7,11 +7,14 @@ import type {
   ApprovalItem,
   ApprovalResult,
   ExamFile,
+  GradeRecord,
   ImportResult,
+  QuestionAuthor,
   QuestionCreatePayload,
   QuestionDetail,
   QuestionQueryParams,
   QuestionScope,
+  QuestionStatus,
   QuestionSummary,
   QuestionUpdatePayload,
   QuestionVersion,
@@ -21,6 +24,14 @@ import type {
 export const examBankApi = {
   getScope: () =>
     api.get<ApiSingleResponse<QuestionScope>>('/exam-questions/scope'),
+
+  getAuthors: (status?: QuestionStatus) =>
+    api.get<ApiSingleResponse<QuestionAuthor[]>>('/exam-questions/authors', {
+      params: status ? { status } : undefined,
+    }),
+
+  getGrades: (params?: { limit?: number }) =>
+    api.get<ApiPaginatedResponse<GradeRecord>>('/grades', { params }),
 
   getQuestions: (params?: QuestionQueryParams) =>
     api.get<ApiPaginatedResponse<QuestionSummary>>('/exam-questions', {
