@@ -135,6 +135,7 @@ function seed(all: boolean) {
   const store = useExamBankStore()
   store.scope = {
     all,
+    employeeId: all ? null : 'emp-1',
     pairs: all
       ? []
       : [
@@ -268,6 +269,26 @@ describe('QuestionListView', () => {
     expect(filters.status.value).toBe('DRAFT')
     expect(filters.subjectId.value).toBe('3d2a9b2e-6a4f-4b1c-9d0e-1f2a3b4c5d6e')
     expect(filters.gradeId.value).toBe('ALL')
+    wrapper.unmount()
+  })
+
+  it("shows a colleague's question for reading only", async () => {
+    seed(false)
+    const wrapper = mount(QuestionListView, { global: { stubs } })
+    await flushPromises()
+
+    const own = rowActionProps(wrapper, question())
+    const colleague = rowActionProps(
+      wrapper,
+      question({ authorEmployeeId: 'emp-2' }),
+    )
+
+    expect(own.hideEdit).toBe(false)
+    expect(own.viewLabel).toBeUndefined()
+    expect(colleague.hideEdit).toBe(true)
+    expect(colleague.viewLabel).toBe('Lihat')
+    expect(colleague.hideDelete).toBe(true)
+    expect(colleague.items).toEqual([])
     wrapper.unmount()
   })
 })

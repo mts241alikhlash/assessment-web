@@ -76,6 +76,7 @@ function seed() {
   const store = useExamBankStore()
   store.scope = {
     all: false,
+    employeeId: 'emp-1',
     pairs: [
       {
         subjectId: SUBJECT,

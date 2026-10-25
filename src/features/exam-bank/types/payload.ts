@@ -48,6 +48,7 @@ export interface ScopePair {
 
 export interface QuestionScope {
   all: boolean
+  employeeId: string | null
   pairs: ScopePair[]
 }
 

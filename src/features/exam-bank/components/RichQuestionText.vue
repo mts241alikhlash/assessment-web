@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref, watch } from 'vue'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
-import StarterKit from '@tiptap/starter-kit'
 import { toast } from 'vue-sonner'
 import {
   Bold,
@@ -10,15 +9,16 @@ import {
   List,
   ListOrdered,
   Sigma,
+  Subscript,
+  Superscript,
   Underline,
 } from '@lucide/vue'
 import { Button } from '@mts241alikhlash/ui/button'
 import { getIndonesianErrorMessage } from '@mts241alikhlash/web-shared/utils/error-handler'
 import { examBankApi } from '../api/examBankApi'
 import MathDialog from './MathDialog.vue'
-import { BlockDirection } from './tiptap/blockDirection'
-import { ExamImage } from './tiptap/examImage'
-import { MathInline, type MathEdit } from './tiptap/mathInline'
+import { buildExtensions } from './tiptap/extensions'
+import type { MathEdit } from './tiptap/mathInline'
 
 const MAX_IMAGE_BYTES = 2 * 1024 * 1024
 const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
@@ -47,20 +47,7 @@ function openMath(edit?: MathEdit) {
 
 const editor = useEditor({
   content: model.value,
-  extensions: [
-    StarterKit.configure({
-      heading: false,
-      codeBlock: false,
-      code: false,
-      horizontalRule: false,
-      blockquote: false,
-      strike: false,
-      link: false,
-    }),
-    BlockDirection,
-    ExamImage,
-    MathInline.configure({ onEdit: openMath }),
-  ],
+  extensions: buildExtensions(openMath),
   editorProps: {
     attributes: {
       class: `${props.compact ? 'min-h-10' : 'min-h-28'} px-3 py-2 text-[length:var(--text-control,0.75rem)] focus:outline-none [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:my-1 [&_ul]:list-disc [&_ul]:pl-5`,
@@ -170,6 +157,28 @@ defineExpose({ insertMath, uploadImage, openMath })
         @click="editor.chain().focus().toggleUnderline().run()"
       >
         <Underline />
+      </Button>
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        :class="{ 'bg-accent': editor.isActive('superscript') }"
+        title="Pangkat (superskrip)"
+        aria-label="Pangkat (superskrip)"
+        @click="editor.chain().focus().toggleSuperscript().run()"
+      >
+        <Superscript />
+      </Button>
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        :class="{ 'bg-accent': editor.isActive('subscript') }"
+        title="Indeks (subskrip)"
+        aria-label="Indeks (subskrip)"
+        @click="editor.chain().focus().toggleSubscript().run()"
+      >
+        <Subscript />
       </Button>
       <Button
         type="button"

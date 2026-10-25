@@ -33,6 +33,22 @@ export function emptyContent(type: QuestionType): QuestionContent {
   }
 }
 
+export function cleanContent(
+  type: QuestionType,
+  content: QuestionContent,
+): QuestionContent {
+  if (type !== 'SHORT_ANSWER') return content
+  const short = content as ShortAnswerContent
+  return {
+    answer: {
+      ...short.answer,
+      accepted: short.answer.accepted
+        .map((answer) => answer.trim())
+        .filter((answer) => answer !== ''),
+    },
+  }
+}
+
 export const MIN_POINTS = 0.25
 export const MAX_POINTS = 100
 

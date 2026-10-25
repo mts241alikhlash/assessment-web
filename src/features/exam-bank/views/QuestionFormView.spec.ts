@@ -102,6 +102,8 @@ const stubs = {
   SelectTrigger: passthrough,
   SelectValue: passthrough,
   QuestionEditor: editor,
+  QuestionPreview: passthrough,
+  AnswerKey: passthrough,
 }
 
 const QUESTION_ID = '3d2a9b2e-6a4f-4b1c-9d0e-1f2a3b4c5d6e'
@@ -141,6 +143,7 @@ function seedScope() {
   const store = useExamBankStore()
   store.scope = {
     all: false,
+    employeeId: 'emp-1',
     pairs: [
       {
         subjectId: 'math',
@@ -272,5 +275,55 @@ describe('QuestionFormView', () => {
 
     expect(loadQuestion).not.toHaveBeenCalled()
     expect(replace).toHaveBeenCalledWith('/bank-soal')
+  })
+
+  it("opens a colleague's question for reading only, with no way to save or submit it", async () => {
+    route.params = { id: QUESTION_ID }
+    loadQuestion.mockResolvedValue(detail({ authorEmployeeId: 'emp-2' }))
+    const wrapper = mount(QuestionFormView, { global: { stubs } })
+    await flushPromises()
+
+    expect(wrapper.text()).toContain('Soal ini ditulis guru lain')
+    expect(wrapper.find('[data-testid="editor"]').exists()).toBe(false)
+    expect(findButton(wrapper, 'Simpan')).toBeUndefined()
+    expect(findButton(wrapper, 'Ajukan untuk persetujuan')).toBeUndefined()
+  })
+
+  it('drops blank accepted answers before saving a short answer', async () => {
+    route.params = { id: QUESTION_ID }
+    loadQuestion.mockResolvedValue(
+      detail({
+        type: 'SHORT_ANSWER',
+        current: {
+          ...detail().current,
+          content: {
+            answer: {
+              accepted: ['Jakarta', '  '],
+              ignoreCase: true,
+              ignoreHarakat: false,
+            },
+          },
+        },
+      }),
+    )
+    updateQuestion.mockResolvedValue({ success: true, data: detail() })
+    const wrapper = mount(QuestionFormView, { global: { stubs } })
+    await flushPromises()
+
+    await findButton(wrapper, 'Simpan')!.trigger('click')
+    await flushPromises()
+
+    expect(updateQuestion).toHaveBeenCalledWith(
+      QUESTION_ID,
+      expect.objectContaining({
+        content: {
+          answer: {
+            accepted: ['Jakarta'],
+            ignoreCase: true,
+            ignoreHarakat: false,
+          },
+        },
+      }),
+    )
   })
 })

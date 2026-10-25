@@ -16,6 +16,15 @@ export const useExamBankStore = defineStore('examBank', () => {
   const scopeLoaded = ref(false)
 
   const manageAll = computed(() => scope.value?.all === true)
+  const employeeId = computed(() => scope.value?.employeeId ?? null)
+
+  function canModify(question: { authorEmployeeId: string }): boolean {
+    return (
+      manageAll.value ||
+      (employeeId.value !== null &&
+        question.authorEmployeeId === employeeId.value)
+    )
+  }
 
   const gradeNames = computed(() => {
     const names = new Map<string, string>()
@@ -95,6 +104,8 @@ export const useExamBankStore = defineStore('examBank', () => {
     authors,
     scopeLoaded,
     manageAll,
+    employeeId,
+    canModify,
     subjectOptions,
     gradeOptions,
     gradeOptionsFor,

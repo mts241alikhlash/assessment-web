@@ -31,7 +31,9 @@ import {
 } from '@mts241alikhlash/ui/select'
 import { useBreadcrumbs } from '@mts241alikhlash/web-shared/composables/useBreadcrumbs'
 import { useAuthSession } from '@/features/platform/auth'
+import AnswerKey from '../components/AnswerKey.vue'
 import QuestionEditor from '../components/QuestionEditor.vue'
+import QuestionPreview from '../components/QuestionPreview.vue'
 import { examBankService } from '../services/examBankService'
 import { useExamBankStore } from '../stores/examBankStore'
 import type {
@@ -41,7 +43,11 @@ import type {
   QuestionType,
 } from '../types'
 import { QUESTION_TYPES, statusLabel, typeLabel } from '../types'
-import { emptyContent, validateDraft } from '../utils/questionDraft'
+import {
+  cleanContent,
+  emptyContent,
+  validateDraft,
+} from '../utils/questionDraft'
 import { plainExcerpt } from '../utils/plainText'
 import { isUuid } from '../utils/uuid'
 
@@ -86,10 +92,16 @@ const gradeOptions = computed(() =>
 )
 const dirty = computed(() => JSON.stringify(draft.value) !== snapshot.value)
 const canUpdate = computed(() => hasPermission('exam-questions.update'))
+const readOnly = computed(
+  () =>
+    isEdit.value &&
+    detail.value !== null &&
+    !(canUpdate.value && store.canModify(detail.value)),
+)
 const canSubmit = computed(
   () =>
     isEdit.value &&
-    canUpdate.value &&
+    !readOnly.value &&
     (detail.value?.status === 'DRAFT' || detail.value?.status === 'RETURNED'),
 )
 const returnNote = computed(() => {
@@ -179,7 +191,7 @@ async function persist() {
   formError.value = null
   const body = {
     bodyHtml: draft.value.bodyHtml,
-    content: draft.value.content,
+    content: cleanContent(type.value, draft.value.content),
     points: draft.value.points,
   }
   if (detail.value) {
@@ -395,7 +407,26 @@ async function submitForApproval() {
           </FloatingLabelField>
         </div>
 
+        <template v-if="readOnly && detail">
+          <div
+            class="rounded-md border bg-muted/30 p-3 text-[length:var(--text-control,0.75rem)]"
+            role="status"
+          >
+            Soal ini ditulis guru lain. Anda hanya bisa melihatnya.
+          </div>
+          <QuestionPreview
+            :type="detail.type"
+            :body-html="detail.current.bodyHtml"
+            :content="detail.current.content"
+            :points="detail.current.points"
+          />
+          <AnswerKey
+            :type="detail.type"
+            :content="detail.current.content"
+          />
+        </template>
         <QuestionEditor
+          v-else
           v-model="draft"
           :type="type"
         />
@@ -426,7 +457,7 @@ async function submitForApproval() {
         </Button>
         <span v-else />
         <Button
-          v-if="!isEdit || canUpdate"
+          v-if="!readOnly && (!isEdit || canUpdate)"
           type="button"
           :disabled="saving"
           @click="save"

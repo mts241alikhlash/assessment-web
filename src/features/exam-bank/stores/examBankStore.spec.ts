@@ -16,6 +16,7 @@ describe('exam bank store', () => {
     const store = useExamBankStore()
     store.scope = {
       all: false,
+      employeeId: 'emp-1',
       pairs: [
         pair('math', 'Matematika', 'g7', 7),
         pair('math', 'Matematika', 'g8', 8),
@@ -38,7 +39,7 @@ describe('exam bank store', () => {
 
   it('offers everything the lists hold to a user who manages every question', () => {
     const store = useExamBankStore()
-    store.scope = { all: true, pairs: [] }
+    store.scope = { all: true, employeeId: null, pairs: [] }
     store.subjects = [
       { id: 'b', name: 'Bahasa Arab' },
       { id: 'a', name: 'Akidah' },
@@ -61,11 +62,29 @@ describe('exam bank store', () => {
 
   it('names an id from either source, and a dash when unknown', () => {
     const store = useExamBankStore()
-    store.scope = { all: false, pairs: [pair('math', 'Matematika', 'g7', 7)] }
+    store.scope = {
+      all: false,
+      employeeId: 'emp-1',
+      pairs: [pair('math', 'Matematika', 'g7', 7)],
+    }
 
     expect(store.subjectName('math')).toBe('Matematika')
     expect(store.gradeName('g7')).toBe('Kelas 7')
     expect(store.subjectName('ghost')).toBe('-')
     expect(store.gradeName('ghost')).toBe('-')
+  })
+
+  it('lets a teacher change only their own questions, and a manager any', () => {
+    const store = useExamBankStore()
+    store.scope = { all: false, employeeId: 'emp-1', pairs: [] }
+
+    expect(store.canModify({ authorEmployeeId: 'emp-1' })).toBe(true)
+    expect(store.canModify({ authorEmployeeId: 'emp-2' })).toBe(false)
+
+    store.scope = { all: false, employeeId: null, pairs: [] }
+    expect(store.canModify({ authorEmployeeId: 'emp-1' })).toBe(false)
+
+    store.scope = { all: true, employeeId: null, pairs: [] }
+    expect(store.canModify({ authorEmployeeId: 'emp-2' })).toBe(true)
   })
 })

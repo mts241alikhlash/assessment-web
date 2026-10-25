@@ -99,6 +99,7 @@ const columns = computed(() =>
     gradeName: store.gradeName,
     canUpdate: hasPermission('exam-questions.update'),
     canDelete: hasPermission('exam-questions.delete'),
+    canModify: store.canModify,
     onEdit: openQuestion,
     onSubmit: async (question) => {
       if (await examBankService.submitQuestion(question.id)) await refresh()

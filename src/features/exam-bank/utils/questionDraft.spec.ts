@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { emptyContent, hasContent, validateDraft } from './questionDraft'
+import {
+  cleanContent,
+  emptyContent,
+  hasContent,
+  validateDraft,
+} from './questionDraft'
 
 describe('hasContent', () => {
   it('is false for markup with nothing to show', () => {
@@ -80,5 +85,31 @@ describe('validateDraft', () => {
       'Poin harus antara 0,25 dan 100',
     )
     expect(validateDraft('TRUE_FALSE', body, content, 2.5)).toBeNull()
+  })
+})
+
+describe('cleanContent', () => {
+  it('drops blank and padded accepted answers of a short answer', () => {
+    expect(
+      cleanContent('SHORT_ANSWER', {
+        answer: {
+          accepted: [' Jakarta ', '', '  '],
+          ignoreCase: true,
+          ignoreHarakat: false,
+        },
+      }),
+    ).toEqual({
+      answer: {
+        accepted: ['Jakarta'],
+        ignoreCase: true,
+        ignoreHarakat: false,
+      },
+    })
+  })
+
+  it('leaves the other types as they are', () => {
+    const content = emptyContent('MULTIPLE_CHOICE')
+
+    expect(cleanContent('MULTIPLE_CHOICE', content)).toBe(content)
   })
 })

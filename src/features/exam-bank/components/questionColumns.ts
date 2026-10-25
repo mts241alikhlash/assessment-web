@@ -12,6 +12,7 @@ export interface QuestionColumnOptions {
   gradeName: (id: string) => string
   canUpdate: boolean
   canDelete: boolean
+  canModify: (question: QuestionSummary) => boolean
   onEdit: (question: QuestionSummary) => void
   onSubmit: (question: QuestionSummary) => void | Promise<void>
   onDelete: (
@@ -115,16 +116,21 @@ export function buildQuestionColumns(
       id: 'actions',
       header: 'Aksi',
       enableSorting: false,
-      cell: ({ row }) =>
-        h(ActionCell, {
+      cell: ({ row }) => {
+        const mine = options.canModify(row.original)
+        const mayChange = options.canUpdate && mine
+        return h(ActionCell, {
           editLabel: 'Ubah',
-          hideEdit: !options.canUpdate,
+          hideEdit: !mayChange,
+          viewLabel: mayChange ? undefined : 'Lihat',
           hideDelete:
-            !options.canDelete || row.original.approvedVersion !== null,
+            !options.canDelete ||
+            !mine ||
+            row.original.approvedVersion !== null,
           deleteTitle: 'Hapus soal?',
           deleteDescription:
             'Soal yang dihapus tidak muncul lagi di bank soal.',
-          items: options.canUpdate
+          items: mayChange
             ? [
                 {
                   label: 'Kirim untuk persetujuan',
@@ -137,13 +143,15 @@ export function buildQuestionColumns(
               ]
             : [],
           onEdit: () => options.onEdit(row.original),
+          onView: () => options.onEdit(row.original),
           onDelete: (controls: {
             closeAlert: () => void
             setLoading: (state: boolean) => void
           }) => {
             void options.onDelete(row.original, controls)
           },
-        }),
+        })
+      },
     },
   ]
 }
