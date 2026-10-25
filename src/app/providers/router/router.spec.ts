@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { assessmentItemRoutes } from '@/features/assessment/assessment-item'
+import { examBankRoutes } from '@/features/exam-bank'
 import { attendanceRoutes } from '@/features/assessment/attendance'
 import { myDashboardRoutes } from '@/features/assessment/my-dashboard'
 import { raporRoutes } from '@/features/assessment/rapor/routes'
@@ -17,6 +18,7 @@ const ALL: RouteRecordRaw[] = [
   ...myDashboardRoutes,
   ...assessmentItemRoutes,
   ...studentScoreRoutes,
+  ...examBankRoutes,
   ...raporRoutes,
   ...attendanceRoutes,
 ]
