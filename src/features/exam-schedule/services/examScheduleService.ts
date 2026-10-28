@@ -115,7 +115,8 @@ export const examScheduleService = {
   async loadSessions(
     id: string,
   ): Promise<
-    { success: true; data: ScheduleSession[] } | { success: false; error: string }
+    | { success: true; data: ScheduleSession[] }
+    | { success: false; error: string }
   > {
     try {
       const response = await examScheduleApi.getSessions(id, {

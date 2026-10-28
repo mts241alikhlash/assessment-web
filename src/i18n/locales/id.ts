@@ -15,6 +15,8 @@ export default {
     examQuestionImport: 'Impor Soal',
     examPackages: 'Paket Soal',
     examSchedules: 'Jadwal Ujian',
+    examGrading: 'Penilaian Ujian',
+    examScores: 'Nilai Ujian',
     studentScores: 'Nilai Siswa',
     reportCard: 'Rapor',
     attendance: 'Presensi',

@@ -155,7 +155,9 @@ describe('buildScheduleColumns', () => {
 
   it('hides the sessions action without the permission', () => {
     expect(
-      labels(actionProps({ canSessions: false }, schedule({ hasSessions: true }))),
+      labels(
+        actionProps({ canSessions: false }, schedule({ hasSessions: true })),
+      ),
     ).not.toContain('Sesi')
   })
 })

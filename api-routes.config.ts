@@ -17,12 +17,14 @@ export const SERVICE_PREFIXES = {
     '/assessment-weights',
     '/attendances',
     '/dashboards',
+    '/exam-scores',
     '/rapors',
     '/student-scores',
   ],
 
   exam: [
     '/exam-files',
+    '/exam-grading',
     '/exam-imports',
     '/exam-packages',
     '/exam-questions',

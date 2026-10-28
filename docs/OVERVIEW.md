@@ -29,6 +29,8 @@ pairing `hr-web` has with `hr-service`.
 | `/bank-soal` | the exam question bank: write, import, approve |
 | `/paket-soal`, `/paket-soal/baru`, `/paket-soal/:id`, `/paket-soal/:id/ubah` | exam packages: a fixed set of approved questions, pinned to the version approved when added, locked once scheduled |
 | `/jadwal-ujian` | exam schedules: a package for a classroom in a time window, cancel, and the access code students enter |
+| `/penilaian-ujian` | exam grading: the exams of the teacher's classes with how many students wait; `/:scheduleId` lists the students, `/:scheduleId/:sessionId` grades each short answer and essay |
+| `/nilai-ujian` | exam scores sent to the assessment for the classes the teacher teaches |
 
 **Every route is English and none keeps the old `/academic/` prefix.**
 `src/app/providers/router/router.spec.ts` fails the build if one comes back,
