@@ -3,6 +3,8 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { assessmentItemRoutes } from '@/features/assessment/assessment-item'
 import { examBankRoutes } from '@/features/exam-bank'
+import { examPackageRoutes } from '@/features/exam-package'
+import { examScheduleRoutes } from '@/features/exam-schedule'
 import { attendanceRoutes } from '@/features/assessment/attendance'
 import { myDashboardRoutes } from '@/features/assessment/my-dashboard'
 import { raporRoutes } from '@/features/assessment/rapor/routes'
@@ -19,6 +21,8 @@ const ALL: RouteRecordRaw[] = [
   ...assessmentItemRoutes,
   ...studentScoreRoutes,
   ...examBankRoutes,
+  ...examPackageRoutes,
+  ...examScheduleRoutes,
   ...raporRoutes,
   ...attendanceRoutes,
 ]
@@ -113,5 +117,44 @@ describe('menu', () => {
       expect(read(en, key), `en is missing ${key}`).toBeTypeOf('string')
       expect(read(id, key), `id is missing ${key}`).toBeTypeOf('string')
     }
+  })
+})
+
+describe('exam package and schedule routes', () => {
+  const required: Record<string, string> = {
+    '/paket-soal': 'exam-packages.read',
+    '/paket-soal/baru': 'exam-packages.create',
+    '/paket-soal/p1': 'exam-packages.read',
+    '/paket-soal/p1/ubah': 'exam-packages.update',
+    '/jadwal-ujian': 'exam-schedules.read',
+  }
+
+  it.each(Object.entries(required))('%s needs %s', (path, permission) => {
+    const resolved = buildRouter(ALL).resolve(path)
+    const meta = resolved.matched.at(-1)?.meta
+
+    expect(resolved.name).not.toBe('not-found')
+    expect(meta?.requiresAuth).toBe(true)
+    expect(meta?.requiredPermission).toBe(permission)
+  })
+
+  it('resolves /paket-soal/baru to the create page, not to a package called "baru"', () => {
+    expect(buildRouter(ALL).resolve('/paket-soal/baru').name).toBe(
+      'ExamPackageCreate',
+    )
+    expect(buildRouter(ALL).resolve('/paket-soal/abc').name).toBe(
+      'ExamPackageDetail',
+    )
+  })
+
+  it('shows the exam menu section only through the exam permissions', () => {
+    const section = menuSections.find((candidate) => candidate.key === 'exam')
+
+    expect(
+      section?.items.map((item) => [item.url, item.requiredPermission]),
+    ).toEqual([
+      ['/paket-soal', 'exam-packages.read'],
+      ['/jadwal-ujian', 'exam-schedules.read'],
+    ])
   })
 })

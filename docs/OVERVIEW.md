@@ -26,6 +26,9 @@ pairing `hr-web` has with `hr-service`.
 | `/report-card`, `/my/report-card` | report cards, generated and read |
 | `/attendance/input`, `/attendance/recap`, `/my/attendance` | the class register |
 | `/my/scores` | a student's own marks |
+| `/bank-soal` | the exam question bank: write, import, approve |
+| `/paket-soal`, `/paket-soal/baru`, `/paket-soal/:id`, `/paket-soal/:id/ubah` | exam packages: a fixed set of approved questions, pinned to the version approved when added, locked once scheduled |
+| `/jadwal-ujian` | exam schedules: a package for a classroom in a time window, cancel, and the access code students enter |
 
 **Every route is English and none keeps the old `/academic/` prefix.**
 `src/app/providers/router/router.spec.ts` fails the build if one comes back,
@@ -36,12 +39,13 @@ which it did once during the split, catching
 `UNROUTED_PREFIXES` because they were calling the singular for a screen
 `assessment-service` serves at `/dashboards`; this app calls the plural.
 
-## Four services answer it
+## Five services answer it
 
 | Service | Port | Answers |
 |---|---|---|
 | identity | 3000 | `/auth`, `/users`, `/profiles`, `/roles`, `/permissions`, `/school-units`, `/religions`, `/blood-types` |
 | assessment | 4000 | `/assessment-items`, `/assessment-weights`, `/attendances`, `/dashboards`, `/rapors`, `/student-scores` |
+| exam | 4100 | `/exam-files`, `/exam-imports`, `/exam-packages`, `/exam-questions`, `/exam-schedules` |
 | academic | 3200 | `/academic-years`, `/classrooms`, `/semesters`, `/subjects`, `/teaching-assignments` |
 | student | 3900 | `/students`, `/student-enrollments` |
 

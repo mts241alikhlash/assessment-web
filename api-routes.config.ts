@@ -21,7 +21,13 @@ export const SERVICE_PREFIXES = {
     '/student-scores',
   ],
 
-  exam: ['/exam-files', '/exam-imports', '/exam-questions'],
+  exam: [
+    '/exam-files',
+    '/exam-imports',
+    '/exam-packages',
+    '/exam-questions',
+    '/exam-schedules',
+  ],
 
   academic: [
     '/academic-years',

@@ -1,10 +1,12 @@
 import {
   CalendarCheck,
+  CalendarClock,
   ClipboardList,
   FileText,
   LayoutDashboard,
   Library,
   ListChecks,
+  Package,
   SquareCheckBig,
   Upload,
 } from '@lucide/vue'
@@ -80,6 +82,26 @@ export const menuSections: MenuSection[] = [
         url: '/bank-soal/persetujuan',
         icon: SquareCheckBig,
         requiredPermission: 'exam-questions.approve',
+      },
+    ],
+  },
+  {
+    key: 'exam',
+    label: 'menu.section.exam',
+    items: [
+      {
+        key: 'exam-packages',
+        title: 'menu.examPackages',
+        url: '/paket-soal',
+        icon: Package,
+        requiredPermission: 'exam-packages.read',
+      },
+      {
+        key: 'exam-schedules',
+        title: 'menu.examSchedules',
+        url: '/jadwal-ujian',
+        icon: CalendarClock,
+        requiredPermission: 'exam-schedules.read',
       },
     ],
   },
