@@ -27,6 +27,9 @@ export const SERVICE_PREFIXES = {
     '/exam-packages',
     '/exam-questions',
     '/exam-schedules',
+    '/exam-sessions',
+    '/me/exams',
+    '/student-exams',
   ],
 
   academic: [
