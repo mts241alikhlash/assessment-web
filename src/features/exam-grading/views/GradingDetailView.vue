@@ -5,6 +5,7 @@ import { BackButton } from '@mts241alikhlash/ui'
 import { Button } from '@mts241alikhlash/ui/button'
 import { Card, CardHeader, CardTitle } from '@mts241alikhlash/ui/card'
 import { useBreadcrumbs } from '@mts241alikhlash/web-shared/composables/useBreadcrumbs'
+import { useAuthSession } from '@/features/platform/auth'
 import ItemGradeCard from '../components/ItemGradeCard.vue'
 import { examGradingService } from '../services/examGradingService'
 import type { GradingDetail, GradingItem } from '../types'
@@ -14,7 +15,9 @@ const router = useRouter()
 const sessionId = computed(() => String(route.params.sessionId ?? ''))
 const scheduleId = computed(() => String(route.params.scheduleId ?? ''))
 
+const { hasPermission } = useAuthSession()
 const detail = ref<GradingDetail | null>(null)
+let request = 0
 const loading = ref(true)
 const error = ref<string | null>(null)
 
@@ -28,6 +31,10 @@ const studentLabel = computed(() =>
         .join(' · ')
     : 'Siswa',
 )
+const finished = computed(() => detail.value?.session.status !== 'IN_PROGRESS')
+const canGrade = computed(
+  () => hasPermission('exam-grading.grade') && finished.value,
+)
 const waiting = computed(
   () => detail.value?.items.filter((item) => item.needsGrading).length ?? 0,
 )
@@ -39,8 +46,10 @@ useBreadcrumbs(() => [
 ])
 
 async function load() {
+  const current = ++request
   loading.value = true
   const result = await examGradingService.loadSession(sessionId.value)
+  if (current !== request) return
   loading.value = false
   if (result.success) {
     detail.value = result.data
@@ -59,8 +68,9 @@ async function onGraded(item: GradingItem) {
       row.questionId === item.questionId ? item : row,
     ),
   }
+  const current = ++request
   const result = await examGradingService.loadSession(sessionId.value)
-  if (result.success) detail.value = result.data
+  if (current === request && result.success) detail.value = result.data
 }
 
 watch(sessionId, load)
@@ -113,11 +123,24 @@ onMounted(load)
       <p v-if="detail.items.length === 0">
         Ujian ini tidak punya soal isian singkat atau uraian.
       </p>
+      <p
+        v-if="!finished"
+        class="rounded-md border p-3"
+      >
+        Siswa ini masih mengerjakan. Jawaban bisa dinilai setelah ujian selesai.
+      </p>
+      <p
+        v-else-if="!hasPermission('exam-grading.grade')"
+        class="rounded-md border p-3"
+      >
+        Anda hanya bisa melihat jawaban; menilai butuh izin penilaian.
+      </p>
       <ItemGradeCard
         v-for="item in detail.items"
         :key="item.questionId"
         :session-id="detail.session.sessionId"
         :item="item"
+        :can-grade="canGrade"
         @graded="onGraded"
       />
     </template>

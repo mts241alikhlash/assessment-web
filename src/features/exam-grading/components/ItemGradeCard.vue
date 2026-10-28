@@ -15,7 +15,11 @@ import { examGradingService } from '../services/examGradingService'
 import type { GradingItem } from '../types'
 import { answerText, itemTypeLabel } from '../types'
 
-const props = defineProps<{ sessionId: string; item: GradingItem }>()
+const props = defineProps<{
+  sessionId: string
+  item: GradingItem
+  canGrade: boolean
+}>()
 const emit = defineEmits<{ graded: [item: GradingItem] }>()
 
 const fieldId = useId()
@@ -24,10 +28,10 @@ const note = ref(props.item.note ?? '')
 const busy = ref(false)
 
 watch(
-  () => props.item,
-  (item) => {
-    score.value = item.score ?? undefined
-    note.value = item.note ?? ''
+  [() => props.item.score, () => props.item.note],
+  ([nextScore, nextNote]) => {
+    score.value = nextScore ?? undefined
+    note.value = nextNote ?? ''
   },
 )
 
@@ -46,7 +50,12 @@ const changed = computed(
     note.value !== (props.item.note ?? ''),
 )
 const canSave = computed(
-  () => hasAnswer.value && valid.value && changed.value && !busy.value,
+  () =>
+    props.canGrade &&
+    hasAnswer.value &&
+    valid.value &&
+    changed.value &&
+    !busy.value,
 )
 
 async function save() {
@@ -121,7 +130,7 @@ async function save() {
         </div>
 
         <div
-          v-if="hasAnswer"
+          v-if="hasAnswer && canGrade"
           class="grid gap-3 sm:grid-cols-[10rem_1fr_auto] sm:items-start"
         >
           <FloatingLabelField

@@ -25,9 +25,9 @@ const item = (overrides: Partial<GradingItem> = {}): GradingItem => ({
   ...overrides,
 })
 
-const mountCard = (value: GradingItem) =>
+const mountCard = (value: GradingItem, canGrade = true) =>
   mount(ItemGradeCard, {
-    props: { sessionId: 'x1', item: value },
+    props: { sessionId: 'x1', item: value, canGrade },
     global: {
       stubs: {
         QuestionHtml: {
@@ -101,5 +101,34 @@ describe('ItemGradeCard', () => {
     )
 
     expect(wrapper.text()).toContain('Jakarta, DKI')
+  })
+
+  it('hides the form when the caller cannot grade', () => {
+    const wrapper = mountCard(item(), false)
+
+    expect(wrapper.text()).toContain('jawaban siswa')
+    expect(wrapper.find('input[type="number"]').exists()).toBe(false)
+    expect(wrapper.text()).not.toContain('Simpan')
+  })
+
+  it('keeps what the teacher typed when the parent reloads the same grade', async () => {
+    const wrapper = mountCard(item())
+    await wrapper.find('input[type="number"]').setValue('6')
+
+    await wrapper.setProps({ item: { ...item() } })
+
+    expect(
+      (wrapper.find('input[type="number"]').element as HTMLInputElement).value,
+    ).toBe('6')
+  })
+
+  it('shows the new grade when the server changed it', async () => {
+    const wrapper = mountCard(item())
+
+    await wrapper.setProps({ item: item({ score: 9, needsGrading: false }) })
+
+    expect(
+      (wrapper.find('input[type="number"]').element as HTMLInputElement).value,
+    ).toBe('9')
   })
 })
