@@ -6,12 +6,16 @@ const {
   cancelSchedule,
   getAccessCode,
   rotateAccessCode,
+  getSessions,
+  releaseSession,
   error,
 } = vi.hoisted(() => ({
   createSchedule: vi.fn(),
   cancelSchedule: vi.fn(),
   getAccessCode: vi.fn(),
   rotateAccessCode: vi.fn(),
+  getSessions: vi.fn(),
+  releaseSession: vi.fn(),
   error: vi.fn(),
 }))
 vi.mock('../api/examScheduleApi', () => ({
@@ -20,6 +24,8 @@ vi.mock('../api/examScheduleApi', () => ({
     cancelSchedule,
     getAccessCode,
     rotateAccessCode,
+    getSessions,
+    releaseSession,
     updateSchedule: vi.fn(),
   },
 }))
@@ -74,5 +80,38 @@ describe('examScheduleService', () => {
       success: false,
       error: 'Jadwal sudah dibatalkan',
     })
+  })
+})
+
+describe('examScheduleService sessions', () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  it('loads the sessions of a schedule', async () => {
+    getSessions.mockResolvedValue({ data: { data: [{ sessionId: 'x1' }] } })
+
+    const result = await examScheduleService.loadSessions('s1')
+
+    expect(result).toEqual({ success: true, data: [{ sessionId: 'x1' }] })
+  })
+
+  it('shows the server message when the sessions cannot be loaded', async () => {
+    getSessions.mockRejectedValue(refused(404, 'Jadwal tidak ditemukan'))
+
+    const result = await examScheduleService.loadSessions('s1')
+
+    expect(result).toEqual({ success: false, error: 'Jadwal tidak ditemukan' })
+  })
+
+  it('releases a session and reports a refusal with the server message', async () => {
+    releaseSession.mockResolvedValueOnce({})
+    expect(await examScheduleService.releaseSession('x1')).toBe(true)
+
+    releaseSession.mockRejectedValueOnce(
+      refused(409, 'Sesi sudah selesai dan tidak bisa dilepas'),
+    )
+    expect(await examScheduleService.releaseSession('x1')).toBe(false)
+    expect(error).toHaveBeenCalledWith(
+      'Sesi sudah selesai dan tidak bisa dilepas',
+    )
   })
 })

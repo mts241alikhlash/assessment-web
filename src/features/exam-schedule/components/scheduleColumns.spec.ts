@@ -15,13 +15,19 @@ const schedule = (overrides: Partial<ExamSchedule> = {}): ExamSchedule => ({
   endsAt: toInstant('2026-11-02', '11:00'),
   durationMinutes: 90,
   status: 'SCHEDULED',
+  hasSessions: false,
   createdById: 'u1',
   createdAt: '2026-10-30T00:00:00.000Z',
   updatedAt: '2026-10-30T00:00:00.000Z',
   ...overrides,
 })
 
-const allowed = { canUpdate: true, canCancel: true, canAccessCode: true }
+const allowed = {
+  canUpdate: true,
+  canCancel: true,
+  canAccessCode: true,
+  canSessions: true,
+}
 
 function columns(
   overrides: Partial<Parameters<typeof buildScheduleColumns>[0]> = {},
@@ -32,6 +38,7 @@ function columns(
     onEdit: vi.fn(),
     onCancel: vi.fn(),
     onAccessCode: vi.fn(),
+    onSessions: vi.fn(),
     ...overrides,
   })
 }
@@ -130,5 +137,25 @@ describe('buildScheduleColumns', () => {
 
     expect(props.hideEdit).toBe(true)
     expect(labels(props)).toEqual([])
+  })
+
+  it('offers the sessions of a schedule that has any, and no cancel once students started', () => {
+    const upcoming = {
+      now: () => new Date(toInstant('2026-11-02', '07:00')),
+    }
+
+    expect(
+      labels(actionProps(upcoming, schedule({ hasSessions: true }))),
+    ).toEqual(['Token', 'Sesi'])
+    expect(labels(actionProps(upcoming, schedule()))).toEqual([
+      'Token',
+      'Batalkan',
+    ])
+  })
+
+  it('hides the sessions action without the permission', () => {
+    expect(
+      labels(actionProps({ canSessions: false }, schedule({ hasSessions: true }))),
+    ).not.toContain('Sesi')
   })
 })
