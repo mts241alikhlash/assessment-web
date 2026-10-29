@@ -35,6 +35,16 @@ vi.mock('vue-router', async () => {
 vi.mock('@mts241alikhlash/web-shared/composables/useBreadcrumbs', () => ({
   useBreadcrumbs: vi.fn(),
 }))
+const { invalidate, userId } = vi.hoisted(() => ({
+  invalidate: vi.fn(),
+  userId: { value: 'u5' },
+}))
+vi.mock('@tanstack/vue-query', () => ({
+  useQueryClient: () => ({ invalidateQueries: invalidate }),
+}))
+vi.mock('@/features/platform/auth', () => ({
+  useAuthSession: () => ({ user: { value: { id: userId.value } } }),
+}))
 vi.mock('vue-sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
 vi.mock('../services/examPackageService', () => ({
   examPackageService: {
@@ -152,6 +162,30 @@ describe('PackageReviewView', () => {
     expect(wrapper.text()).toContain('Salinan')
     expect(wrapper.text()).toContain('Diubah')
     wrapper.unmount()
+  })
+
+  it('refreshes the cached lists after a decision so the package leaves the review list', async () => {
+    approve.mockResolvedValue({ success: true, data: view() })
+    const wrapper = await mountView()
+
+    await buttonByText(wrapper, 'Setujui')!.trigger('click')
+    await flushPromises()
+
+    expect(invalidate).toHaveBeenCalledWith({
+      queryKey: ['exam-package', 'packages'],
+    })
+    wrapper.unmount()
+  })
+
+  it('does not offer to approve the package the reviewer wrote, but still lets them return it', async () => {
+    userId.value = 'u1'
+    const wrapper = await mountView()
+
+    expect(buttonByText(wrapper, 'Setujui')).toBeUndefined()
+    expect(wrapper.text()).toContain('Anda menyusun paket ini')
+    expect(buttonByText(wrapper, 'Kembalikan')).toBeDefined()
+    wrapper.unmount()
+    userId.value = 'u5'
   })
 
   it('approves and goes back to the review list', async () => {

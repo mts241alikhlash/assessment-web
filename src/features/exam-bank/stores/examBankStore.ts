@@ -7,10 +7,8 @@ export const useExamBankStore = defineStore('examBank', () => {
   const scope = ref<QuestionScope | null>(null)
   const subjects = ref<NamedOption[]>([])
   const grades = ref<GradeRecord[]>([])
-  const scopeLoaded = ref(false)
 
   const manageAll = computed(() => scope.value?.all === true)
-  const employeeId = computed(() => scope.value?.employeeId ?? null)
 
   const gradeNames = computed(() => {
     const names = new Map<string, string>()
@@ -87,9 +85,7 @@ export const useExamBankStore = defineStore('examBank', () => {
     scope,
     subjects,
     grades,
-    scopeLoaded,
     manageAll,
-    employeeId,
     subjectOptions,
     gradeOptions,
     gradeOptionsFor,

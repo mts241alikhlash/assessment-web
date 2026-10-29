@@ -19,7 +19,6 @@ const pair = (subjectId: string, gradeId: string) => ({
 function seed(pairs: ReturnType<typeof pair>[], all = false) {
   const store = useExamBankStore()
   store.scope = { all, employeeId: 'e1', pairs }
-  store.scopeLoaded = true
 }
 
 describe('usePackageCreate', () => {

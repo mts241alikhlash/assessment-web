@@ -22,7 +22,6 @@ export const examBankService = {
         store.subjects = subjectRes.data?.data ?? []
         store.grades = gradeRes.data?.data ?? []
       }
-      store.scopeLoaded = true
     } catch (err: unknown) {
       toast.error(
         getIndonesianErrorMessage(err, 'Gagal memuat mapel dan tingkat.'),

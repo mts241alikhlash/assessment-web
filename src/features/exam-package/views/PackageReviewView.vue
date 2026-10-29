@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, useId, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useQueryClient } from '@tanstack/vue-query'
 import { BackButton } from '@mts241alikhlash/ui'
 import { Badge } from '@mts241alikhlash/ui/badge'
 import { Button } from '@mts241alikhlash/ui/button'
@@ -16,6 +17,7 @@ import { Textarea } from '@mts241alikhlash/ui/textarea'
 import { useBreadcrumbs } from '@mts241alikhlash/web-shared/composables/useBreadcrumbs'
 import AnswerKey from '@/features/exam-bank/components/AnswerKey.vue'
 import QuestionPreview from '@/features/exam-bank/components/QuestionPreview.vue'
+import { useAuthSession } from '@/features/platform/auth'
 import { typeLabel } from '@/features/exam-bank/types'
 import ReturnPackageDialog from '../components/ReturnPackageDialog.vue'
 import { usePackageReview } from '../composables/usePackageReview'
@@ -26,6 +28,8 @@ import { markerLabel, markerVariant } from '../types'
 const route = useRoute()
 const router = useRouter()
 const store = useExamPackageStore()
+const queryClient = useQueryClient()
+const { user } = useAuthSession()
 
 const packageId = computed(() => String(route.params.id ?? ''))
 const review = usePackageReview(packageId)
@@ -43,13 +47,27 @@ useBreadcrumbs(() => [
   { title: pkg.value?.title ?? 'Paket' },
 ])
 
+const wroteIt = computed(
+  () => pkg.value !== null && pkg.value.createdById === user.value?.id,
+)
+
+function refreshLists() {
+  return queryClient.invalidateQueries({
+    queryKey: ['exam-package', 'packages'],
+  })
+}
+
 async function approve() {
-  if (await review.approve()) await router.push('/persetujuan-paket')
+  if (await review.approve()) {
+    await refreshLists()
+    await router.push('/persetujuan-paket')
+  }
 }
 
 async function giveBack(note: string) {
   if (await review.returnPackage(note)) {
     returnOpen.value = false
+    await refreshLists()
     await router.push('/persetujuan-paket')
   }
 }
@@ -110,6 +128,14 @@ onMounted(() => {
             role="status"
           >
             Paket ini tidak sedang menunggu tinjauan.
+          </div>
+          <div
+            v-if="wroteIt && canReview"
+            class="rounded-md border bg-muted/30 p-3 text-[length:var(--text-control,0.75rem)]"
+            role="status"
+          >
+            Anda menyusun paket ini, jadi penyetujuan harus dilakukan orang
+            lain. Anda tetap bisa mengembalikannya.
           </div>
           <div
             v-if="error"
@@ -188,6 +214,7 @@ onMounted(() => {
           Kembalikan
         </Button>
         <Button
+          v-if="!wroteIt"
           type="button"
           :disabled="busy || !canDecide"
           @click="approve"

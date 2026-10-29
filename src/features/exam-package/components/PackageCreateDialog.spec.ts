@@ -80,7 +80,6 @@ function open() {
       },
     ],
   }
-  store.scopeLoaded = true
   return mount(PackageCreateDialog, {
     props: { open: true },
     global: { stubs },
