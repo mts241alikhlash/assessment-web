@@ -17,6 +17,7 @@ import {
 import { Filter, Plus } from '@lucide/vue'
 import { useAuthSession } from '@/features/platform/auth'
 import { buildPackageColumns } from '../components/packageColumns'
+import PackageCreateDialog from '../components/PackageCreateDialog.vue'
 import PackageFilterFields from '../components/PackageFilterFields.vue'
 import { usePackageList } from '../composables/usePackageList'
 import { examPackageService } from '../services/examPackageService'
@@ -36,6 +37,7 @@ const page = ref(1)
 const pageSize = ref(10)
 const filterOpen = ref(false)
 const copying = ref(false)
+const createOpen = ref(false)
 
 const { packages, totalItems, loading, listError, filtersPending, refresh } =
   usePackageList({ search, subjectId, gradeId, status }, page, pageSize)
@@ -144,7 +146,7 @@ onMounted(() => examPackageService.loadReferences())
             <Button
               v-if="hasPermission('exam-packages.create')"
               class="shrink-0"
-              @click="router.push('/paket-soal/baru')"
+              @click="createOpen = true"
             >
               <Plus class="mr-1.5 size-4" />
               Tambah
@@ -246,5 +248,10 @@ onMounted(() => examPackageService.loadReferences())
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    <PackageCreateDialog
+      v-if="createOpen"
+      v-model:open="createOpen"
+      @created="router.push(`/paket-soal/${$event}`)"
+    />
   </div>
 </template>

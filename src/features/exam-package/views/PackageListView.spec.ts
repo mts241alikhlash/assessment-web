@@ -161,6 +161,38 @@ describe('PackageListView', () => {
     without.unmount()
   })
 
+  it('opens the create dialog from Tambah and goes to the new package', async () => {
+    const wrapper = mount(PackageListView, {
+      global: {
+        stubs: {
+          ...stubs,
+          PackageCreateDialog: defineComponent({
+            name: 'PackageCreateDialog',
+            props: { open: Boolean },
+            emits: ['update:open', 'created'],
+            template: '<div v-if="open" data-test="create-dialog" />',
+          }),
+        },
+      },
+    })
+    await flushPromises()
+    expect(wrapper.find('[data-test="create-dialog"]').exists()).toBe(false)
+
+    await wrapper
+      .findAll('button')
+      .find((candidate) => candidate.text() === 'Tambah')!
+      .trigger('click')
+    expect(wrapper.find('[data-test="create-dialog"]').exists()).toBe(true)
+
+    wrapper
+      .findComponent({ name: 'PackageCreateDialog' })
+      .vm.$emit('created', 'p9')
+    await flushPromises()
+
+    expect(push).toHaveBeenCalledWith('/paket-soal/p9')
+    wrapper.unmount()
+  })
+
   it('opens the package when a row is clicked', async () => {
     const wrapper = mount(PackageListView, { global: { stubs } })
     await flushPromises()
