@@ -1,33 +1,33 @@
 <script setup lang="ts">
 import { authConfig } from '../config'
+import { ssoService } from '../services/ssoService'
 import AuthLogo from '../components/AuthLogo.vue'
 import LoginForm from '../components/LoginForm.vue'
 import LoginHero from '../components/LoginHero.vue'
 </script>
 
 <template>
-  <div class="grid min-h-svh lg:grid-cols-2">
-    <div class="flex flex-col gap-4 bg-muted/50 p-6 md:p-10">
-      <div class="hidden justify-center gap-2 lg:flex lg:justify-start">
-        <a
-          href="#"
-          class="flex items-center gap-2.5 font-semibold text-lg tracking-tight"
+  <div class="grid min-h-svh lg:h-svh lg:grid-cols-2 lg:overflow-hidden">
+    <div
+      class="flex flex-col gap-4 bg-muted/50 [--ff-label-bg:color-mix(in_oklab,var(--muted)_50%,var(--background))] p-6 md:p-8 lg:overflow-y-auto lg:pb-4"
+    >
+      <header class="flex justify-center">
+        <AuthLogo wordmark />
+      </header>
+      <div
+        class="flex flex-1 items-start justify-center pt-4 lg:items-center lg:pt-0"
+      >
+        <LoginForm class="w-full max-w-sm" />
+      </div>
+      <footer class="flex justify-center">
+        <button
+          type="button"
+          class="cursor-pointer text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          @click="ssoService.startSignIn(authConfig.homeRoute)"
         >
-          <AuthLogo size="sm" />
-          <span>{{ authConfig.appTitle }}</span>
-        </a>
-      </div>
-      <div class="flex flex-1 flex-col items-center justify-center gap-6">
-        <div class="flex flex-col items-center gap-3 lg:hidden">
-          <AuthLogo size="md" />
-          <h1 class="text-xl font-bold tracking-tight">
-            {{ authConfig.appTitle }}
-          </h1>
-        </div>
-        <div class="w-full max-w-sm rounded-xl border bg-card p-8 shadow-lg">
-          <LoginForm />
-        </div>
-      </div>
+          Masuk sebagai staf
+        </button>
+      </footer>
     </div>
     <LoginHero />
   </div>

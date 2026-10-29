@@ -119,11 +119,9 @@ onMounted(async () => {
 <template>
   <div
     v-if="!canRecordAttendance"
-    class="p-4 md:p-6 lg:p-8"
+    class="space-y-6 p-4 sm:p-6"
   >
-    <Card
-      class="overflow-hidden rounded-2xl shadow-sm shadow-black/5 ring-1 ring-black/4"
-    >
+    <Card class="overflow-hidden">
       <div class="p-10 text-center text-sm text-muted-foreground">
         Anda tidak memiliki izin untuk menginput kehadiran.
       </div>
@@ -132,27 +130,27 @@ onMounted(async () => {
 
   <div
     v-else
-    class="p-4 md:p-6 lg:p-8"
+    class="space-y-6 p-4 sm:p-6"
   >
     <Card
       gap="none"
-      class="overflow-hidden rounded-2xl shadow-sm shadow-black/5 ring-1 ring-black/4"
+      class="overflow-hidden"
     >
       <CardHeader standard>
         <CardTitle size="lg"> Input Kehadiran </CardTitle>
       </CardHeader>
 
-      <div class="space-y-6 p-6">
+      <div class="space-y-6 px-4 py-5 sm:px-6">
         <div class="hidden lg:flex lg:flex-row lg:items-center gap-3">
           <template v-if="academicYearLabel">
             <div
-              class="flex items-center gap-2 rounded-md border bg-muted/30 px-3 h-9 text-sm"
+              class="flex items-center gap-2 rounded-md border bg-muted/30 px-3 min-h-[var(--control-h-lg,2rem)] whitespace-nowrap text-[length:var(--text-control,0.75rem)]"
             >
               <span class="text-muted-foreground">Tahun Ajaran</span>
               <span class="font-semibold">{{ academicYearLabel }}</span>
             </div>
             <div
-              class="flex items-center gap-2 rounded-md border bg-muted/30 px-3 h-9 text-sm"
+              class="flex items-center gap-2 rounded-md border bg-muted/30 px-3 min-h-[var(--control-h-lg,2rem)] whitespace-nowrap text-[length:var(--text-control,0.75rem)]"
             >
               <span class="text-muted-foreground">Semester</span>
               <span class="font-semibold">{{ semesterLabel }}</span>
@@ -160,7 +158,7 @@ onMounted(async () => {
           </template>
           <div
             v-else
-            class="flex items-center rounded-md border border-destructive/40 bg-destructive/5 px-3 h-9 text-sm text-destructive"
+            class="flex items-center rounded-md border border-destructive/40 bg-destructive/5 px-3 min-h-[var(--control-h-lg,2rem)] whitespace-nowrap text-[length:var(--text-control,0.75rem)] text-destructive"
           >
             Belum ada semester aktif
           </div>

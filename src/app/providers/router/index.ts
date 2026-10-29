@@ -7,6 +7,7 @@ import { attendanceRoutes } from '@/features/assessment/attendance'
 import { myDashboardRoutes } from '@/features/assessment/my-dashboard'
 import { raporRoutes } from '@/features/assessment/rapor/routes'
 import { studentScoreRoutes } from '@/features/assessment/student-score'
+import { profileRoutes } from '@/features/platform/profile'
 import { authSessionService, useAuthStore } from '@/features/platform/auth'
 
 const router = createRouter({
@@ -27,6 +28,7 @@ const router = createRouter({
         ...examBankRoutes,
         ...raporRoutes,
         ...attendanceRoutes,
+        ...profileRoutes,
       ],
     },
     {

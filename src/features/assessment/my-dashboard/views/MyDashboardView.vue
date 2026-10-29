@@ -64,11 +64,11 @@ onMounted(() => {
 
     <div
       v-else
-      class="p-4 md:p-6 lg:p-8"
+      class="space-y-6 p-4 sm:p-6"
     >
       <Card
         gap="none"
-        class="overflow-hidden rounded-2xl shadow-sm shadow-black/5 ring-1 ring-black/4"
+        class="overflow-hidden"
       >
         <CardHeader standard>
           <div>

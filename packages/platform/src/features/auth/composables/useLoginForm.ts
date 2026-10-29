@@ -4,6 +4,7 @@ import { useForm } from 'vee-validate'
 import * as z from 'zod'
 import { useRouter } from 'vue-router'
 import { useAuthLogin } from './useAuthLogin'
+import { authConfig } from '../config'
 
 export function useLoginForm() {
   const router = useRouter()
@@ -14,7 +15,9 @@ export function useLoginForm() {
 
   const formSchema = toTypedSchema(
     z.object({
-      identifier: z.string().min(1, 'ID Pengguna wajib diisi.'),
+      identifier: z
+        .string()
+        .min(1, `${authConfig.value.identifierLabel} wajib diisi.`),
       password: z.string().min(1, 'Password wajib diisi.'),
     }),
   )

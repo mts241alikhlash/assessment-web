@@ -1,47 +1,24 @@
 <script setup lang="ts">
 import type { SidebarProps } from '@mts241alikhlash/ui/sidebar'
+
 import { useAuthSession } from '@/features/platform/auth'
 import { useMenuVisibility } from '@/composables/useMenuVisibility'
 import NavMain from './NavMain.vue'
 import {
   Sidebar,
   SidebarContent,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
+  SidebarFooter,
+  SidebarToggle,
 } from '@mts241alikhlash/ui/sidebar'
-import { onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, ref } from 'vue'
 
 const props = withDefaults(defineProps<SidebarProps>(), {
-  variant: 'sidebar',
+  variant: 'inset',
   collapsible: 'icon',
 })
 
 const { user, syncAuthenticatedUserProfile } = useAuthSession()
 const { filteredSections } = useMenuVisibility()
-const { isMobile, setOpenMobile } = useSidebar()
-const route = useRoute()
-
-watch(
-  () => route.fullPath,
-  () => {
-    if (isMobile.value) {
-      setOpenMobile(false)
-    }
-  },
-)
-
-function handleLinkClick() {
-  if (isMobile.value) {
-    setOpenMobile(false)
-  }
-}
-
-const logoSrc = '/logo.webp'
-const appTitle = '241 Assessment'
 
 const scrollContainer = ref<HTMLDivElement | null>(null)
 const STORAGE_KEY = 'sidebar-scroll-position'
@@ -65,32 +42,6 @@ function handleScroll(e: Event) {
 
 <template>
   <Sidebar v-bind="props">
-    <SidebarHeader>
-      <SidebarMenu>
-        <SidebarMenuItem>
-          <SidebarMenuButton
-            size="lg"
-            as-child
-          >
-            <RouterLink
-              to="/academic/info"
-              @click="handleLinkClick"
-            >
-              <img
-                :src="logoSrc"
-                :alt="appTitle"
-                class="size-8 rounded-lg object-contain"
-              />
-              <div class="grid flex-1 text-left text-sm leading-tight">
-                <span class="truncate font-semibold text-base">{{
-                  appTitle
-                }}</span>
-              </div>
-            </RouterLink>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      </SidebarMenu>
-    </SidebarHeader>
     <SidebarContent>
       <div
         ref="scrollContainer"
@@ -100,5 +51,8 @@ function handleScroll(e: Event) {
         <NavMain :sections="filteredSections" />
       </div>
     </SidebarContent>
+    <SidebarFooter>
+      <SidebarToggle />
+    </SidebarFooter>
   </Sidebar>
 </template>

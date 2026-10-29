@@ -34,7 +34,7 @@ onMounted(() => void raporService.fetchMine())
   <div class="p-4 md:p-5 lg:p-6">
     <Card
       gap="none"
-      class="overflow-hidden rounded-2xl shadow-sm shadow-black/5 ring-1 ring-black/4"
+      class="overflow-hidden"
     >
       <CardHeader standard>
         <CardTitle size="lg"> Rapor Saya </CardTitle>
