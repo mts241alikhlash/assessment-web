@@ -4,7 +4,7 @@ import { ActionCell } from '@mts241alikhlash/ui'
 import { Badge } from '@mts241alikhlash/ui/badge'
 import { Ban, KeyRound, Users } from '@lucide/vue'
 import type { ExamSchedule } from '../types'
-import { phaseLabel, phaseTone } from '../types'
+import { examTypeLabel, phaseLabel, phaseTone } from '../types'
 import { formatWindow } from '../utils/formatWindow'
 import { schedulePhase } from '../utils/schedulePhase'
 
@@ -27,6 +27,7 @@ const BADGE_VARIANT = {
   warning: 'destructive',
 } as const
 
+const typeText = (schedule: ExamSchedule) => examTypeLabel(schedule.type)
 const classroomText = (schedule: ExamSchedule) => schedule.classroomName ?? '-'
 const windowText = (schedule: ExamSchedule) =>
   formatWindow(schedule.startsAt, schedule.endsAt)
@@ -45,6 +46,12 @@ export function buildScheduleColumns(
       header: 'Paket',
       meta: { align: 'left', strong: true },
       cell: ({ row }) => row.original.packageTitle,
+    },
+    {
+      id: 'type',
+      header: 'Jenis',
+      meta: { mobileLabel: 'Jenis', mobileValue: typeText },
+      cell: ({ row }) => typeText(row.original),
     },
     {
       id: 'classroom',

@@ -1,6 +1,6 @@
 import { computed, ref, watch } from 'vue'
 import { examScheduleService } from '../services/examScheduleService'
-import type { ExamSchedule } from '../types'
+import type { ExamSchedule, ExamType } from '../types'
 import { fromInstant, toInstant } from '../utils/instant'
 import { validateSchedule } from '../utils/validateSchedule'
 
@@ -15,7 +15,12 @@ export function useScheduleForm(options: ScheduleFormOptions) {
 
   const multiDay = start !== null && end !== null && start.date !== end.date
 
+  const typeLocked = options.mode === 'edit' && options.schedule.hasSessions
+
   const packageId = ref('')
+  const type = ref<ExamType | ''>(
+    options.mode === 'edit' ? options.schedule.type : '',
+  )
   const classroomId = ref('')
   const date = ref(start?.date ?? '')
   const startTime = ref(start?.time ?? '')
@@ -41,6 +46,7 @@ export function useScheduleForm(options: ScheduleFormOptions) {
     if (options.mode === 'create') {
       if (!packageId.value) return 'Pilih paket'
       if (!classroomId.value) return 'Pilih kelas'
+      if (!type.value) return 'Pilih jenis ujian'
     }
     return validateSchedule({
       date: date.value,
@@ -52,6 +58,9 @@ export function useScheduleForm(options: ScheduleFormOptions) {
 
   function window() {
     return {
+      type: (typeLocked && options.mode === 'edit'
+        ? options.schedule.type
+        : type.value) as ExamType,
       startsAt: toInstant(date.value, startTime.value),
       endsAt: toInstant(date.value, endTime.value),
       durationMinutes: durationMinutes.value ?? 0,
@@ -87,6 +96,8 @@ export function useScheduleForm(options: ScheduleFormOptions) {
   return {
     packageId,
     classroomId,
+    type,
+    typeLocked,
     date,
     startTime,
     endTime,

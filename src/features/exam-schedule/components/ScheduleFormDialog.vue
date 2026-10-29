@@ -22,6 +22,7 @@ import {
 } from '@mts241alikhlash/ui/select'
 import type { ExamPackageSummary } from '@/features/exam-package/types'
 import type { Classroom } from '@/features/lookup/classroom'
+import { EXAM_TYPES, examTypeLabel } from '../types'
 import { useScheduleForm } from '../composables/useScheduleForm'
 import { examScheduleService } from '../services/examScheduleService'
 import type { ExamSchedule } from '../types'
@@ -48,6 +49,7 @@ const form = useScheduleForm(
 const {
   packageId: chosenPackageId,
   classroomId,
+  type,
   date,
   startTime,
   endTime,
@@ -204,6 +206,32 @@ async function save() {
             </p>
           </template>
 
+          <FloatingLabelField
+            label="Jenis ujian"
+            :for="`${fieldId}-type`"
+            floating
+          >
+            <Select
+              v-model="type"
+              :disabled="form.typeLocked"
+            >
+              <SelectTrigger
+                :id="`${fieldId}-type`"
+                class="w-full"
+              >
+                <SelectValue placeholder="Pilih jenis ujian" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem
+                  v-for="option in EXAM_TYPES"
+                  :key="option"
+                  :value="option"
+                >
+                  {{ examTypeLabel(option) }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </FloatingLabelField>
           <FloatingLabelField
             label="Tanggal"
             :for="`${fieldId}-date`"

@@ -13,6 +13,7 @@ const schedule: GradingSchedule = {
   classroomId: 'c1',
   classroomName: 'VII A',
   semesterId: 'sem',
+  type: 'UTS',
   startsAt: '2026-11-02T01:00:00.000Z',
   endsAt: '2026-11-02T04:00:00.000Z',
   sessions: 30,
@@ -52,6 +53,7 @@ describe('grading columns', () => {
     expect(text('awaiting')).toBe('4')
     expect(text('graded')).toBe('20')
     expect(text('classroom')).toBe('VII A')
+    expect(text('type')).toBe('UTS')
   })
 
   it('opens the exam of the row', () => {

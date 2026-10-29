@@ -2,11 +2,15 @@ import { h } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
 import { Badge } from '@mts241alikhlash/ui/badge'
 import { Button } from '@mts241alikhlash/ui/button'
-import { sessionStatusLabel } from '@/features/exam-schedule/types'
+import {
+  examTypeLabel,
+  sessionStatusLabel,
+} from '@/features/exam-schedule/types'
 import { formatWindow } from '@/features/exam-schedule/utils/formatWindow'
 import type { GradingSchedule, GradingSessionRow } from '../types'
 import { publicationLabel } from '../types'
 
+const typeText = (row: GradingSchedule) => examTypeLabel(row.type)
 const classroomText = (row: GradingSchedule) => row.classroomName ?? '-'
 const windowText = (row: GradingSchedule) =>
   formatWindow(row.startsAt, row.endsAt)
@@ -20,6 +24,12 @@ export function buildGradingScheduleColumns(options: {
       header: 'Ujian',
       meta: { align: 'left', strong: true },
       cell: ({ row }) => row.original.title,
+    },
+    {
+      id: 'type',
+      header: 'Jenis',
+      meta: { mobileLabel: 'Jenis', mobileValue: typeText },
+      cell: ({ row }) => typeText(row.original),
     },
     {
       id: 'classroom',

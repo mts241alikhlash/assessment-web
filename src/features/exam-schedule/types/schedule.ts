@@ -1,3 +1,7 @@
+export const EXAM_TYPES = ['UH', 'QUIZ', 'TUGAS', 'UTS', 'UAS'] as const
+
+export type ExamType = (typeof EXAM_TYPES)[number]
+
 export const SCHEDULE_STATUSES = ['SCHEDULED', 'CANCELLED'] as const
 
 export type ExamScheduleStatus = (typeof SCHEDULE_STATUSES)[number]
@@ -11,6 +15,7 @@ export interface ExamSchedule {
   classroomId: string
   classroomName: string | null
   semesterId: string
+  type: ExamType
   startsAt: string
   endsAt: string
   durationMinutes: number
@@ -22,6 +27,7 @@ export interface ExamSchedule {
 }
 
 export interface SchedulePayload {
+  type: ExamType
   startsAt: string
   endsAt: string
   durationMinutes: number
