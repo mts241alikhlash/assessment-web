@@ -37,6 +37,7 @@ const emit = defineEmits<{ 'update:open': [value: boolean] }>()
 const { hasPermission } = useAuthSession()
 
 const sessions = ref<ScheduleSession[]>([])
+const total = ref(0)
 const error = ref<string | null>(null)
 const loading = ref(false)
 const releaseTarget = ref<ScheduleSession | null>(null)
@@ -48,9 +49,11 @@ async function load() {
   loading.value = false
   if (result.success) {
     sessions.value = result.data
+    total.value = result.total
     error.value = null
   } else {
     sessions.value = []
+    total.value = 0
     error.value = result.error
   }
 }
@@ -95,6 +98,13 @@ watch(
         <DialogDescription>{{ title }}</DialogDescription>
       </DialogHeader>
       <DialogBody class="min-h-0 flex-1 overflow-y-auto">
+        <p
+          v-if="!error && total > sessions.length"
+          class="mb-3 rounded-md border p-3 text-[length:var(--text-control,0.75rem)]"
+          role="status"
+        >
+          Menampilkan {{ sessions.length }} dari {{ total }} sesi.
+        </p>
         <div
           v-if="error"
           class="space-y-3 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-[length:var(--text-control,0.75rem)]"

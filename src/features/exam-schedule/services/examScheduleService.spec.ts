@@ -87,11 +87,17 @@ describe('examScheduleService sessions', () => {
   beforeEach(() => vi.clearAllMocks())
 
   it('loads the sessions of a schedule', async () => {
-    getSessions.mockResolvedValue({ data: { data: [{ sessionId: 'x1' }] } })
+    getSessions.mockResolvedValue({
+      data: { data: [{ sessionId: 'x1' }], meta: { total: 1 } },
+    })
 
     const result = await examScheduleService.loadSessions('s1')
 
-    expect(result).toEqual({ success: true, data: [{ sessionId: 'x1' }] })
+    expect(result).toEqual({
+      success: true,
+      data: [{ sessionId: 'x1' }],
+      total: 1,
+    })
   })
 
   it('shows the server message when the sessions cannot be loaded', async () => {
@@ -113,5 +119,15 @@ describe('examScheduleService sessions', () => {
     expect(error).toHaveBeenCalledWith(
       'Sesi sudah selesai dan tidak bisa dilepas',
     )
+  })
+
+  it('reports the real total when more sessions exist than were loaded', async () => {
+    getSessions.mockResolvedValue({
+      data: { data: [{ sessionId: 'x1' }], meta: { total: 1400 } },
+    })
+
+    const result = await examScheduleService.loadSessions('s1')
+
+    expect(result).toMatchObject({ success: true, total: 1400 })
   })
 })

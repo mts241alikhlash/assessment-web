@@ -115,7 +115,7 @@ export const examScheduleService = {
   async loadSessions(
     id: string,
   ): Promise<
-    | { success: true; data: ScheduleSession[] }
+    | { success: true; data: ScheduleSession[]; total: number }
     | { success: false; error: string }
   > {
     try {
@@ -123,7 +123,12 @@ export const examScheduleService = {
         page: 1,
         limit: PAGINATION.REFERENCE_LIMIT,
       })
-      return { success: true, data: response.data?.data ?? [] }
+      const data = response.data?.data ?? []
+      return {
+        success: true,
+        data,
+        total: response.data?.meta?.total ?? data.length,
+      }
     } catch (err: unknown) {
       return {
         success: false,
