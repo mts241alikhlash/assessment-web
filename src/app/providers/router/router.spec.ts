@@ -128,6 +128,8 @@ describe('exam package and schedule routes', () => {
   const required: Record<string, string> = {
     '/paket-soal': 'exam-packages.read',
     '/paket-soal/p1': 'exam-packages.read',
+    '/paket-soal/p1/soal/baru': 'exam-packages.update',
+    '/paket-soal/p1/soal/q1': 'exam-packages.read',
     '/jadwal-ujian': 'exam-schedules.read',
     '/penilaian-ujian': 'exam-grading.read',
     '/penilaian-ujian/s1': 'exam-grading.read',
@@ -142,6 +144,15 @@ describe('exam package and schedule routes', () => {
     expect(resolved.name).not.toBe('not-found')
     expect(meta?.requiresAuth).toBe(true)
     expect(meta?.requiredPermission).toBe(permission)
+  })
+
+  it('resolves the new question address to the form, not to a question called "baru"', () => {
+    expect(buildRouter(ALL).resolve('/paket-soal/p1/soal/baru').name).toBe(
+      'ExamPackageQuestionCreate',
+    )
+    expect(buildRouter(ALL).resolve('/paket-soal/p1/soal/q1').name).toBe(
+      'ExamPackageQuestion',
+    )
   })
 
   it('resolves a package address to its page', () => {

@@ -20,14 +20,31 @@ import {
   CardHeader,
   CardTitle,
 } from '@mts241alikhlash/ui/card'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@mts241alikhlash/ui/dropdown-menu'
+import { ChevronDown, Plus } from '@lucide/vue'
 import { useBreadcrumbs } from '@mts241alikhlash/web-shared/composables/useBreadcrumbs'
 import ScheduleFormDialog from '@/features/exam-schedule/components/ScheduleFormDialog.vue'
 import { useAuthSession } from '@/features/platform/auth'
-import { buildPackageItemColumns } from '../components/packageItemColumns'
+import { buildBuilderColumns } from '../components/builderColumns'
+import RenamePackageDialog from '../components/RenamePackageDialog.vue'
+import ReturnedNotes from '../components/ReturnedNotes.vue'
+import { usePackageBuilder } from '../composables/usePackageBuilder'
 import { examPackageService } from '../services/examPackageService'
 import { useExamPackageStore } from '../stores/examPackageStore'
-import { packageStatusLabel } from '../types'
-import type { ExamPackageView } from '../types'
+import {
+  packageStatusLabel,
+  packageStatusTone,
+  type ExamPackageItemView,
+  type ExamPackageStatus,
+} from '../types'
+
+const DELETABLE: ExamPackageStatus[] = ['DRAFT', 'RETURNED', 'APPROVED']
+const SCHEDULABLE: ExamPackageStatus[] = ['APPROVED', 'LOCKED']
 
 const route = useRoute()
 const router = useRouter()
@@ -35,19 +52,55 @@ const { hasPermission } = useAuthSession()
 const store = useExamPackageStore()
 
 const id = computed(() => String(route.params.id ?? ''))
-const pkg = ref<ExamPackageView | null>(null)
-const loading = ref(true)
-const loadFailed = ref(false)
+const builder = usePackageBuilder(id)
+const { pkg, loading, loadFailed, error, canEdit, canSubmit, owns } = builder
+
 const deleteOpen = ref(false)
 const deleting = ref(false)
 const copying = ref(false)
 const scheduleOpen = ref(false)
+const renameOpen = ref(false)
 
-const isDraft = computed(() => pkg.value?.status === 'DRAFT')
+const status = computed(() => pkg.value?.status ?? null)
 const totalPoints = computed(() =>
   (pkg.value?.items ?? []).reduce((sum, item) => sum + item.points, 0),
 )
-const columns = buildPackageItemColumns()
+const canDelete = computed(
+  () =>
+    owns.value &&
+    hasPermission('exam-packages.delete') &&
+    status.value !== null &&
+    DELETABLE.includes(status.value),
+)
+const canSchedule = computed(
+  () =>
+    hasPermission('exam-schedules.create') &&
+    status.value !== null &&
+    SCHEDULABLE.includes(status.value),
+)
+const canCopy = computed(
+  () =>
+    hasPermission('exam-packages.create') &&
+    status.value !== null &&
+    SCHEDULABLE.includes(status.value),
+)
+
+const columns = computed(() =>
+  buildBuilderColumns({
+    canEdit: canEdit.value,
+    total: pkg.value?.items.length ?? 0,
+    noteOf: builder.noteOf,
+    onOpen: (item: ExamPackageItemView) =>
+      void router.push(`/paket-soal/${id.value}/soal/${item.questionId}`),
+    onMove: (item, direction) => void builder.move(item.questionId, direction),
+    onRemove: async (item, { closeAlert, setLoading }) => {
+      setLoading(true)
+      await builder.remove(item.questionId)
+      setLoading(false)
+      closeAlert()
+    },
+  }),
+)
 
 useBreadcrumbs(() => [
   { title: 'Paket Soal', href: '/paket-soal' },
@@ -72,25 +125,18 @@ async function confirmDelete() {
   }
 }
 
-async function load() {
-  loading.value = true
-  loadFailed.value = false
+async function reload() {
   deleteOpen.value = false
   scheduleOpen.value = false
-  try {
-    pkg.value = await examPackageService.loadPackage(id.value)
-  } catch {
-    pkg.value = null
-    loadFailed.value = true
-  }
-  loading.value = false
+  renameOpen.value = false
+  await builder.load()
 }
 
-watch(id, load)
+watch(id, reload)
 
 onMounted(async () => {
   await examPackageService.loadReferences()
-  await load()
+  await builder.load()
 })
 </script>
 
@@ -111,31 +157,38 @@ onMounted(async () => {
             class="flex flex-wrap gap-2"
           >
             <Button
-              v-if="isDraft && hasPermission('exam-packages.update')"
+              v-if="canEdit"
               variant="outline"
-              @click="router.push(`/paket-soal/${id}/ubah`)"
+              @click="renameOpen = true"
             >
-              Ubah
+              Ganti judul
             </Button>
             <Button
-              v-if="hasPermission('exam-packages.create')"
+              v-if="canCopy"
               variant="outline"
               @click="copy"
             >
               Salin
             </Button>
             <Button
-              v-if="isDraft && hasPermission('exam-packages.delete')"
+              v-if="canDelete"
               variant="outline"
               @click="deleteOpen = true"
             >
               Hapus
             </Button>
             <Button
-              v-if="hasPermission('exam-schedules.create')"
+              v-if="canSchedule"
               @click="scheduleOpen = true"
             >
               Jadwalkan
+            </Button>
+            <Button
+              v-if="canSubmit"
+              :disabled="builder.busy.value"
+              @click="builder.submit()"
+            >
+              Ajukan
             </Button>
           </div>
         </div>
@@ -155,7 +208,7 @@ onMounted(async () => {
           </p>
           <Button
             variant="outline"
-            @click="load"
+            @click="builder.load()"
           >
             Coba lagi
           </Button>
@@ -169,15 +222,29 @@ onMounted(async () => {
         </p>
         <template v-if="pkg">
           <div
+            v-if="error"
+            class="rounded-md border border-destructive/40 bg-destructive/5 p-3 text-[length:var(--text-control,0.75rem)]"
+            role="alert"
+          >
+            {{ error }}
+          </div>
+          <ReturnedNotes :review="builder.lastReturn.value" />
+          <div
             class="flex flex-wrap items-center gap-2 text-[length:var(--text-control,0.75rem)]"
           >
             <Badge variant="outline">{{
               store.subjectName(pkg.subjectId)
             }}</Badge>
             <Badge variant="outline">{{ store.gradeName(pkg.gradeId) }}</Badge>
-            <Badge variant="secondary">{{
-              packageStatusLabel(pkg.status)
-            }}</Badge>
+            <Badge
+              :variant="
+                packageStatusTone(pkg.status) === 'neutral'
+                  ? 'outline'
+                  : 'secondary'
+              "
+            >
+              {{ packageStatusLabel(pkg.status) }}
+            </Badge>
             <span class="text-muted-foreground">
               {{ pkg.items.length }} soal · Total {{ totalPoints }} poin
             </span>
@@ -192,10 +259,56 @@ onMounted(async () => {
             :total-items="pkg.items.length"
             item-label="soal"
           >
+            <template #header-left>
+              <DropdownMenu v-if="canEdit">
+                <DropdownMenuTrigger as-child>
+                  <Button class="shrink-0">
+                    <Plus class="mr-1.5 size-4" />
+                    Tambah soal
+                    <ChevronDown class="ml-1.5 size-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem
+                    @select="router.push(`/paket-soal/${id}/soal/baru`)"
+                  >
+                    Buat baru
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    v-if="hasPermission('exam-questions.create')"
+                    @select="router.push(`/paket-soal/${id}/impor`)"
+                  >
+                    Impor Excel/Word
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </template>
             <template #empty>
               <p>Paket ini belum berisi soal.</p>
             </template>
           </DataTable>
+          <details
+            v-if="pkg.reviews.length > 0"
+            class="text-[length:var(--text-control,0.75rem)]"
+          >
+            <summary class="cursor-pointer">Riwayat tinjauan</summary>
+            <ul class="mt-2 space-y-1">
+              <li
+                v-for="review in pkg.reviews"
+                :key="review.id"
+              >
+                {{
+                  review.action === 'SUBMIT'
+                    ? 'Diajukan'
+                    : review.action === 'APPROVE'
+                      ? 'Disetujui'
+                      : 'Dikembalikan'
+                }}
+                · {{ new Date(review.createdAt).toLocaleString('id-ID') }}
+                <span v-if="review.note"> · {{ review.note }}</span>
+              </li>
+            </ul>
+          </details>
         </template>
       </CardContent>
     </Card>
@@ -207,6 +320,14 @@ onMounted(async () => {
       :package-grade-id="pkg.gradeId"
       :package-title="pkg.title"
       @saved="router.push('/jadwal-ujian')"
+    />
+
+    <RenamePackageDialog
+      v-if="renameOpen && pkg"
+      v-model:open="renameOpen"
+      :package-id="pkg.id"
+      :title="pkg.title"
+      @renamed="builder.load()"
     />
 
     <AlertDialog v-model:open="deleteOpen">

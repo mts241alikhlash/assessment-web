@@ -29,4 +29,32 @@ export const examPackageRoutes: RouteRecordRaw[] = [
       ],
     },
   },
+  {
+    path: '/paket-soal/:id/soal/baru',
+    name: 'ExamPackageQuestionCreate',
+    component: () => import('./views/PackageQuestionFormView.vue'),
+    meta: {
+      title: 'Tambah Soal',
+      requiresAuth: true,
+      requiredPermission: 'exam-packages.update',
+      breadcrumbs: [
+        { title: 'Ujian', href: '#' },
+        { title: 'Paket Soal', href: '/paket-soal' },
+      ],
+    },
+  },
+  {
+    path: '/paket-soal/:id/soal/:questionId',
+    name: 'ExamPackageQuestion',
+    component: () => import('./views/PackageQuestionFormView.vue'),
+    meta: {
+      title: 'Soal',
+      requiresAuth: true,
+      requiredPermission: 'exam-packages.read',
+      breadcrumbs: [
+        { title: 'Ujian', href: '#' },
+        { title: 'Paket Soal', href: '/paket-soal' },
+      ],
+    },
+  },
 ]
