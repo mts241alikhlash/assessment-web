@@ -24,14 +24,10 @@ import { Avatar, AvatarImage, AvatarFallback } from '@mts241alikhlash/ui/avatar'
 
 import PersonalInfoTab from '../components/PersonalInfoTab.vue'
 import SchoolIdentityCard from '../components/SchoolIdentityCard.vue'
-import ProfileSheets from '../components/ProfileSheets.vue'
+import { EditAddressDialog } from '@/features/platform/address'
+import AddressInfoTab from '@/features/platform/address/components/AddressInfoTab.vue'
 import ChangePasswordSection from '../components/ChangePasswordSection.vue'
 
-import {
-  AddressInfoTab,
-  useAddress,
-  type AddressSavePayload,
-} from '@/features/platform/address'
 import { useProfileView } from '../composables/useProfileView'
 import { profileConfig } from '../config'
 
@@ -41,12 +37,10 @@ const router = useRouter()
 
 const {
   activeTab,
-  showEditProfile,
   showEditAddress,
   loading,
   profileData,
   rawProfile,
-  isSaving,
   isAdmin,
   isEditable,
   initials,
@@ -58,21 +52,9 @@ const {
   actionConfig,
   reloadProfile,
   handleActionClick,
-  handleUpdateProfile,
   handlePhotoChange,
   handlePhotoDelete,
 } = useProfileView()
-
-const { saveAddress } = useAddress()
-
-const handleUpdateAddress = async (payload: AddressSavePayload) => {
-  const addressId = rawProfile.value?.address?.id
-  const isCreate = !addressId
-  const { success } = await saveAddress(payload, isCreate, addressId)
-  if (success) {
-    reloadProfile()
-  }
-}
 
 const photoInput = ref<HTMLInputElement | null>(null)
 
@@ -92,13 +74,6 @@ const activeTabLabel = computed(() => {
     (tab) => tab.value === activeTab.value,
   )
   return extraTab ? extraTab.label : 'Profil Pengguna'
-})
-
-const hasExtraAction = computed(() => {
-  const extraTab = profileConfig.value.extraTabs.find(
-    (tab) => tab.value === activeTab.value,
-  )
-  return !!extraTab?.actionConfig
 })
 
 onMounted(() => {
@@ -127,15 +102,16 @@ useBreadcrumbs(() => {
 
     <Card
       v-else-if="profileData"
-      class="overflow-hidden rounded-2xl shadow-sm shadow-black/5 ring-1 ring-black/4 bg-card border-none lg:h-[530px] flex flex-col"
+      class="overflow-hidden rounded-2xl shadow-sm shadow-black/5 ring-1 ring-black/4 bg-card border-none"
     >
       <Tabs
         v-model="activeTab"
-        class="w-full lg:h-full lg:flex lg:flex-col"
+        class="w-full"
+        variant="line"
       >
-        <div class="grid grid-cols-1 lg:grid-cols-4 lg:h-full lg:min-h-0">
+        <div class="grid grid-cols-1 lg:grid-cols-4">
           <div
-            class="lg:col-span-1 p-6 lg:border-r border-border/60 flex flex-col gap-6 lg:h-full lg:min-h-0"
+            class="lg:col-span-1 p-6 lg:border-r border-border/60 flex flex-col gap-6"
           >
             <BackButton
               v-if="!isOwnProfile"
@@ -229,7 +205,7 @@ useBreadcrumbs(() => {
             </div>
 
             <TabsList
-              class="hidden lg:flex flex-col gap-1 w-full bg-transparent border-0 h-auto p-0 flex-1 overflow-y-auto min-h-0 pr-1 select-none items-stretch justify-start [scrollbar-width:none] [&::-webkit-scrollbar]:w-0 [&::-webkit-scrollbar]:h-0"
+              class="hidden lg:flex flex-col gap-1 w-full bg-transparent border-0 h-auto p-0 select-none items-stretch justify-start"
             >
               <TabsTrigger
                 value="personal"
@@ -264,7 +240,7 @@ useBreadcrumbs(() => {
             </TabsList>
           </div>
 
-          <div class="lg:col-span-3 flex flex-col lg:h-full lg:min-h-0">
+          <div class="lg:col-span-3 flex flex-col">
             <div
               class="px-6 py-3.5 border-b border-border/60 shrink-0 flex items-center justify-between"
             >
@@ -272,7 +248,7 @@ useBreadcrumbs(() => {
                 {{ activeTabLabel }}
               </h3>
               <Button
-                v-if="isEditable && hasExtraAction"
+                v-if="isEditable"
                 size="sm"
                 class="h-8 gap-1.5 cursor-pointer text-xs"
                 @click="handleActionClick(activeTab)"
@@ -285,9 +261,7 @@ useBreadcrumbs(() => {
               </Button>
             </div>
 
-            <div
-              class="p-6 lg:p-6 lg:pt-1 flex-1 lg:overflow-y-auto lg:min-h-0"
-            >
+            <div class="p-6 lg:p-6 lg:pt-1">
               <TabsContent
                 value="personal"
                 class="mt-0 focus-visible:outline-none focus-visible:ring-0 animate-in fade-in-50 duration-200"
@@ -295,9 +269,8 @@ useBreadcrumbs(() => {
                 <PersonalInfoTab
                   :data="profileData"
                   :raw-profile="rawProfile"
-                  :is-editable="isEditable"
-                  :is-saving="isSaving"
-                  @save="handleUpdateProfile"
+                  :is-editable="false"
+                  :is-saving="false"
                 />
 
                 <SchoolIdentityCard
@@ -323,7 +296,7 @@ useBreadcrumbs(() => {
                         ? tab.props({
                             profileData: unref(profileData),
                             rawProfile: unref(rawProfile),
-                            isAdmin,
+                            isAdmin: unref(isAdmin),
                             reloadProfile,
                           })
                         : { data: profileData }
@@ -341,8 +314,7 @@ useBreadcrumbs(() => {
                 <AddressInfoTab
                   :data="profileData"
                   :raw-address="rawProfile?.address"
-                  :is-editable="isEditable"
-                  @save="handleUpdateAddress"
+                  :is-editable="false"
                 />
               </TabsContent>
 
@@ -359,14 +331,9 @@ useBreadcrumbs(() => {
     </Card>
   </div>
 
-  <ProfileSheets
-    v-model:show-edit-profile="showEditProfile"
-    v-model:show-edit-address="showEditAddress"
-    :raw-profile="rawProfile"
-    :profile-data="profileData"
-    :is-saving="isSaving"
-    :user-id="getUserId"
-    @save-profile="handleUpdateProfile"
+  <EditAddressDialog
+    v-model:open="showEditAddress"
+    :profile-data="rawProfile"
     @reload="reloadProfile"
   />
 
@@ -376,11 +343,11 @@ useBreadcrumbs(() => {
     :key="i"
     v-bind="
       sheet.props({
-        userId: getUserId,
+        userId: unref(getUserId),
         rawProfile: unref(rawProfile),
         profileData: unref(profileData),
         reloadProfile,
-        isAdmin,
+        isAdmin: unref(isAdmin),
       })
     "
   />

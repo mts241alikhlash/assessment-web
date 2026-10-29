@@ -116,10 +116,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-4 md:p-6 lg:p-8">
+  <div class="space-y-6 p-4 sm:p-6">
     <Card
       gap="none"
-      class="overflow-hidden rounded-2xl shadow-sm shadow-black/5 ring-1 ring-black/4"
+      class="overflow-hidden"
     >
       <CardHeader standard>
         <div>
@@ -128,7 +128,7 @@ onMounted(() => {
         <Button
           variant="outline"
           size="sm"
-          class="shrink-0 h-9 gap-2 shadow-2xs"
+          class="shrink-0 gap-2"
           :disabled="loading"
           @click="fetchSummary()"
         >
@@ -145,7 +145,7 @@ onMounted(() => {
         class="space-y-6"
       >
         <div
-          class="rounded-xl border bg-gradient-to-br from-primary/5 via-muted/30 to-background p-4 sm:p-5 shadow-2xs"
+          class="rounded-md border bg-gradient-to-br from-primary/5 via-muted/30 to-background p-4 sm:p-5"
         >
           <div
             v-if="loading"
@@ -159,8 +159,8 @@ onMounted(() => {
               </div>
             </div>
             <div class="flex flex-wrap gap-2.5">
-              <Skeleton class="h-9 w-36 rounded-lg" />
-              <Skeleton class="h-9 w-32 rounded-lg" />
+              <Skeleton class="h-8 w-36 rounded-md" />
+              <Skeleton class="h-8 w-32 rounded-md" />
             </div>
           </div>
 
@@ -197,7 +197,7 @@ onMounted(() => {
 
             <div class="flex flex-wrap items-center gap-2.5 shrink-0">
               <div
-                class="flex items-center gap-2 rounded-lg border bg-card px-3.5 py-2 shadow-2xs"
+                class="flex items-center gap-2 rounded-md border bg-card px-3.5 py-2"
               >
                 <CalendarDays class="size-4 text-primary" />
                 <div class="text-xs">
@@ -209,7 +209,7 @@ onMounted(() => {
               </div>
 
               <div
-                class="flex items-center gap-2 rounded-lg border bg-card px-3.5 py-2 shadow-2xs"
+                class="flex items-center gap-2 rounded-md border bg-card px-3.5 py-2"
               >
                 <CalendarCheck class="size-4 text-primary" />
                 <div class="text-xs">
@@ -223,7 +223,7 @@ onMounted(() => {
 
         <div class="grid gap-4 grid-cols-2 sm:grid-cols-2 lg:grid-cols-5">
           <Card
-            class="shadow-2xs border transition-all duration-200 hover:shadow-md hover:border-blue-500/40 cursor-pointer group relative overflow-hidden"
+            class="border transition-all duration-200 hover:border-blue-500/40 cursor-pointer group relative overflow-hidden"
             @click="navigateTo('/student')"
           >
             <CardContent
@@ -269,7 +269,7 @@ onMounted(() => {
           </Card>
 
           <Card
-            class="shadow-2xs border transition-all duration-200 hover:shadow-md hover:border-emerald-500/40 cursor-pointer group relative overflow-hidden"
+            class="border transition-all duration-200 hover:border-emerald-500/40 cursor-pointer group relative overflow-hidden"
             @click="navigateTo('/teacher')"
           >
             <CardContent
@@ -315,7 +315,7 @@ onMounted(() => {
           </Card>
 
           <Card
-            class="shadow-2xs border transition-all duration-200 hover:shadow-md hover:border-teal-500/40 cursor-pointer group relative overflow-hidden"
+            class="border transition-all duration-200 hover:border-teal-500/40 cursor-pointer group relative overflow-hidden"
             @click="navigateTo('/learning/teaching-assignment')"
           >
             <CardContent
@@ -361,7 +361,7 @@ onMounted(() => {
           </Card>
 
           <Card
-            class="shadow-2xs border transition-all duration-200 hover:shadow-md hover:border-amber-500/40 cursor-pointer group relative overflow-hidden"
+            class="border transition-all duration-200 hover:border-amber-500/40 cursor-pointer group relative overflow-hidden"
             @click="navigateTo('/academic/classroom')"
           >
             <CardContent
@@ -407,7 +407,7 @@ onMounted(() => {
           </Card>
 
           <Card
-            class="shadow-2xs border transition-all duration-200 hover:shadow-md hover:border-rose-500/40 cursor-pointer group relative overflow-hidden col-span-2 sm:col-span-1"
+            class="border transition-all duration-200 hover:border-rose-500/40 cursor-pointer group relative overflow-hidden col-span-2 sm:col-span-1"
             @click="navigateTo('/learning/subject')"
           >
             <CardContent
@@ -455,7 +455,7 @@ onMounted(() => {
 
         <Card
           gap="none"
-          class="shadow-2xs border"
+          class="border"
         >
           <CardHeader standard>
             <div class="flex items-center gap-3">
@@ -603,7 +603,7 @@ onMounted(() => {
         <div class="grid gap-6 lg:grid-cols-2">
           <Card
             gap="none"
-            class="shadow-2xs border"
+            class="border"
           >
             <CardHeader standard>
               <div class="flex items-center gap-3">
@@ -686,7 +686,7 @@ onMounted(() => {
 
           <Card
             gap="none"
-            class="shadow-2xs border"
+            class="border"
           >
             <CardHeader standard>
               <div class="flex items-center gap-3">
@@ -780,7 +780,7 @@ onMounted(() => {
         <div class="grid gap-6 lg:grid-cols-2">
           <Card
             gap="none"
-            class="shadow-2xs border"
+            class="border"
           >
             <CardHeader standard>
               <div class="flex items-center gap-3">
@@ -850,7 +850,7 @@ onMounted(() => {
 
           <Card
             gap="none"
-            class="shadow-2xs border"
+            class="border"
           >
             <CardHeader standard>
               <div class="flex items-center gap-3">

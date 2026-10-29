@@ -143,7 +143,7 @@ function updateRowNote(index: number, note: string) {
                 :max="maxScore"
                 :model-value="row.score ?? ''"
                 :placeholder="`0 - ${maxScore}`"
-                class="h-9 min-w-[80px] text-center tabular-nums [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                class="min-w-[80px] text-center tabular-nums [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 @update:model-value="
                   (val) => updateRowScore(index, String(val))
                 "
@@ -153,7 +153,7 @@ function updateRowNote(index: number, note: string) {
               <Input
                 :model-value="row.note ?? ''"
                 placeholder="Catatan..."
-                class="h-9"
+                class=""
                 @update:model-value="
                   (val) => updateRowNote(index, val as string)
                 "
