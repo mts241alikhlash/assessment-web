@@ -122,11 +122,11 @@ describe('buildScheduleColumns', () => {
     ).toEqual(['Token'])
   })
 
-  it('lets a running exam be extended and its code shown, but not be cancelled', () => {
+  it('lets a running exam be extended, its code and sessions shown, but not be cancelled', () => {
     const props = actionProps({}, schedule())
 
     expect(props.hideEdit).toBe(false)
-    expect(labels(props)).toEqual(['Token'])
+    expect(labels(props)).toEqual(['Token', 'Sesi'])
   })
 
   it('offers nothing once the exam has ended', () => {
@@ -157,6 +157,18 @@ describe('buildScheduleColumns', () => {
     expect(
       labels(
         actionProps({ canSessions: false }, schedule({ hasSessions: true })),
+      ),
+    ).not.toContain('Sesi')
+  })
+
+  it('offers the sessions while the exam is running even before the list knows of any', () => {
+    expect(labels(actionProps({}, schedule()))).toContain('Sesi')
+    expect(
+      labels(
+        actionProps(
+          { now: () => new Date(toInstant('2026-11-02', '07:00')) },
+          schedule(),
+        ),
       ),
     ).not.toContain('Sesi')
   })

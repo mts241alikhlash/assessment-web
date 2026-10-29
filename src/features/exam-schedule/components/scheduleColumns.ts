@@ -98,7 +98,10 @@ export function buildScheduleColumns(
             onClick: () => options.onAccessCode(row.original),
           })
         }
-        if (row.original.hasSessions && options.canSessions) {
+        if (
+          (row.original.hasSessions || current === 'RUNNING') &&
+          options.canSessions
+        ) {
           items.push({
             label: 'Sesi',
             icon: Users,
