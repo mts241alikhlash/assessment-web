@@ -16,7 +16,11 @@ const { schedules, totalItems, loading, listError, refresh } =
 
 const columns = computed(() =>
   buildGradingScheduleColumns({
-    onOpen: (schedule) => void router.push(`/penilaian-ujian/${schedule.id}`),
+    onOpen: (schedule) =>
+      void router.push({
+        path: `/penilaian-ujian/${schedule.id}`,
+        query: { judul: schedule.title },
+      }),
   }),
 )
 

@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@mts241alikhlash/ui/select'
+import { useBreadcrumbs } from '@mts241alikhlash/web-shared/composables/useBreadcrumbs'
 import { sessionStatusLabel } from '@/features/exam-schedule/types'
 import { buildGradingSessionColumns } from '../components/gradingColumns'
 import { useGradingSessions } from '../composables/useGradingLists'
@@ -24,10 +25,20 @@ import { useGradingSessions } from '../composables/useGradingLists'
 const route = useRoute()
 const router = useRouter()
 const scheduleId = computed(() => String(route.params.scheduleId ?? ''))
+const examTitle = computed(() =>
+  typeof route.query.judul === 'string' && route.query.judul !== ''
+    ? route.query.judul
+    : 'Daftar Siswa',
+)
 const status = ref('ALL')
 const page = ref(1)
 const pageSize = ref(10)
 const statusFieldId = useId()
+
+useBreadcrumbs(() => [
+  { title: 'Penilaian Ujian', href: '/penilaian-ujian' },
+  { title: examTitle.value },
+])
 
 const { sessions, totalItems, loading, listError, refresh } =
   useGradingSessions(scheduleId, status, page, pageSize)
@@ -37,9 +48,10 @@ watch(status, () => (page.value = 1), { flush: 'sync' })
 const columns = computed(() =>
   buildGradingSessionColumns({
     onOpen: (session) =>
-      void router.push(
-        `/penilaian-ujian/${scheduleId.value}/${session.sessionId}`,
-      ),
+      void router.push({
+        path: `/penilaian-ujian/${scheduleId.value}/${session.sessionId}`,
+        query: route.query,
+      }),
   }),
 )
 
@@ -58,7 +70,7 @@ function changePageSize(size: number) {
             label="Kembali ke Penilaian Ujian"
             @click="router.push('/penilaian-ujian')"
           />
-          <CardTitle size="lg">Siswa</CardTitle>
+          <CardTitle size="lg">{{ examTitle }}</CardTitle>
         </div>
       </CardHeader>
       <CardContent variant="flush">

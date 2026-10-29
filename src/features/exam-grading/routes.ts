@@ -20,9 +20,9 @@ export const examGradingRoutes: RouteRecordRaw[] = [
     path: '/penilaian-ujian/:scheduleId',
     name: 'ExamGradingSessions',
     component: () => import('./views/GradingSessionListView.vue'),
-    meta: meta('Siswa', [
+    meta: meta('Daftar Siswa', [
       { title: 'Penilaian Ujian', href: '/penilaian-ujian' },
-      { title: 'Siswa', href: '#' },
+      { title: 'Daftar Siswa', href: '#' },
     ]),
   },
   {

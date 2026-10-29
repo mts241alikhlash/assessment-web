@@ -3,7 +3,12 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { BackButton } from '@mts241alikhlash/ui'
 import { Button } from '@mts241alikhlash/ui/button'
-import { Card, CardHeader, CardTitle } from '@mts241alikhlash/ui/card'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@mts241alikhlash/ui/card'
 import { useBreadcrumbs } from '@mts241alikhlash/web-shared/composables/useBreadcrumbs'
 import { useAuthSession } from '@/features/platform/auth'
 import ItemGradeCard from '../components/ItemGradeCard.vue'
@@ -16,6 +21,15 @@ const sessionId = computed(() => String(route.params.sessionId ?? ''))
 const scheduleId = computed(() => String(route.params.scheduleId ?? ''))
 
 const { hasPermission } = useAuthSession()
+const examTitle = computed(() =>
+  typeof route.query.judul === 'string' && route.query.judul !== ''
+    ? route.query.judul
+    : 'Daftar Siswa',
+)
+const sessionsLocation = computed(() => ({
+  path: `/penilaian-ujian/${scheduleId.value}`,
+  query: route.query,
+}))
 const detail = ref<GradingDetail | null>(null)
 let request = 0
 const loading = ref(true)
@@ -41,7 +55,10 @@ const waiting = computed(
 
 useBreadcrumbs(() => [
   { title: 'Penilaian Ujian', href: '/penilaian-ujian' },
-  { title: 'Siswa', href: `/penilaian-ujian/${scheduleId.value}` },
+  {
+    title: examTitle.value,
+    href: router.resolve(sessionsLocation.value).href,
+  },
   { title: studentLabel.value },
 ])
 
@@ -85,24 +102,28 @@ onMounted(load)
           <div class="flex items-center gap-3">
             <BackButton
               label="Kembali ke Daftar Siswa"
-              @click="router.push(`/penilaian-ujian/${scheduleId}`)"
+              @click="router.push(sessionsLocation)"
             />
             <CardTitle size="lg">{{ studentLabel }}</CardTitle>
           </div>
-          <p
-            v-if="detail"
-            class="text-[length:var(--text-control,0.75rem)] text-muted-foreground"
-          >
-            {{
-              waiting > 0
-                ? `${waiting} jawaban belum dinilai`
-                : detail.session.rawScore !== null
-                  ? `Nilai: ${detail.session.rawScore} / ${detail.session.maxScore}`
-                  : 'Semua jawaban sudah dinilai'
-            }}
-          </p>
         </div>
       </CardHeader>
+      <CardContent
+        v-if="detail"
+        variant="standard"
+      >
+        <p
+          class="text-[length:var(--text-control,0.75rem)] text-muted-foreground"
+        >
+          {{
+            waiting > 0
+              ? `${waiting} jawaban belum dinilai`
+              : detail.session.rawScore !== null
+                ? `Nilai: ${detail.session.rawScore} / ${detail.session.maxScore}`
+                : 'Semua jawaban sudah dinilai'
+          }}
+        </p>
+      </CardContent>
     </Card>
 
     <p v-if="loading">Memuat…</p>
