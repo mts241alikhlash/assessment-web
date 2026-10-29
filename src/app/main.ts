@@ -15,6 +15,8 @@ configureAuth({
   appSubtitle: 'Penilaian, Rapor & Presensi Kelas',
   logoAlt: 'Logo 241 Assessment',
   loginTitle: 'Masuk ke 241 Assessment',
+  loginSubtitle: 'Masuk untuk melanjutkan ke penilaian, rapor, dan presensi.',
+  identifierLabel: 'ID Pengguna',
   homeRoute: '/dashboard',
   ssoApp: 'assessment',
 })

@@ -1,8 +1,8 @@
 import { computed, ref, type Ref, type ComputedRef, type Component } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useAuthSession, useRoleGuard } from '@/features/platform/auth'
 import { useProfile } from './useProfile'
-import { useProfileSheets } from './useProfileSheets'
+import { useProfileDialogs } from './useProfileDialogs'
 import { PencilLine } from '@lucide/vue'
 import type {
   ProfileUpdatePayload,
@@ -14,7 +14,6 @@ import { toast } from 'vue-sonner'
 
 export interface ProfileViewReturn {
   activeTab: Ref<string>
-  showEditProfile: Ref<boolean>
   showEditAddress: Ref<boolean>
   loading: Ref<boolean>
   profileData: Ref<ProfileStoreData | null>
@@ -38,6 +37,7 @@ export interface ProfileViewReturn {
 
 export function useProfileView(): ProfileViewReturn {
   const route = useRoute()
+  const router = useRouter()
   const activeTab = ref('personal')
   const { user: authUser } = useAuthSession()
 
@@ -47,7 +47,7 @@ export function useProfileView(): ProfileViewReturn {
   const isViewingOther = computed(() => !!routeRole.value && !!routeId.value)
   const isAdmin = computed(() => can('profiles.update'))
 
-  const sheets = useProfileSheets()
+  const dialogs = useProfileDialogs()
 
   const {
     loading,
@@ -63,6 +63,15 @@ export function useProfileView(): ProfileViewReturn {
 
   const isOwnProfile = computed(() => !isViewingOther.value)
 
+  const editRoute = computed(() =>
+    isViewingOther.value
+      ? {
+          name: 'profile-other-edit',
+          params: { role: routeRole.value, id: routeId.value },
+        }
+      : { name: 'profile-edit' },
+  )
+
   const reloadProfile = () => {
     if (!authUser.value) return
     void fetchProfileData(
@@ -76,10 +85,7 @@ export function useProfileView(): ProfileViewReturn {
   const handleUpdateProfile = async (payload: ProfileUpdatePayload) => {
     const targetUserId = isViewingOther.value ? getUserId.value : undefined
     const { success } = await updateProfile(payload, targetUserId)
-    if (success) {
-      sheets.showEditProfile.value = false
-      reloadProfile()
-    }
+    if (success) reloadProfile()
   }
 
   const isEditable = computed(() => {
@@ -128,9 +134,9 @@ export function useProfileView(): ProfileViewReturn {
       return
     }
     if (tabId === 'personal') {
-      sheets.showEditProfile.value = true
+      void router.push(editRoute.value)
     } else if (tabId === 'address') {
-      sheets.showEditAddress.value = true
+      dialogs.showEditAddress.value = true
     } else {
       toast.info(`Fitur edit untuk tab ${tabId} akan segera hadir`)
     }
@@ -179,7 +185,7 @@ export function useProfileView(): ProfileViewReturn {
 
   return {
     activeTab,
-    ...sheets,
+    ...dialogs,
     loading,
     profileData,
     rawProfile,

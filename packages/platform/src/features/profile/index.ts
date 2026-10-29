@@ -10,7 +10,7 @@ export { profileService } from './services/profileService'
 export { useProfileStore } from './stores/profileStore'
 export { useProfile } from './composables/useProfile'
 export { useProfileView } from './composables/useProfileView'
-export { useProfileSheets } from './composables/useProfileSheets'
+export { useProfileFormPage } from './composables/useProfileFormPage'
 export { profileRoutes } from './routes'
 export type {
   ProfileUpdatePayload,
