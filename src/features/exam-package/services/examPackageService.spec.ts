@@ -1,14 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { examPackageService } from './examPackageService'
 
-const { createPackage, updatePackage, getPackage, error } = vi.hoisted(() => ({
-  createPackage: vi.fn(),
-  updatePackage: vi.fn(),
-  getPackage: vi.fn(),
-  error: vi.fn(),
-}))
+const { createPackage, renamePackage, getPackage, getPackages, error } =
+  vi.hoisted(() => ({
+    createPackage: vi.fn(),
+    renamePackage: vi.fn(),
+    getPackage: vi.fn(),
+    getPackages: vi.fn(),
+    error: vi.fn(),
+  }))
 vi.mock('../api/examPackageApi', () => ({
-  examPackageApi: { createPackage, updatePackage, getPackage },
+  examPackageApi: { createPackage, renamePackage, getPackage, getPackages },
 }))
 vi.mock('vue-sonner', () => ({ toast: { success: vi.fn(), error } }))
 
@@ -20,20 +22,52 @@ const refused = (status: number, message: string) => ({
 describe('examPackageService', () => {
   beforeEach(() => vi.clearAllMocks())
 
-  it('hands the server message of a refused save to the form', async () => {
-    updatePackage.mockRejectedValue(
-      refused(409, 'Paket sudah dijadwalkan dan tidak bisa diubah'),
+  it('hands the server message of a refused rename to the caller', async () => {
+    renamePackage.mockRejectedValue(
+      refused(409, 'Paket berstatus LOCKED dan tidak bisa diubah'),
     )
 
-    const result = await examPackageService.savePackage(
-      { mode: 'edit', id: 'p1' },
-      { title: 'UTS', questionIds: ['q1'] },
-    )
+    const result = await examPackageService.rename('p1', 'UAS')
 
     expect(result).toEqual({
       success: false,
-      error: 'Paket sudah dijadwalkan dan tidak bisa diubah',
+      error: 'Paket berstatus LOCKED dan tidak bisa diubah',
+      status: 409,
     })
+  })
+
+  it('returns the package a change leaves behind', async () => {
+    createPackage.mockResolvedValue({ data: { data: { id: 'p9' } } })
+
+    const result = await examPackageService.create({
+      title: 'UTS',
+      subjectId: 's1',
+      gradeId: 'g1',
+    })
+
+    expect(result).toEqual({ success: true, data: { id: 'p9' } })
+  })
+
+  it('merges the approved and the scheduled packages of a subject and grade by title', async () => {
+    getPackages.mockImplementation(async ({ status }: { status: string }) => ({
+      data: {
+        data:
+          status === 'APPROVED'
+            ? [{ id: 'a', title: 'UAS' }]
+            : [{ id: 'b', title: 'Bank' }],
+      },
+    }))
+
+    const sources = await examPackageService.loadApprovedSources('s1', 'g1')
+
+    expect(sources.map((row) => row.id)).toEqual(['b', 'a'])
+    expect(getPackages).toHaveBeenCalledWith(
+      expect.objectContaining({
+        subjectId: 's1',
+        gradeId: 'g1',
+        status: 'LOCKED',
+      }),
+    )
   })
 
   it('shows the server message when a copy or delete is refused', async () => {

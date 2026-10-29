@@ -1,15 +1,27 @@
-import type { ExamPackageStatus } from './package'
+import type { ExamPackageStatus, QuestionMarker } from './package'
 
 export type PackageTone = 'neutral' | 'info' | 'success' | 'warning'
 
 const STATUS_LABELS: Record<ExamPackageStatus, string> = {
   DRAFT: 'Draf',
-  LOCKED: 'Terkunci',
+  SUBMITTED: 'Menunggu tinjauan',
+  RETURNED: 'Dikembalikan',
+  APPROVED: 'Disetujui',
+  LOCKED: 'Terjadwal',
 }
 
 const STATUS_TONES: Record<ExamPackageStatus, PackageTone> = {
   DRAFT: 'neutral',
-  LOCKED: 'success',
+  SUBMITTED: 'info',
+  RETURNED: 'warning',
+  APPROVED: 'success',
+  LOCKED: 'neutral',
+}
+
+const MARKER_LABELS: Record<QuestionMarker, string> = {
+  NEW: 'Baru',
+  CHANGED: 'Diubah',
+  COPIED: 'Salinan',
 }
 
 export const packageStatusLabel = (status: ExamPackageStatus): string =>
@@ -17,3 +29,6 @@ export const packageStatusLabel = (status: ExamPackageStatus): string =>
 
 export const packageStatusTone = (status: ExamPackageStatus): PackageTone =>
   STATUS_TONES[status]
+
+export const markerLabel = (marker: QuestionMarker): string =>
+  MARKER_LABELS[marker]

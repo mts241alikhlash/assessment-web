@@ -127,9 +127,7 @@ describe('menu', () => {
 describe('exam package and schedule routes', () => {
   const required: Record<string, string> = {
     '/paket-soal': 'exam-packages.read',
-    '/paket-soal/baru': 'exam-packages.create',
     '/paket-soal/p1': 'exam-packages.read',
-    '/paket-soal/p1/ubah': 'exam-packages.update',
     '/jadwal-ujian': 'exam-schedules.read',
     '/penilaian-ujian': 'exam-grading.read',
     '/penilaian-ujian/s1': 'exam-grading.read',
@@ -146,10 +144,7 @@ describe('exam package and schedule routes', () => {
     expect(meta?.requiredPermission).toBe(permission)
   })
 
-  it('resolves /paket-soal/baru to the create page, not to a package called "baru"', () => {
-    expect(buildRouter(ALL).resolve('/paket-soal/baru').name).toBe(
-      'ExamPackageCreate',
-    )
+  it('resolves a package address to its page', () => {
     expect(buildRouter(ALL).resolve('/paket-soal/abc').name).toBe(
       'ExamPackageDetail',
     )

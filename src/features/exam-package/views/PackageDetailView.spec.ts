@@ -111,12 +111,14 @@ const view = (overrides: Partial<ExamPackageView> = {}): ExamPackageView => ({
   createdById: 'u1',
   createdAt: '2026-10-30T00:00:00.000Z',
   updatedAt: '2026-10-30T00:00:00.000Z',
+  reviews: [],
   items: [
     {
       questionId: 'q1',
       questionVersion: 1,
       position: 1,
       type: 'TRUE_FALSE',
+      marker: 'NEW',
       summary: 'Langit berwarna biru',
       points: 2,
     },
@@ -125,6 +127,7 @@ const view = (overrides: Partial<ExamPackageView> = {}): ExamPackageView => ({
       questionVersion: 3,
       position: 2,
       type: 'ESSAY',
+      marker: 'NEW',
       summary: 'Jelaskan fotosintesis',
       points: 5,
     },
@@ -194,7 +197,7 @@ describe('PackageDetailView', () => {
     expect(buttonByText(wrapper, 'Ubah')).toBeUndefined()
     expect(buttonByText(wrapper, 'Hapus')).toBeUndefined()
     expect(buttonByText(wrapper, 'Salin')).toBeDefined()
-    expect(wrapper.text()).toContain('Terkunci')
+    expect(wrapper.text()).toContain('Terjadwal')
     wrapper.unmount()
   })
 
