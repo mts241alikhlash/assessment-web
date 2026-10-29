@@ -73,4 +73,5 @@ export interface ScheduleSession {
   rawScore: number | null
   maxScore: number | null
   deviceBound: boolean
+  violationCount: number
 }

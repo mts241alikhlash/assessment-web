@@ -11,6 +11,8 @@ import type { GradingSchedule, GradingSessionRow } from '../types'
 import { publicationLabel } from '../types'
 
 const typeText = (row: GradingSchedule) => examTypeLabel(row.type)
+const exitText = (row: GradingSessionRow) =>
+  row.violationCount > 0 ? `${row.violationCount}×` : '-'
 const classroomText = (row: GradingSchedule) => row.classroomName ?? '-'
 const windowText = (row: GradingSchedule) =>
   formatWindow(row.startsAt, row.endsAt)
@@ -117,6 +119,16 @@ export function buildGradingSessionColumns(options: {
       header: 'Siswa',
       meta: { align: 'left', strong: true },
       cell: ({ row }) => studentText(row.original),
+    },
+    {
+      id: 'exits',
+      header: 'Keluar',
+      meta: {
+        align: 'center',
+        mobileLabel: 'Keluar',
+        mobileValue: exitText,
+      },
+      cell: ({ row }) => exitText(row.original),
     },
     {
       id: 'status',

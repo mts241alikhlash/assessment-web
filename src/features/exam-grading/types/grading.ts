@@ -30,6 +30,7 @@ export interface GradingSessionRow {
   rawScore: number | null
   maxScore: number | null
   awaitingGrading: boolean
+  violationCount: number
   publication: PublicationState
 }
 
