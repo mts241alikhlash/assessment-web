@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { assessmentItemRoutes } from '@/features/assessment/assessment-item'
-import { examBankRoutes } from '@/features/exam-bank'
 import { examPackageRoutes } from '@/features/exam-package'
 import { examScheduleRoutes } from '@/features/exam-schedule'
 import { examGradingRoutes } from '@/features/exam-grading'
@@ -22,7 +21,6 @@ const ALL: RouteRecordRaw[] = [
   ...myDashboardRoutes,
   ...assessmentItemRoutes,
   ...studentScoreRoutes,
-  ...examBankRoutes,
   ...examPackageRoutes,
   ...examScheduleRoutes,
   ...examGradingRoutes,
@@ -130,6 +128,9 @@ describe('exam package and schedule routes', () => {
     '/paket-soal/p1': 'exam-packages.read',
     '/paket-soal/p1/soal/baru': 'exam-packages.update',
     '/paket-soal/p1/soal/q1': 'exam-packages.read',
+    '/paket-soal/p1/impor': 'exam-questions.create',
+    '/persetujuan-paket': 'exam-questions.approve',
+    '/persetujuan-paket/p1': 'exam-questions.approve',
     '/jadwal-ujian': 'exam-schedules.read',
     '/penilaian-ujian': 'exam-grading.read',
     '/penilaian-ujian/s1': 'exam-grading.read',
@@ -155,6 +156,13 @@ describe('exam package and schedule routes', () => {
     )
   })
 
+  it('has no question bank left: no bank section and no /bank-soal route', () => {
+    expect(menuSections.map((section) => section.key)).not.toContain(
+      'exam-bank',
+    )
+    expect(buildRouter(ALL).resolve('/bank-soal').name).toBe('not-found')
+  })
+
   it('resolves a package address to its page', () => {
     expect(buildRouter(ALL).resolve('/paket-soal/abc').name).toBe(
       'ExamPackageDetail',
@@ -168,6 +176,7 @@ describe('exam package and schedule routes', () => {
       section?.items.map((item) => [item.url, item.requiredPermission]),
     ).toEqual([
       ['/paket-soal', 'exam-packages.read'],
+      ['/persetujuan-paket', 'exam-questions.approve'],
       ['/jadwal-ujian', 'exam-schedules.read'],
       ['/penilaian-ujian', 'exam-grading.read'],
       ['/nilai-ujian', 'exam-scores.read'],

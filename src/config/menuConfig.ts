@@ -6,7 +6,6 @@ import {
   Medal,
   FileText,
   LayoutDashboard,
-  Library,
   ListChecks,
   Package,
   SquareCheckBig,
@@ -60,26 +59,6 @@ export const menuSections: MenuSection[] = [
     ],
   },
   {
-    key: 'exam-bank',
-    label: 'menu.section.examBank',
-    items: [
-      {
-        key: 'exam-questions',
-        title: 'menu.examQuestions',
-        url: '/bank-soal',
-        icon: Library,
-        requiredPermission: 'exam-questions.read',
-      },
-      {
-        key: 'exam-question-review',
-        title: 'menu.examQuestionReview',
-        url: '/bank-soal/persetujuan',
-        icon: SquareCheckBig,
-        requiredPermission: 'exam-questions.approve',
-      },
-    ],
-  },
-  {
     key: 'exam',
     label: 'menu.section.exam',
     items: [
@@ -89,6 +68,13 @@ export const menuSections: MenuSection[] = [
         url: '/paket-soal',
         icon: Package,
         requiredPermission: 'exam-packages.read',
+      },
+      {
+        key: 'exam-package-review',
+        title: 'menu.examPackageReview',
+        url: '/persetujuan-paket',
+        icon: SquareCheckBig,
+        requiredPermission: 'exam-questions.approve',
       },
       {
         key: 'exam-schedules',
