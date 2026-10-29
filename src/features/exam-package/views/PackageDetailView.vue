@@ -33,6 +33,7 @@ import { useAuthSession } from '@/features/platform/auth'
 import { buildBuilderColumns } from '../components/builderColumns'
 import RenamePackageDialog from '../components/RenamePackageDialog.vue'
 import ReturnedNotes from '../components/ReturnedNotes.vue'
+import TakeQuestionsDialog from '../components/TakeQuestionsDialog.vue'
 import { usePackageBuilder } from '../composables/usePackageBuilder'
 import { examPackageService } from '../services/examPackageService'
 import { useExamPackageStore } from '../stores/examPackageStore'
@@ -60,6 +61,7 @@ const deleting = ref(false)
 const copying = ref(false)
 const scheduleOpen = ref(false)
 const renameOpen = ref(false)
+const takeOpen = ref(false)
 
 const status = computed(() => pkg.value?.status ?? null)
 const totalPoints = computed(() =>
@@ -129,6 +131,7 @@ async function reload() {
   deleteOpen.value = false
   scheduleOpen.value = false
   renameOpen.value = false
+  takeOpen.value = false
   await builder.load()
 }
 
@@ -274,6 +277,9 @@ onMounted(async () => {
                   >
                     Buat baru
                   </DropdownMenuItem>
+                  <DropdownMenuItem @select="takeOpen = true">
+                    Ambil dari paket lain
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     v-if="hasPermission('exam-questions.create')"
                     @select="router.push(`/paket-soal/${id}/impor`)"
@@ -320,6 +326,15 @@ onMounted(async () => {
       :package-grade-id="pkg.gradeId"
       :package-title="pkg.title"
       @saved="router.push('/jadwal-ujian')"
+    />
+
+    <TakeQuestionsDialog
+      v-if="takeOpen && pkg"
+      v-model:open="takeOpen"
+      :package-id="pkg.id"
+      :subject-id="pkg.subjectId"
+      :grade-id="pkg.gradeId"
+      @taken="builder.load()"
     />
 
     <RenamePackageDialog

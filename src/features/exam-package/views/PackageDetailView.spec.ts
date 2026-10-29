@@ -74,6 +74,20 @@ vi.mock('@/features/exam-schedule/components/ScheduleFormDialog.vue', () => ({
       '<div data-test="schedule-dialog" :data-package="packageId" :data-grade="packageGradeId" :data-title="packageTitle" />',
   }),
 }))
+vi.mock('../components/TakeQuestionsDialog.vue', () => ({
+  default: defineComponent({
+    name: 'TakeQuestionsDialogStub',
+    props: {
+      open: Boolean,
+      packageId: String,
+      subjectId: String,
+      gradeId: String,
+    },
+    emits: ['update:open', 'taken'],
+    template:
+      '<div data-test="take-dialog" :data-package="packageId" :data-subject="subjectId" :data-grade="gradeId" />',
+  }),
+}))
 vi.mock('../components/RenamePackageDialog.vue', () => ({
   default: defineComponent({
     name: 'RenamePackageDialogStub',
@@ -234,6 +248,19 @@ describe('PackageDetailView', () => {
 
     expect(push).toHaveBeenCalledWith('/paket-soal/p1/soal/baru')
     expect(push).toHaveBeenCalledWith('/paket-soal/p1/impor')
+    wrapper.unmount()
+  })
+
+  it('opens the take dialog for this package from the add menu', async () => {
+    const wrapper = await mountView()
+    expect(wrapper.find('[data-test="take-dialog"]').exists()).toBe(false)
+
+    await buttonByText(wrapper, 'Ambil dari paket lain')!.trigger('click')
+
+    const dialog = wrapper.get('[data-test="take-dialog"]')
+    expect(dialog.attributes('data-package')).toBe('p1')
+    expect(dialog.attributes('data-subject')).toBe('math')
+    expect(dialog.attributes('data-grade')).toBe('g7')
     wrapper.unmount()
   })
 
