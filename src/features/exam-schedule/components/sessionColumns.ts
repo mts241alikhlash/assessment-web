@@ -25,6 +25,8 @@ const scoreText = (session: ScheduleSession) =>
   session.rawScore === null || session.maxScore === null
     ? '-'
     : `${session.rawScore} / ${session.maxScore}`
+const exitText = (session: ScheduleSession) =>
+  session.violationCount > 0 ? `${session.violationCount}×` : '-'
 const deviceText = (session: ScheduleSession) =>
   session.status !== 'IN_PROGRESS'
     ? '-'
@@ -76,6 +78,16 @@ export function buildSessionColumns(
         mobileValue: scoreText,
       },
       cell: ({ row }) => scoreText(row.original),
+    },
+    {
+      id: 'exits',
+      header: 'Keluar',
+      meta: {
+        align: 'center',
+        mobileLabel: 'Keluar',
+        mobileValue: exitText,
+      },
+      cell: ({ row }) => exitText(row.original),
     },
     {
       id: 'device',

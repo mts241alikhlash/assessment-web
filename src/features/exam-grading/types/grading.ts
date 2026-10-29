@@ -1,4 +1,7 @@
-import type { ExamSessionStatus } from '@/features/exam-schedule/types'
+import type {
+  ExamSessionStatus,
+  ExamType,
+} from '@/features/exam-schedule/types'
 
 export interface GradingSchedule {
   id: string
@@ -7,6 +10,7 @@ export interface GradingSchedule {
   classroomId: string
   classroomName: string | null
   semesterId: string
+  type: ExamType
   startsAt: string
   endsAt: string
   sessions: number
@@ -26,6 +30,7 @@ export interface GradingSessionRow {
   rawScore: number | null
   maxScore: number | null
   awaitingGrading: boolean
+  violationCount: number
   publication: PublicationState
 }
 

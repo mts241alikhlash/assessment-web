@@ -13,6 +13,7 @@ const schedule: GradingSchedule = {
   classroomId: 'c1',
   classroomName: 'VII A',
   semesterId: 'sem',
+  type: 'UTS',
   startsAt: '2026-11-02T01:00:00.000Z',
   endsAt: '2026-11-02T04:00:00.000Z',
   sessions: 30,
@@ -32,6 +33,7 @@ const session = (
   rawScore: null,
   maxScore: null,
   awaitingGrading: true,
+  violationCount: 0,
   publication: null,
   ...overrides,
 })
@@ -52,6 +54,7 @@ describe('grading columns', () => {
     expect(text('awaiting')).toBe('4')
     expect(text('graded')).toBe('20')
     expect(text('classroom')).toBe('VII A')
+    expect(text('type')).toBe('UTS')
   })
 
   it('opens the exam of the row', () => {
@@ -101,5 +104,18 @@ describe('grading columns', () => {
       'Terkirim ke penilaian',
     )
     expect(text('status', session())).toBe('Menunggu penilaian')
+  })
+
+  it('says how often the student left the exam', () => {
+    const built = buildGradingSessionColumns({ onOpen: vi.fn() })
+    const text = (row: GradingSessionRow) =>
+      (
+        built.find((column) => column.id === 'exits')!.meta as {
+          mobileValue: (value: GradingSessionRow) => string
+        }
+      ).mobileValue(row)
+
+    expect(text(session())).toBe('-')
+    expect(text(session({ violationCount: 4 }))).toBe('4×')
   })
 })

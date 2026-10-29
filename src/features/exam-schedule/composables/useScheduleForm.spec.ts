@@ -15,6 +15,7 @@ const existing: ExamSchedule = {
   classroomId: 'c1',
   classroomName: 'VII A',
   semesterId: 'sem',
+  type: 'UH',
   startsAt: toInstant('2026-11-02', '08:00'),
   endsAt: toInstant('2026-11-02', '11:00'),
   durationMinutes: 90,
@@ -29,6 +30,7 @@ function filled() {
   const form = useScheduleForm({ mode: 'create' })
   form.packageId.value = 'p1'
   form.classroomId.value = 'c1'
+  form.type.value = 'UTS'
   form.date.value = '2026-11-02'
   form.startTime.value = '08:00'
   form.endTime.value = '11:00'
@@ -49,6 +51,13 @@ describe('useScheduleForm', () => {
     form.packageId.value = 'p1'
     form.classroomId.value = ''
     expect(form.problem.value).toBe('Pilih kelas')
+  })
+
+  it('needs an exam type to create', () => {
+    const form = filled()
+    form.type.value = ''
+
+    expect(form.problem.value).toBe('Pilih jenis ujian')
   })
 
   it('clears the classroom when the package changes', () => {
@@ -78,6 +87,7 @@ describe('useScheduleForm', () => {
       {
         packageId: 'p1',
         classroomId: 'c1',
+        type: 'UTS',
         startsAt: toInstant('2026-11-02', '08:00'),
         endsAt: toInstant('2026-11-02', '11:00'),
         durationMinutes: 90,
@@ -93,18 +103,39 @@ describe('useScheduleForm', () => {
     expect(form.startTime.value).toBe('08:00')
     expect(form.endTime.value).toBe('11:00')
     expect(form.durationMinutes.value).toBe(90)
+    expect(form.type.value).toBe('UH')
     expect(form.problem.value).toBeNull()
 
     form.durationMinutes.value = 120
+    form.type.value = 'UAS'
     await form.submit()
 
     expect(saveSchedule).toHaveBeenCalledWith(
       { mode: 'edit', id: 's1' },
       {
+        type: 'UAS',
         startsAt: toInstant('2026-11-02', '08:00'),
         endsAt: toInstant('2026-11-02', '11:00'),
         durationMinutes: 120,
       },
+    )
+  })
+
+  it('keeps the type of a schedule that already has sessions', async () => {
+    saveSchedule.mockResolvedValue({ success: true, data: existing })
+    const form = useScheduleForm({
+      mode: 'edit',
+      schedule: { ...existing, hasSessions: true },
+    })
+
+    expect(form.typeLocked).toBe(true)
+
+    form.type.value = 'UAS'
+    await form.submit()
+
+    expect(saveSchedule).toHaveBeenCalledWith(
+      { mode: 'edit', id: 's1' },
+      expect.objectContaining({ type: 'UH' }),
     )
   })
 

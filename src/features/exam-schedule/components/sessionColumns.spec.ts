@@ -16,6 +16,7 @@ const session = (
   rawScore: null,
   maxScore: null,
   deviceBound: true,
+  violationCount: 0,
   ...overrides,
 })
 
@@ -56,6 +57,8 @@ describe('buildSessionColumns', () => {
     expect(mobile('score', session())).toBe('-')
     expect(mobile('device', session())).toBe('Terikat')
     expect(mobile('device', session({ deviceBound: false }))).toBe('Dilepas')
+    expect(mobile('exits', session())).toBe('-')
+    expect(mobile('exits', session({ violationCount: 4 }))).toBe('4×')
     expect(mobile('device', session({ status: 'SUBMITTED' }))).toBe('-')
   })
 

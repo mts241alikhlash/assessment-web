@@ -113,6 +113,7 @@ const schedule = (overrides: Partial<ExamSchedule> = {}): ExamSchedule => ({
   classroomId: 'c1',
   classroomName: 'VII A',
   semesterId: 'sem',
+  type: 'UTS',
   startsAt: toInstant('2030-11-02', '08:00'),
   endsAt: toInstant('2030-11-02', '11:00'),
   durationMinutes: 90,

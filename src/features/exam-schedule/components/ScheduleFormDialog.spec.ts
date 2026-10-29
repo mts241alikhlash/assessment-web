@@ -99,6 +99,7 @@ const existing: ExamSchedule = {
   classroomId: 'c1',
   classroomName: 'VII A',
   semesterId: 'sem',
+  type: 'UTS',
   startsAt: toInstant('2030-11-02', '08:00'),
   endsAt: toInstant('2030-11-02', '11:00'),
   durationMinutes: 90,
@@ -162,7 +163,7 @@ describe('ScheduleFormDialog', () => {
 
     expect(loadClassrooms).toHaveBeenCalledWith('g8')
     expect(wrapper.text()).toContain('UTS IPA')
-    expect(wrapper.findAllComponents({ name: 'SelectStub' })).toHaveLength(1)
+    expect(wrapper.findAllComponents({ name: 'SelectStub' })).toHaveLength(2)
     wrapper.unmount()
   })
 
@@ -171,7 +172,7 @@ describe('ScheduleFormDialog', () => {
     await flushPromises()
 
     expect(loadPackages).not.toHaveBeenCalled()
-    expect(wrapper.findAllComponents({ name: 'SelectStub' })).toHaveLength(0)
+    expect(wrapper.findAllComponents({ name: 'SelectStub' })).toHaveLength(1)
     expect(wrapper.text()).toContain('Ubah Jadwal')
     expect(wrapper.text()).toContain('UTS Matematika')
     wrapper.unmount()
@@ -184,6 +185,37 @@ describe('ScheduleFormDialog', () => {
     expect(wrapper.text()).toContain('Pilih paket')
     expect(
       buttonByText(wrapper, 'Simpan')!.attributes('disabled'),
+    ).toBeDefined()
+    wrapper.unmount()
+  })
+
+  it('offers the five exam types and sends the chosen one', async () => {
+    saveSchedule.mockResolvedValue({ success: true, data: existing })
+    const wrapper = open({ schedule: existing })
+    await flushPromises()
+
+    expect(wrapper.text()).toContain('Jenis ujian')
+    for (const label of ['Ulangan Harian', 'Quiz', 'Tugas', 'UTS', 'UAS']) {
+      expect(wrapper.text()).toContain(label)
+    }
+
+    await choose(wrapper, 0, 'UAS')
+    await buttonByText(wrapper, 'Simpan')!.trigger('click')
+    await flushPromises()
+
+    expect(saveSchedule).toHaveBeenCalledWith(
+      { mode: 'edit', id: 's1' },
+      expect.objectContaining({ type: 'UAS' }),
+    )
+    wrapper.unmount()
+  })
+
+  it('locks the type once students have started', async () => {
+    const wrapper = open({ schedule: { ...existing, hasSessions: true } })
+    await flushPromises()
+
+    expect(
+      wrapper.findComponent({ name: 'SelectStub' }).attributes('disabled'),
     ).toBeDefined()
     wrapper.unmount()
   })

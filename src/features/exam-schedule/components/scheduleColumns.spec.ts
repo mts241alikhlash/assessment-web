@@ -11,6 +11,7 @@ const schedule = (overrides: Partial<ExamSchedule> = {}): ExamSchedule => ({
   classroomId: 'c1',
   classroomName: 'VII A',
   semesterId: 'sem',
+  type: 'UTS',
   startsAt: toInstant('2026-11-02', '08:00'),
   endsAt: toInstant('2026-11-02', '11:00'),
   durationMinutes: 90,
@@ -69,12 +70,14 @@ describe('buildScheduleColumns', () => {
 
     expect(built.map((column) => column.id)).toEqual([
       'package',
+      'type',
       'classroom',
       'window',
       'duration',
       'phase',
       'actions',
     ])
+    expect(mobile('type')).toBe('UTS')
     expect(mobile('classroom')).toBe('VII A')
     expect(mobile('window')).toContain('08.00')
     expect(mobile('duration')).toBe('90 menit')
