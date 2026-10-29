@@ -33,8 +33,13 @@ export function useTakeQuestions(target: TakeTarget) {
     selected.value = new Set()
     questions.value = []
     if (id === '') return
-    const source = await examPackageService.loadPackage(id)
-    if (sourceId.value === id) questions.value = source?.items ?? []
+    try {
+      const source = await examPackageService.loadPackage(id)
+      if (sourceId.value === id) questions.value = source?.items ?? []
+    } catch {
+      if (sourceId.value === id)
+        error.value = 'Soal paket ini tidak dapat dimuat.'
+    }
   })
 
   function toggle(questionId: string) {

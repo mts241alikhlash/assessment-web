@@ -98,7 +98,8 @@ function applyDetail(next: QuestionDetail) {
   }
 }
 
-onMounted(async () => {
+async function init() {
+  loading.value = true
   await builder.load()
   if (builder.notFound.value) {
     await router.replace('/paket-soal')
@@ -121,7 +122,10 @@ onMounted(async () => {
     }
   }
   loading.value = false
-})
+}
+
+watch([packageId, questionId], init)
+onMounted(init)
 
 async function save() {
   const problem = validateDraft(
@@ -203,7 +207,15 @@ async function save() {
         </div>
 
         <div
-          v-if="!isEdit"
+          v-if="!isEdit && !canEdit"
+          class="rounded-md border bg-muted/30 p-3 text-[length:var(--text-control,0.75rem)]"
+          role="status"
+        >
+          Paket ini tidak bisa diubah, jadi soal baru tidak bisa ditambahkan.
+        </div>
+
+        <div
+          v-if="!isEdit && canEdit"
           class="grid gap-5 sm:grid-cols-2"
         >
           <FloatingLabelField

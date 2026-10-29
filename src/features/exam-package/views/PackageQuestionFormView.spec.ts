@@ -325,4 +325,13 @@ describe('PackageQuestionFormView', () => {
     expect(wrapper.text()).toContain('Catatan penyetuju: Kunci salah')
     wrapper.unmount()
   })
+
+  it('explains why a new question cannot be added to a package that waits for review', async () => {
+    loadPackage.mockResolvedValue(view({ status: 'SUBMITTED' }))
+    const wrapper = await mountView()
+
+    expect(wrapper.text()).toContain('soal baru tidak bisa ditambahkan')
+    expect(wrapper.text()).not.toContain('Jenis')
+    wrapper.unmount()
+  })
 })

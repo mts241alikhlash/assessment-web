@@ -88,7 +88,9 @@ describe('buildBuilderColumns', () => {
     const editable = actionProps({ canEdit: true }, item(2))
     const readOnly = actionProps({ canEdit: false }, item(2))
 
-    expect(editable.hideEdit).toBe(false)
+    expect(editable.hideEdit).toBe(true)
+    expect(editable.viewLabel).toBe('Ubah')
+    expect(readOnly.viewLabel).toBe('Lihat')
     expect(editable.hideDelete).toBe(false)
     expect(readOnly.hideEdit).toBe(true)
     expect(readOnly.hideDelete).toBe(true)

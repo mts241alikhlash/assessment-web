@@ -26,8 +26,8 @@ pairing `hr-web` has with `hr-service`.
 | `/report-card`, `/my/report-card` | report cards, generated and read |
 | `/attendance/input`, `/attendance/recap`, `/my/attendance` | the class register |
 | `/my/scores` | a student's own marks |
-| `/bank-soal` | the exam question bank: write, import, approve |
-| `/paket-soal`, `/paket-soal/baru`, `/paket-soal/:id`, `/paket-soal/:id/ubah` | exam packages: a fixed set of approved questions, pinned to the version approved when added, locked once scheduled |
+| `/persetujuan-paket`, `/persetujuan-paket/:id` | package approval: read every question of a submitted package, note, approve or return |
+| `/paket-soal`, `/paket-soal/:id`, `/paket-soal/:id/soal/baru`, `/paket-soal/:id/soal/:questionId`, `/paket-soal/:id/impor` | exam packages: questions live inside a package (write, import, take from another package), submitted and approved as a whole, locked once scheduled |
 | `/jadwal-ujian` | exam schedules: a package for a classroom in a time window, cancel, and the access code students enter |
 | `/penilaian-ujian` | exam grading: the exams of the teacher's classes with how many students wait; `/:scheduleId` lists the students, `/:scheduleId/:sessionId` grades each short answer and essay |
 | `/nilai-ujian` | exam scores sent to the assessment for the classes the teacher teaches |

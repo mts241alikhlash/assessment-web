@@ -80,7 +80,8 @@ export const examPackageService = {
       const response = await examPackageApi.getPackage(id)
       return response.data?.data ?? null
     } catch (err: unknown) {
-      if (statusOf(err) === 404) return null
+      const status = statusOf(err)
+      if (status === 404 || status === 400) return null
       toast.error(getIndonesianErrorMessage(err, 'Gagal memuat paket.'))
       throw err
     }

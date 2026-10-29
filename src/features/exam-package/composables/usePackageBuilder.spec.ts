@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 import type { ExamPackageView } from '../types'
 import { usePackageBuilder } from './usePackageBuilder'
 
@@ -221,5 +221,51 @@ describe('usePackageBuilder', () => {
 
     expect(builder.lastReturn.value).toBeNull()
     expect(builder.noteOf('q2')).toBeUndefined()
+  })
+
+  it('keeps the newest package when an older load answers last', async () => {
+    const id = ref('p1')
+    const builder = usePackageBuilder(id)
+    let release: (value: ExamPackageView) => void = () => undefined
+    loadPackage.mockReturnValueOnce(
+      new Promise<ExamPackageView>((resolve) => (release = resolve)),
+    )
+    const slow = builder.load()
+    id.value = 'p2'
+    loadPackage.mockResolvedValueOnce(view({ id: 'p2', title: 'Baru' }))
+    await builder.load()
+
+    release(view({ id: 'p1', title: 'Lama' }))
+    await slow
+
+    expect(builder.pkg.value?.title).toBe('Baru')
+  })
+
+  it('forgets the error of the previous package when the id changes', async () => {
+    const id = ref('p1')
+    loadPackage.mockResolvedValue(view())
+    removeQuestion.mockResolvedValue({ success: false, error: 'Gagal' })
+    const builder = usePackageBuilder(id)
+    await builder.load()
+    await builder.remove('q1')
+    expect(builder.error.value).toBe('Gagal')
+
+    id.value = 'p2'
+    await nextTick()
+
+    expect(builder.error.value).toBeNull()
+  })
+
+  it('says whether a removal went through, and refuses while another change runs', async () => {
+    const builder = await loaded()
+    let release: (value: unknown) => void = () => undefined
+    reorder.mockReturnValueOnce(new Promise((resolve) => (release = resolve)))
+    const moving = builder.move('q1', 'down')
+
+    expect(await builder.remove('q2')).toBe(false)
+    release({ success: true, data: view() })
+    await moving
+    removeQuestion.mockResolvedValue({ success: true, data: view() })
+    expect(await builder.remove('q2')).toBe(true)
   })
 })

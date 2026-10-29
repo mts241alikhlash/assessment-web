@@ -221,4 +221,30 @@ describe('PackageReviewView', () => {
     expect(replace).toHaveBeenCalledWith('/persetujuan-paket')
     wrapper.unmount()
   })
+
+  it('holds back both decisions and says so when a question cannot be loaded', async () => {
+    loadQuestion.mockImplementation((_id: string, questionId: string) =>
+      questionId === 'q2'
+        ? Promise.reject(new Error('down'))
+        : Promise.resolve({
+            id: questionId,
+            type: 'TRUE_FALSE',
+            current: {
+              bodyHtml: '<p>x</p>',
+              content: { answer: { value: true } },
+              points: 2,
+            },
+          }),
+    )
+    const wrapper = await mountView()
+
+    expect(wrapper.text()).toContain('1 soal tidak bisa dimuat')
+    expect(
+      buttonByText(wrapper, 'Setujui')!.attributes('disabled'),
+    ).toBeDefined()
+    expect(
+      buttonByText(wrapper, 'Kembalikan')!.attributes('disabled'),
+    ).toBeDefined()
+    wrapper.unmount()
+  })
 })

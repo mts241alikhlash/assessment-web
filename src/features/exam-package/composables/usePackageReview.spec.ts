@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { flushPromises } from '@vue/test-utils'
 import { ref } from 'vue'
 import type { ExamPackageView } from '../types'
 import { usePackageReview } from './usePackageReview'
@@ -135,7 +136,7 @@ describe('usePackageReview', () => {
     const review = await loaded()
 
     expect(await review.returnPackage('   ')).toBe(false)
-    expect(review.error.value).toBe('Catatan wajib diisi')
+    expect(review.returnError.value).toBe('Catatan wajib diisi')
     expect(returnPackage).not.toHaveBeenCalled()
   })
 
@@ -160,5 +161,64 @@ describe('usePackageReview', () => {
     review.setNote('q1', 'Kunci salah dan ejaan')
 
     expect(review.notes.value.q1).toBe('Kunci salah dan ejaan')
+  })
+
+  it('keeps the page when one question cannot be read, and holds back the decision', async () => {
+    const review = await loaded(3)
+    loadQuestion.mockImplementation((_id: string, questionId: string) =>
+      questionId === 'q2'
+        ? Promise.reject(new Error('down'))
+        : Promise.resolve({ id: questionId, type: 'TRUE_FALSE', current: {} }),
+    )
+
+    await review.load()
+
+    expect(review.loadFailed.value).toBe(false)
+    expect(review.pkg.value?.items).toHaveLength(3)
+    expect([...review.unreadable.value]).toEqual(['q2'])
+    expect(review.canDecide.value).toBe(false)
+  })
+
+  it('holds back the decision while the questions are still loading', async () => {
+    loadPackage.mockResolvedValue(view(2))
+    let release: (value: unknown) => void = () => undefined
+    loadQuestion.mockReturnValue(new Promise((resolve) => (release = resolve)))
+    const review = usePackageReview(ref('p1'))
+    const loading = review.load()
+    await flushPromises()
+
+    expect(review.canDecide.value).toBe(false)
+    release({ id: 'x', type: 'TRUE_FALSE', current: {} })
+    await loading
+    expect(review.canDecide.value).toBe(true)
+  })
+
+  it('reloads the package when the server says someone else already decided', async () => {
+    approve.mockResolvedValue({
+      success: false,
+      error: 'Sudah disetujui',
+      status: 409,
+    })
+    const review = await loaded()
+    loadPackage.mockClear()
+
+    await review.approve()
+
+    expect(loadPackage).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps the return error apart from the approve error', async () => {
+    approve.mockResolvedValue({ success: false, error: 'Gagal setujui' })
+    returnPackage.mockResolvedValue({
+      success: false,
+      error: 'Gagal kembalikan',
+    })
+    const review = await loaded()
+
+    await review.approve()
+    await review.returnPackage('Perbaiki')
+
+    expect(review.error.value).toBe('Gagal setujui')
+    expect(review.returnError.value).toBe('Gagal kembalikan')
   })
 })

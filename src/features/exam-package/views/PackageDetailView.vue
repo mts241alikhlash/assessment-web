@@ -40,7 +40,7 @@ import { examPackageService } from '../services/examPackageService'
 import { useExamPackageStore } from '../stores/examPackageStore'
 import {
   packageStatusLabel,
-  packageStatusTone,
+  statusVariant,
   type ExamPackageItemView,
   type ExamPackageStatus,
 } from '../types'
@@ -98,9 +98,9 @@ const columns = computed(() =>
     onMove: (item, direction) => void builder.move(item.questionId, direction),
     onRemove: async (item, { closeAlert, setLoading }) => {
       setLoading(true)
-      await builder.remove(item.questionId)
+      const removed = await builder.remove(item.questionId)
       setLoading(false)
-      closeAlert()
+      if (removed) closeAlert()
     },
   }),
 )
@@ -241,13 +241,7 @@ onMounted(async () => {
               store.subjectName(pkg.subjectId)
             }}</Badge>
             <Badge variant="outline">{{ store.gradeName(pkg.gradeId) }}</Badge>
-            <Badge
-              :variant="
-                packageStatusTone(pkg.status) === 'neutral'
-                  ? 'outline'
-                  : 'secondary'
-              "
-            >
+            <Badge :variant="statusVariant(pkg.status)">
               {{ packageStatusLabel(pkg.status) }}
             </Badge>
             <span class="text-muted-foreground">

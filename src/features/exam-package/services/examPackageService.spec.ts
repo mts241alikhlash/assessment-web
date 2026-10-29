@@ -102,6 +102,15 @@ describe('examPackageService', () => {
     expect(error).not.toHaveBeenCalled()
   })
 
+  it('treats an id the server rejects as malformed like a missing package', async () => {
+    getPackage.mockRejectedValue(
+      refused(400, 'Validation failed (uuid is expected)'),
+    )
+
+    expect(await examPackageService.loadPackage('abc')).toBeNull()
+    expect(error).not.toHaveBeenCalled()
+  })
+
   it('shows a toast and throws when the package cannot be loaded', async () => {
     getPackage.mockRejectedValue(refused(503, 'academic down'))
 

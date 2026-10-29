@@ -5,7 +5,7 @@ import { Badge } from '@mts241alikhlash/ui/badge'
 import { ArrowDown, ArrowUp } from '@lucide/vue'
 import { typeLabel } from '@/features/exam-bank/types'
 import type { ExamPackageItemView } from '../types'
-import { markerLabel } from '../types'
+import { markerLabel, markerVariant } from '../types'
 
 export interface BuilderColumnOptions {
   canEdit: boolean
@@ -18,12 +18,6 @@ export interface BuilderColumnOptions {
     controls: { closeAlert: () => void; setLoading: (state: boolean) => void },
   ) => void | Promise<void>
 }
-
-const MARKER_VARIANT = {
-  NEW: 'secondary',
-  CHANGED: 'destructive',
-  COPIED: 'outline',
-} as const
 
 export function buildBuilderColumns(
   options: BuilderColumnOptions,
@@ -78,7 +72,7 @@ export function buildBuilderColumns(
         mobileValue: (row: ExamPackageItemView) => markerLabel(row.marker),
       },
       cell: ({ row }) =>
-        h(Badge, { variant: MARKER_VARIANT[row.original.marker] }, () =>
+        h(Badge, { variant: markerVariant(row.original.marker) }, () =>
           markerLabel(row.original.marker),
         ),
     },
@@ -98,9 +92,8 @@ export function buildBuilderColumns(
       enableSorting: false,
       cell: ({ row }) =>
         h(ActionCell, {
-          editLabel: 'Ubah',
-          viewLabel: 'Lihat',
-          hideEdit: !options.canEdit,
+          viewLabel: options.canEdit ? 'Ubah' : 'Lihat',
+          hideEdit: true,
           hideDelete: !options.canEdit,
           deleteTitle: 'Hapus soal?',
           deleteDescription:
@@ -121,7 +114,6 @@ export function buildBuilderColumns(
                 },
               ]
             : [],
-          onEdit: () => options.onOpen(row.original),
           onView: () => options.onOpen(row.original),
           onDelete: (controls: {
             closeAlert: () => void

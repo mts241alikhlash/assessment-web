@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, useId } from 'vue'
+import { computed, onMounted, ref, useId, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Download } from '@lucide/vue'
 import { BackButton, FileDropzone } from '@mts241alikhlash/ui'
@@ -94,7 +94,9 @@ async function submit() {
   }
 }
 
-onMounted(async () => {
+async function init() {
+  loading.value = true
+  result.value = null
   await builder.load()
   if (builder.notFound.value) {
     await router.replace('/paket-soal')
@@ -105,7 +107,10 @@ onMounted(async () => {
     teachers.value = await examBankService.loadTeachers(pkg.value.subjectId)
   }
   loading.value = false
-})
+}
+
+watch(packageId, init)
+onMounted(init)
 </script>
 
 <template>

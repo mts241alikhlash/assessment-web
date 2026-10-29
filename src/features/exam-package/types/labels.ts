@@ -24,6 +24,21 @@ const MARKER_LABELS: Record<QuestionMarker, string> = {
   COPIED: 'Salinan',
 }
 
+export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline'
+
+const TONE_VARIANT = {
+  neutral: 'outline',
+  info: 'secondary',
+  success: 'default',
+  warning: 'destructive',
+} as const satisfies Record<PackageTone, BadgeVariant>
+
+export const statusVariant = (status: ExamPackageStatus): BadgeVariant =>
+  TONE_VARIANT[STATUS_TONES[status]]
+
+export const markerVariant = (marker: QuestionMarker): BadgeVariant =>
+  marker === 'COPIED' ? 'outline' : 'default'
+
 export const packageStatusLabel = (status: ExamPackageStatus): string =>
   STATUS_LABELS[status]
 

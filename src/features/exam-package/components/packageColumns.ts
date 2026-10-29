@@ -4,7 +4,7 @@ import { ActionCell } from '@mts241alikhlash/ui'
 import { Badge } from '@mts241alikhlash/ui/badge'
 import { Copy } from '@lucide/vue'
 import type { ExamPackageStatus, ExamPackageSummary } from '../types'
-import { packageStatusLabel, packageStatusTone } from '../types'
+import { packageStatusLabel, statusVariant } from '../types'
 
 export interface PackageColumnOptions {
   subjectName: (id: string) => string
@@ -18,13 +18,6 @@ export interface PackageColumnOptions {
     controls: { closeAlert: () => void; setLoading: (state: boolean) => void },
   ) => void | Promise<void>
 }
-
-const BADGE_VARIANT = {
-  neutral: 'outline',
-  info: 'secondary',
-  success: 'default',
-  warning: 'destructive',
-} as const
 
 const DELETABLE: ExamPackageStatus[] = ['DRAFT', 'RETURNED', 'APPROVED']
 const COPYABLE: ExamPackageStatus[] = ['APPROVED', 'LOCKED']
@@ -81,10 +74,8 @@ export function buildPackageColumns(
           packageStatusLabel(row.status),
       },
       cell: ({ row }) =>
-        h(
-          Badge,
-          { variant: BADGE_VARIANT[packageStatusTone(row.original.status)] },
-          () => packageStatusLabel(row.original.status),
+        h(Badge, { variant: statusVariant(row.original.status) }, () =>
+          packageStatusLabel(row.original.status),
         ),
     },
     {

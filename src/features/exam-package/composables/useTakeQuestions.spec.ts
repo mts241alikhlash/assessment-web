@@ -126,4 +126,16 @@ describe('useTakeQuestions', () => {
     expect(take$.error.value).toBe('Paling banyak 200 soal sekali salin')
     expect(take).not.toHaveBeenCalled()
   })
+
+  it('tells the user instead of throwing when the source cannot be loaded', async () => {
+    loadPackage.mockRejectedValue(new Error('down'))
+    const take$ = useTakeQuestions(target)
+    await take$.load()
+
+    take$.sourceId.value = 'p2'
+    await flushPromises()
+
+    expect(take$.error.value).toBe('Soal paket ini tidak dapat dimuat.')
+    expect(take$.questions.value).toEqual([])
+  })
 })

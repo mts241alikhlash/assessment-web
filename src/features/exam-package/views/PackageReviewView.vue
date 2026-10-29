@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, useId } from 'vue'
+import { computed, onMounted, ref, useId, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { BackButton } from '@mts241alikhlash/ui'
 import { Badge } from '@mts241alikhlash/ui/badge'
@@ -21,7 +21,7 @@ import ReturnPackageDialog from '../components/ReturnPackageDialog.vue'
 import { usePackageReview } from '../composables/usePackageReview'
 import { examPackageService } from '../services/examPackageService'
 import { useExamPackageStore } from '../stores/examPackageStore'
-import { markerLabel } from '../types'
+import { markerLabel, markerVariant } from '../types'
 
 const route = useRoute()
 const router = useRouter()
@@ -29,7 +29,7 @@ const store = useExamPackageStore()
 
 const packageId = computed(() => String(route.params.id ?? ''))
 const review = usePackageReview(packageId)
-const { pkg, questions, notes, canReview, busy, error } = review
+const { pkg, questions, notes, canReview, canDecide, busy, error } = review
 
 const returnOpen = ref(false)
 const fieldId = useId()
@@ -54,10 +54,15 @@ async function giveBack(note: string) {
   }
 }
 
-onMounted(async () => {
-  void examPackageService.loadReferences()
+async function init() {
   await review.load()
   if (review.notFound.value) await router.replace('/persetujuan-paket')
+}
+
+watch(packageId, init)
+onMounted(() => {
+  void examPackageService.loadReferences()
+  return init()
 })
 </script>
 
@@ -67,7 +72,7 @@ onMounted(async () => {
       <CardHeader standard>
         <div class="flex flex-wrap items-center gap-3">
           <BackButton
-            label="Kembali"
+            label="Kembali ke Persetujuan Paket"
             @click="router.push('/persetujuan-paket')"
           />
           <CardTitle size="lg">{{ pkg?.title ?? 'Tinjau Paket' }}</CardTitle>
@@ -89,7 +94,7 @@ onMounted(async () => {
           class="rounded-md border p-4 text-[length:var(--text-control,0.75rem)]"
           role="alert"
         >
-          Gagal memuat paket.
+          Paket tidak dapat dimuat.
           <Button
             variant="outline"
             @click="review.load()"
@@ -114,6 +119,15 @@ onMounted(async () => {
             {{ error }}
           </div>
 
+          <div
+            v-if="review.unreadable.value.size > 0"
+            class="rounded-md border border-destructive/40 bg-destructive/5 p-3 text-[length:var(--text-control,0.75rem)]"
+            role="alert"
+          >
+            {{ review.unreadable.value.size }} soal tidak bisa dimuat. Muat
+            ulang halaman sebelum menyetujui atau mengembalikan paket.
+          </div>
+
           <section
             v-for="item in pkg.items"
             :key="item.questionId"
@@ -124,7 +138,9 @@ onMounted(async () => {
             >
               <span class="font-medium">Soal {{ item.position }}</span>
               <Badge variant="outline">{{ typeLabel(item.type) }}</Badge>
-              <Badge variant="secondary">{{ markerLabel(item.marker) }}</Badge>
+              <Badge :variant="markerVariant(item.marker)">{{
+                markerLabel(item.marker)
+              }}</Badge>
             </div>
             <template v-if="questions[item.questionId]">
               <QuestionPreview
@@ -166,14 +182,14 @@ onMounted(async () => {
         <Button
           type="button"
           variant="outline"
-          :disabled="busy"
+          :disabled="busy || !canDecide"
           @click="returnOpen = true"
         >
           Kembalikan
         </Button>
         <Button
           type="button"
-          :disabled="busy"
+          :disabled="busy || !canDecide"
           @click="approve"
         >
           Setujui
@@ -185,7 +201,7 @@ onMounted(async () => {
       v-model:open="returnOpen"
       :note-count="noteCount"
       :busy="busy"
-      :error="error"
+      :error="review.returnError.value"
       @confirm="giveBack"
     />
   </div>

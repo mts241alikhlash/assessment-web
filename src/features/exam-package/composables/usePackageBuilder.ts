@@ -1,4 +1,4 @@
-import { computed, ref, toValue, type MaybeRefOrGetter } from 'vue'
+import { computed, ref, toValue, watch, type MaybeRefOrGetter } from 'vue'
 import { useAuthSession } from '@/features/platform/auth'
 import {
   examPackageService,
@@ -56,35 +56,49 @@ export function usePackageBuilder(id: MaybeRefOrGetter<string>) {
     lastReturn.value?.questionNotes.find((n) => n.questionId === questionId)
       ?.note
 
+  watch(
+    () => toValue(id),
+    () => {
+      error.value = null
+    },
+  )
+
+  let latest = 0
+
   async function load() {
+    const ticket = ++latest
     loading.value = true
     loadFailed.value = false
     notFound.value = false
     try {
-      pkg.value = await examPackageService.loadPackage(toValue(id))
-      notFound.value = pkg.value === null
+      const found = await examPackageService.loadPackage(toValue(id))
+      if (ticket !== latest) return
+      pkg.value = found
+      notFound.value = found === null
     } catch {
+      if (ticket !== latest) return
       pkg.value = null
       loadFailed.value = true
     }
     loading.value = false
   }
 
-  async function run(call: () => Promise<ChangeResult>) {
-    if (busy.value) return
+  async function run(call: () => Promise<ChangeResult>): Promise<boolean> {
+    if (busy.value) return false
     busy.value = true
     error.value = null
     const result = await call()
     if (!result.success) error.value = result.error
     if (result.success || result.status === 409) await load()
     busy.value = false
+    return result.success
   }
 
   function move(questionId: string, direction: 'up' | 'down') {
     const order = (pkg.value?.items ?? []).map((item) => item.questionId)
     const from = order.indexOf(questionId)
     const to = direction === 'up' ? from - 1 : from + 1
-    if (from < 0 || to < 0 || to >= order.length) return Promise.resolve()
+    if (from < 0 || to < 0 || to >= order.length) return Promise.resolve(false)
     ;[order[from], order[to]] = [order[to], order[from]]
     return run(() => examPackageService.reorder(toValue(id), order))
   }

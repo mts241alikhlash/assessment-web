@@ -8,15 +8,6 @@ export const QUESTION_TYPES = [
 
 export type QuestionType = (typeof QUESTION_TYPES)[number]
 
-export const QUESTION_STATUSES = [
-  'DRAFT',
-  'SUBMITTED',
-  'APPROVED',
-  'RETURNED',
-] as const
-
-export type QuestionStatus = (typeof QUESTION_STATUSES)[number]
-
 export const CHOICE_KEYS = ['A', 'B', 'C', 'D', 'E'] as const
 
 export type ChoiceKey = (typeof CHOICE_KEYS)[number]
@@ -70,49 +61,10 @@ export interface QuestionVersion {
   createdAt: string
 }
 
-export type ReviewAction = 'SUBMITTED' | 'APPROVED' | 'RETURNED'
-
-export interface QuestionReview {
-  id: string
-  questionId: string
-  versionNumber: number
-  action: ReviewAction
-  note: string | null
-  byUserId: string
-  createdAt: string
-}
-
-export interface QuestionSummary {
-  id: string
-  subjectId: string
-  gradeId: string
-  authorEmployeeId: string
-  type: QuestionType
-  status: QuestionStatus
-  currentVersion: number
-  approvedVersion: number | null
-  revision: number
-  bodyHtml: string
-  points: number
-  authorName: string | null
-  createdAt: string
-  updatedAt: string
-}
-
 export interface QuestionDetail {
   id: string
-  subjectId: string
-  gradeId: string
-  authorEmployeeId: string
+  packageId: string
   type: QuestionType
-  status: QuestionStatus
   currentVersion: number
-  approvedVersion: number | null
-  revision: number
-  createdById: string
-  createdAt: string
-  updatedAt: string
   current: QuestionVersion
-  approved: QuestionVersion | null
-  reviews: QuestionReview[]
 }
