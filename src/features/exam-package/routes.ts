@@ -71,4 +71,29 @@ export const examPackageRoutes: RouteRecordRaw[] = [
       ],
     },
   },
+  {
+    path: '/persetujuan-paket',
+    name: 'ExamPackageReviewList',
+    component: () => import('./views/PackageReviewListView.vue'),
+    meta: {
+      title: 'Persetujuan Paket',
+      requiresAuth: true,
+      requiredPermission: 'exam-questions.approve',
+      breadcrumbs: [{ title: 'Ujian', href: '#' }],
+    },
+  },
+  {
+    path: '/persetujuan-paket/:id',
+    name: 'ExamPackageReview',
+    component: () => import('./views/PackageReviewView.vue'),
+    meta: {
+      title: 'Tinjau Paket',
+      requiresAuth: true,
+      requiredPermission: 'exam-questions.approve',
+      breadcrumbs: [
+        { title: 'Ujian', href: '#' },
+        { title: 'Persetujuan Paket', href: '/persetujuan-paket' },
+      ],
+    },
+  },
 ]
