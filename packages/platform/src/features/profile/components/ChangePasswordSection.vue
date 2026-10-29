@@ -8,7 +8,7 @@ import { toast } from 'vue-sonner'
 import { getIndonesianErrorMessage } from '@mts241alikhlash/web-shared/utils/error-handler'
 import { Button } from '@mts241alikhlash/ui/button'
 import { Input } from '@mts241alikhlash/ui/input'
-import { FormControl, FloatingField } from '@mts241alikhlash/ui/form'
+import { FloatingField, FormControl } from '@mts241alikhlash/ui/form'
 import { Loader2 } from '@lucide/vue'
 
 const isSubmitting = ref(false)
@@ -46,7 +46,7 @@ const onSubmit = handleSubmit(async (values) => {
 <template>
   <div class="py-4">
     <form
-      class="space-y-4"
+      class="space-y-2"
       @submit.prevent="onSubmit"
     >
       <FloatingField
@@ -55,14 +55,12 @@ const onSubmit = handleSubmit(async (values) => {
         label="Password Saat Ini"
         required
       >
-        <div class="space-y-1.5">
-          <FormControl>
-            <Input
-              type="password"
-              v-bind="componentField"
-            />
-          </FormControl>
-        </div>
+        <FormControl>
+          <Input
+            v-bind="componentField"
+            type="password"
+          />
+        </FormControl>
       </FloatingField>
 
       <FloatingField
@@ -71,14 +69,12 @@ const onSubmit = handleSubmit(async (values) => {
         label="Password Baru"
         required
       >
-        <div class="space-y-1.5">
-          <FormControl>
-            <Input
-              type="password"
-              v-bind="componentField"
-            />
-          </FormControl>
-        </div>
+        <FormControl>
+          <Input
+            v-bind="componentField"
+            type="password"
+          />
+        </FormControl>
       </FloatingField>
 
       <FloatingField
@@ -87,14 +83,12 @@ const onSubmit = handleSubmit(async (values) => {
         label="Konfirmasi Password Baru"
         required
       >
-        <div class="space-y-1.5">
-          <FormControl>
-            <Input
-              type="password"
-              v-bind="componentField"
-            />
-          </FormControl>
-        </div>
+        <FormControl>
+          <Input
+            v-bind="componentField"
+            type="password"
+          />
+        </FormControl>
       </FloatingField>
 
       <div class="flex justify-end pt-4">
