@@ -70,20 +70,40 @@ describe('buildPackageColumns', () => {
     expect(text('status')).toBe('Draf')
   })
 
-  it('offers delete only for a draft and only with the permission', () => {
-    expect(actions({}, pkg()).hideDelete).toBe(false)
-    expect(actions({}, pkg({ status: 'LOCKED' })).hideDelete).toBe(true)
+  it('offers delete for a draft, a returned and an approved package, with the permission', () => {
+    for (const status of ['DRAFT', 'RETURNED', 'APPROVED'] as const) {
+      expect(actions({}, pkg({ status })).hideDelete).toBe(false)
+    }
+    for (const status of ['SUBMITTED', 'LOCKED'] as const) {
+      expect(actions({}, pkg({ status })).hideDelete).toBe(true)
+    }
     expect(actions({ canDelete: false }, pkg()).hideDelete).toBe(true)
   })
 
-  it('offers a copy entry only with the permission', () => {
-    const withCopy = actions({}, pkg()).items as { label: string }[]
-    const without = actions({ canCopy: false }, pkg()).items as {
-      label: string
-    }[]
+  it('offers a copy entry only for an approved or scheduled package, with the permission', () => {
+    const labels = (status: ExamPackageSummary['status'], canCopy = true) =>
+      (actions({ canCopy }, pkg({ status })).items as { label: string }[]).map(
+        (entry) => entry.label,
+      )
 
-    expect(withCopy.map((entry) => entry.label)).toEqual(['Salin'])
-    expect(without).toEqual([])
+    expect(labels('APPROVED')).toEqual(['Salin'])
+    expect(labels('LOCKED')).toEqual(['Salin'])
+    for (const status of ['DRAFT', 'SUBMITTED', 'RETURNED'] as const) {
+      expect(labels(status)).toEqual([])
+    }
+    expect(labels('APPROVED', false)).toEqual([])
+  })
+
+  it('shows the status of every kind in Indonesian', () => {
+    const column = columns().find((item) => item.id === 'status')!
+    const mobile = (
+      column.meta as { mobileValue: (row: ExamPackageSummary) => string }
+    ).mobileValue
+
+    expect(mobile(pkg({ status: 'SUBMITTED' }))).toBe('Menunggu tinjauan')
+    expect(mobile(pkg({ status: 'RETURNED' }))).toBe('Dikembalikan')
+    expect(mobile(pkg({ status: 'APPROVED' }))).toBe('Disetujui')
+    expect(mobile(pkg({ status: 'LOCKED' }))).toBe('Terjadwal')
   })
 
   it('opens a package for viewing and hides the edit entry', () => {

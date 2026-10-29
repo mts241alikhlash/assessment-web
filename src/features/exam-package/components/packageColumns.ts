@@ -3,7 +3,7 @@ import type { ColumnDef } from '@tanstack/vue-table'
 import { ActionCell } from '@mts241alikhlash/ui'
 import { Badge } from '@mts241alikhlash/ui/badge'
 import { Copy } from '@lucide/vue'
-import type { ExamPackageSummary } from '../types'
+import type { ExamPackageStatus, ExamPackageSummary } from '../types'
 import { packageStatusLabel, packageStatusTone } from '../types'
 
 export interface PackageColumnOptions {
@@ -25,6 +25,9 @@ const BADGE_VARIANT = {
   success: 'default',
   warning: 'destructive',
 } as const
+
+const DELETABLE: ExamPackageStatus[] = ['DRAFT', 'RETURNED', 'APPROVED']
+const COPYABLE: ExamPackageStatus[] = ['APPROVED', 'LOCKED']
 
 const itemsLabel = (pkg: ExamPackageSummary) => `${pkg.itemCount} soal`
 
@@ -92,21 +95,23 @@ export function buildPackageColumns(
         h(ActionCell, {
           hideEdit: true,
           viewLabel: 'Lihat',
-          hideDelete: !options.canDelete || row.original.status !== 'DRAFT',
+          hideDelete:
+            !options.canDelete || !DELETABLE.includes(row.original.status),
           deleteTitle: 'Hapus paket?',
           deleteDescription:
-            'Paket yang dihapus tidak muncul lagi. Paket yang sudah dijadwalkan tidak bisa dihapus.',
-          items: options.canCopy
-            ? [
-                {
-                  label: 'Salin',
-                  icon: Copy,
-                  onClick: () => {
-                    void options.onCopy(row.original)
+            'Paket yang dihapus tidak muncul lagi. Paket yang menunggu tinjauan atau sudah dijadwalkan tidak bisa dihapus.',
+          items:
+            options.canCopy && COPYABLE.includes(row.original.status)
+              ? [
+                  {
+                    label: 'Salin',
+                    icon: Copy,
+                    onClick: () => {
+                      void options.onCopy(row.original)
+                    },
                   },
-                },
-              ]
-            : [],
+                ]
+              : [],
           onView: () => options.onOpen(row.original),
           onDelete: (controls: {
             closeAlert: () => void

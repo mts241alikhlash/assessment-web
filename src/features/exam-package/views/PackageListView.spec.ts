@@ -243,7 +243,8 @@ describe('PackageListView', () => {
     )
     const wrapper = mount(PackageListView, { global: { stubs } })
     await flushPromises()
-    const items = rowActionProps(wrapper, pkg()).items as unknown as {
+    const items = rowActionProps(wrapper, pkg({ status: 'APPROVED' }))
+      .items as unknown as {
       label: string
       onClick: () => void
     }[]
