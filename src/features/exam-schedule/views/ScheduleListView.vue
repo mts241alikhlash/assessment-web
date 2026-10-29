@@ -35,6 +35,7 @@ import { useAuthSession } from '@/features/platform/auth'
 import { buildScheduleColumns } from '../components/scheduleColumns'
 import AccessCodeDialog from '../components/AccessCodeDialog.vue'
 import ScheduleFormDialog from '../components/ScheduleFormDialog.vue'
+import SessionsDialog from '../components/SessionsDialog.vue'
 import { useScheduleList } from '../composables/useScheduleList'
 import { examScheduleService } from '../services/examScheduleService'
 import { SCHEDULE_STATUSES, scheduleStatusLabel } from '../types'
@@ -63,6 +64,7 @@ const filterOpen = ref(false)
 const editing = ref<ExamSchedule | null>(null)
 const cancelTarget = ref<ExamSchedule | null>(null)
 const accessTarget = ref<ExamSchedule | null>(null)
+const sessionsTarget = ref<ExamSchedule | null>(null)
 const cancelling = ref(false)
 
 function openCreate() {
@@ -97,6 +99,7 @@ const columns = computed(() =>
     canUpdate: hasPermission('exam-schedules.update'),
     canCancel: hasPermission('exam-schedules.cancel'),
     canAccessCode: hasPermission('exam-schedules.access-code'),
+    canSessions: hasPermission('exam-sessions.read'),
     now: () => new Date(),
     onEdit: openEdit,
     onCancel: (schedule) => {
@@ -104,6 +107,9 @@ const columns = computed(() =>
     },
     onAccessCode: (schedule) => {
       accessTarget.value = schedule
+    },
+    onSessions: (schedule) => {
+      sessionsTarget.value = schedule
     },
   }),
 )
@@ -281,6 +287,14 @@ const columns = computed(() =>
       :schedule-id="accessTarget.id"
       :title="`${accessTarget.packageTitle} · ${accessTarget.classroomName ?? '-'}`"
       @update:open="(value: boolean) => !value && (accessTarget = null)"
+    />
+
+    <SessionsDialog
+      v-if="sessionsTarget"
+      :open="true"
+      :schedule-id="sessionsTarget.id"
+      :title="`${sessionsTarget.packageTitle} · ${sessionsTarget.classroomName ?? '-'}`"
+      @update:open="(value: boolean) => !value && (sessionsTarget = null)"
     />
 
     <AlertDialog

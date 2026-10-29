@@ -5,6 +5,8 @@ import { assessmentItemRoutes } from '@/features/assessment/assessment-item'
 import { examBankRoutes } from '@/features/exam-bank'
 import { examPackageRoutes } from '@/features/exam-package'
 import { examScheduleRoutes } from '@/features/exam-schedule'
+import { examGradingRoutes } from '@/features/exam-grading'
+import { examScoreRoutes } from '@/features/exam-score'
 import { attendanceRoutes } from '@/features/assessment/attendance'
 import { myDashboardRoutes } from '@/features/assessment/my-dashboard'
 import { raporRoutes } from '@/features/assessment/rapor/routes'
@@ -23,6 +25,8 @@ const ALL: RouteRecordRaw[] = [
   ...examBankRoutes,
   ...examPackageRoutes,
   ...examScheduleRoutes,
+  ...examGradingRoutes,
+  ...examScoreRoutes,
   ...raporRoutes,
   ...attendanceRoutes,
 ]
@@ -127,6 +131,10 @@ describe('exam package and schedule routes', () => {
     '/paket-soal/p1': 'exam-packages.read',
     '/paket-soal/p1/ubah': 'exam-packages.update',
     '/jadwal-ujian': 'exam-schedules.read',
+    '/penilaian-ujian': 'exam-grading.read',
+    '/penilaian-ujian/s1': 'exam-grading.read',
+    '/penilaian-ujian/s1/x1': 'exam-grading.read',
+    '/nilai-ujian': 'exam-scores.read',
   }
 
   it.each(Object.entries(required))('%s needs %s', (path, permission) => {
@@ -155,6 +163,8 @@ describe('exam package and schedule routes', () => {
     ).toEqual([
       ['/paket-soal', 'exam-packages.read'],
       ['/jadwal-ujian', 'exam-schedules.read'],
+      ['/penilaian-ujian', 'exam-grading.read'],
+      ['/nilai-ujian', 'exam-scores.read'],
     ])
   })
 })

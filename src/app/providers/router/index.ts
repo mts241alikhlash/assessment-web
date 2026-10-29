@@ -4,6 +4,8 @@ import { ssoAuthRoutes } from '@/features/platform/auth'
 import { assessmentItemRoutes } from '@/features/assessment/assessment-item'
 import { examBankRoutes } from '@/features/exam-bank'
 import { examPackageRoutes } from '@/features/exam-package'
+import { examScoreRoutes } from '@/features/exam-score'
+import { examGradingRoutes } from '@/features/exam-grading'
 import { examScheduleRoutes } from '@/features/exam-schedule'
 import { attendanceRoutes } from '@/features/assessment/attendance'
 import { myDashboardRoutes } from '@/features/assessment/my-dashboard'
@@ -30,6 +32,8 @@ const router = createRouter({
         ...examBankRoutes,
         ...examPackageRoutes,
         ...examScheduleRoutes,
+        ...examGradingRoutes,
+        ...examScoreRoutes,
         ...raporRoutes,
         ...attendanceRoutes,
         ...profileRoutes,

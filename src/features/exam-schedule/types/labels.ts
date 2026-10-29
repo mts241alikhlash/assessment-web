@@ -1,4 +1,8 @@
-import type { ExamScheduleStatus, SchedulePhase } from './schedule'
+import type {
+  ExamScheduleStatus,
+  ExamSessionStatus,
+  SchedulePhase,
+} from './schedule'
 
 export type PhaseTone = 'neutral' | 'info' | 'success' | 'warning'
 
@@ -27,3 +31,13 @@ export const scheduleStatusLabel = (status: ExamScheduleStatus): string =>
 export const phaseLabel = (phase: SchedulePhase): string => PHASE_LABELS[phase]
 
 export const phaseTone = (phase: SchedulePhase): PhaseTone => PHASE_TONES[phase]
+
+const SESSION_LABELS: Record<ExamSessionStatus, string> = {
+  IN_PROGRESS: 'Mengerjakan',
+  SUBMITTED: 'Menunggu penilaian',
+  EXPIRED: 'Waktu habis',
+  GRADED: 'Selesai dinilai',
+}
+
+export const sessionStatusLabel = (status: ExamSessionStatus): string =>
+  SESSION_LABELS[status]

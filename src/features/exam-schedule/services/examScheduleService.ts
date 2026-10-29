@@ -12,6 +12,7 @@ import type {
   ExamSchedule,
   ScheduleCreatePayload,
   SchedulePayload,
+  ScheduleSession,
 } from '../types'
 
 export type SaveResult =
@@ -108,6 +109,42 @@ export const examScheduleService = {
         success: false,
         error: messageOf(err, 'Gagal mengganti token ujian.'),
       }
+    }
+  },
+
+  async loadSessions(
+    id: string,
+  ): Promise<
+    | { success: true; data: ScheduleSession[]; total: number }
+    | { success: false; error: string }
+  > {
+    try {
+      const response = await examScheduleApi.getSessions(id, {
+        page: 1,
+        limit: PAGINATION.REFERENCE_LIMIT,
+      })
+      const data = response.data?.data ?? []
+      return {
+        success: true,
+        data,
+        total: response.data?.meta?.total ?? data.length,
+      }
+    } catch (err: unknown) {
+      return {
+        success: false,
+        error: messageOf(err, 'Gagal memuat daftar sesi.'),
+      }
+    }
+  },
+
+  async releaseSession(sessionId: string): Promise<boolean> {
+    try {
+      await examScheduleApi.releaseSession(sessionId)
+      toast.success('Sesi dilepas. Siswa bisa masuk lagi dengan token.')
+      return true
+    } catch (err: unknown) {
+      toast.error(messageOf(err, 'Gagal melepas sesi.'))
+      return false
     }
   },
 }

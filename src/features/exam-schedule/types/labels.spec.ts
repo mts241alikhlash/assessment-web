@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { phaseLabel, phaseTone, scheduleStatusLabel } from './labels'
+import {
+  phaseLabel,
+  phaseTone,
+  scheduleStatusLabel,
+  sessionStatusLabel,
+} from './labels'
 
 describe('schedule labels', () => {
   it('names the schedule statuses in Indonesian', () => {
@@ -19,5 +24,12 @@ describe('schedule labels', () => {
     expect(phaseTone('RUNNING')).toBe('success')
     expect(phaseTone('UPCOMING')).toBe('info')
     expect(phaseTone('ENDED')).toBe('neutral')
+  })
+
+  it('names every session status', () => {
+    expect(sessionStatusLabel('IN_PROGRESS')).toBe('Mengerjakan')
+    expect(sessionStatusLabel('SUBMITTED')).toBe('Menunggu penilaian')
+    expect(sessionStatusLabel('EXPIRED')).toBe('Waktu habis')
+    expect(sessionStatusLabel('GRADED')).toBe('Selesai dinilai')
   })
 })

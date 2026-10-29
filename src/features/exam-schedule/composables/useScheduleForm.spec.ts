@@ -19,6 +19,7 @@ const existing: ExamSchedule = {
   endsAt: toInstant('2026-11-02', '11:00'),
   durationMinutes: 90,
   status: 'SCHEDULED',
+  hasSessions: false,
   createdById: 'u1',
   createdAt: '2026-10-30T00:00:00.000Z',
   updatedAt: '2026-10-30T00:00:00.000Z',

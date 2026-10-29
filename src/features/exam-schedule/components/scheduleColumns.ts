@@ -2,7 +2,7 @@ import { h } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
 import { ActionCell } from '@mts241alikhlash/ui'
 import { Badge } from '@mts241alikhlash/ui/badge'
-import { Ban, KeyRound } from '@lucide/vue'
+import { Ban, KeyRound, Users } from '@lucide/vue'
 import type { ExamSchedule } from '../types'
 import { phaseLabel, phaseTone } from '../types'
 import { formatWindow } from '../utils/formatWindow'
@@ -12,10 +12,12 @@ export interface ScheduleColumnOptions {
   canUpdate: boolean
   canCancel: boolean
   canAccessCode: boolean
+  canSessions: boolean
   now: () => Date
   onEdit: (schedule: ExamSchedule) => void
   onCancel: (schedule: ExamSchedule) => void
   onAccessCode: (schedule: ExamSchedule) => void
+  onSessions: (schedule: ExamSchedule) => void
 }
 
 const BADGE_VARIANT = {
@@ -96,7 +98,21 @@ export function buildScheduleColumns(
             onClick: () => options.onAccessCode(row.original),
           })
         }
-        if (current === 'UPCOMING' && options.canCancel) {
+        if (
+          (row.original.hasSessions || current === 'RUNNING') &&
+          options.canSessions
+        ) {
+          items.push({
+            label: 'Sesi',
+            icon: Users,
+            onClick: () => options.onSessions(row.original),
+          })
+        }
+        if (
+          current === 'UPCOMING' &&
+          options.canCancel &&
+          !row.original.hasSessions
+        ) {
           items.push({
             label: 'Batalkan',
             icon: Ban,

@@ -77,4 +77,14 @@ describe('examScheduleApi', () => {
     expect(paths).toHaveLength(5)
     for (const path of paths) expect(path).toContain(safe)
   })
+
+  it('lists the sessions of a schedule and releases one', () => {
+    void examScheduleApi.getSessions('s 1', { page: 1, limit: 100 })
+    void examScheduleApi.releaseSession('x1')
+
+    expect(get).toHaveBeenCalledWith('/exam-schedules/s%201/sessions', {
+      params: { page: 1, limit: 100 },
+    })
+    expect(post).toHaveBeenCalledWith('/exam-sessions/x1/release')
+  })
 })

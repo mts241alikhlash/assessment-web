@@ -15,6 +15,7 @@ export interface ExamSchedule {
   endsAt: string
   durationMinutes: number
   status: ExamScheduleStatus
+  hasSessions: boolean
   createdById: string
   createdAt: string
   updatedAt: string
@@ -44,4 +45,26 @@ export interface ScheduleQueryParams {
 export interface AccessCode {
   accessCode: string
   rotation: number
+}
+
+export const SESSION_STATUSES = [
+  'IN_PROGRESS',
+  'SUBMITTED',
+  'EXPIRED',
+  'GRADED',
+] as const
+
+export type ExamSessionStatus = (typeof SESSION_STATUSES)[number]
+
+export interface ScheduleSession {
+  sessionId: string
+  studentId: string
+  studentName: string | null
+  studentNis: string | null
+  status: ExamSessionStatus
+  startedAt: string
+  submittedAt: string | null
+  rawScore: number | null
+  maxScore: number | null
+  deviceBound: boolean
 }

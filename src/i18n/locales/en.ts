@@ -15,6 +15,8 @@ export default {
     examQuestionImport: 'Import Questions',
     examPackages: 'Question Packages',
     examSchedules: 'Exam Schedules',
+    examGrading: 'Exam Grading',
+    examScores: 'Exam Scores',
     studentScores: 'Student Scores',
     reportCard: 'Report Cards',
     attendance: 'Attendance',
