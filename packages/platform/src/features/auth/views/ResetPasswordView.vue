@@ -8,7 +8,7 @@ import * as z from 'zod'
 import { authApi } from '../api/authApi'
 import { Button } from '@mts241alikhlash/ui/button'
 import { Input } from '@mts241alikhlash/ui/input'
-import { FormControl, FloatingField } from '@mts241alikhlash/ui/form'
+import { FloatingField, FormControl } from '@mts241alikhlash/ui/form'
 import { toast } from 'vue-sonner'
 import { getIndonesianErrorMessage } from '@mts241alikhlash/web-shared/utils/error-handler'
 import AuthLogo from '../components/AuthLogo.vue'
@@ -90,7 +90,9 @@ const onSubmit = handleSubmit(async (values) => {
             {{ authConfig.appTitle }}
           </h1>
         </div>
-        <div class="w-full max-w-sm rounded-xl border bg-card p-8 shadow-lg">
+        <div
+          class="w-full max-w-sm rounded-xl border bg-card p-8 shadow-lg [--ff-label-bg:var(--card)]"
+        >
           <div
             v-if="!token"
             class="space-y-6 text-center flex flex-col items-center"
@@ -137,7 +139,7 @@ const onSubmit = handleSubmit(async (values) => {
 
           <form
             v-else
-            class="space-y-6"
+            class="space-y-4"
             @submit.prevent="onSubmit"
           >
             <div class="flex flex-col items-center gap-1 text-center">
@@ -147,37 +149,35 @@ const onSubmit = handleSubmit(async (values) => {
               </p>
             </div>
 
-            <FloatingField
-              v-slot="{ componentField }"
-              name="password"
-              label="Password Baru"
-            >
-              <div class="content-start">
+            <div class="space-y-2">
+              <FloatingField
+                v-slot="{ componentField }"
+                name="password"
+                label="Password Baru"
+                required
+              >
                 <FormControl>
                   <Input
-                    id="password"
-                    type="password"
                     v-bind="componentField"
+                    type="password"
                   />
                 </FormControl>
-              </div>
-            </FloatingField>
+              </FloatingField>
 
-            <FloatingField
-              v-slot="{ componentField }"
-              name="confirmPassword"
-              label="Konfirmasi Password"
-            >
-              <div class="content-start">
+              <FloatingField
+                v-slot="{ componentField }"
+                name="confirmPassword"
+                label="Konfirmasi Password"
+                required
+              >
                 <FormControl>
                   <Input
-                    id="confirmPassword"
-                    type="password"
                     v-bind="componentField"
+                    type="password"
                   />
                 </FormControl>
-              </div>
-            </FloatingField>
+              </FloatingField>
+            </div>
 
             <Button
               type="submit"
