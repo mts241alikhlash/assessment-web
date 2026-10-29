@@ -8,7 +8,7 @@ import * as z from 'zod'
 import { authApi } from '../api/authApi'
 import { Button } from '@mts241alikhlash/ui/button'
 import { Input } from '@mts241alikhlash/ui/input'
-import { FormControl, FloatingField } from '@mts241alikhlash/ui/form'
+import { FloatingField, FormControl } from '@mts241alikhlash/ui/form'
 import { toast } from 'vue-sonner'
 import { getIndonesianErrorMessage } from '@mts241alikhlash/web-shared/utils/error-handler'
 import AuthLogo from '../components/AuthLogo.vue'
@@ -22,7 +22,9 @@ const debugToken = ref<string | null>(null)
 
 const formSchema = toTypedSchema(
   z.object({
-    identifier: z.string().min(1, 'ID Pengguna wajib diisi.'),
+    identifier: z
+      .string()
+      .min(1, `${authConfig.value.identifierLabel} wajib diisi.`),
   }),
 )
 
@@ -77,7 +79,9 @@ const onSubmit = handleSubmit(async (values) => {
             {{ authConfig.appTitle }}
           </h1>
         </div>
-        <div class="w-full max-w-sm rounded-xl border bg-card p-8 shadow-lg">
+        <div
+          class="w-full max-w-sm rounded-xl border bg-card p-8 shadow-lg [--ff-label-bg:var(--card)]"
+        >
           <div
             v-if="successMessage"
             class="space-y-6"
@@ -124,30 +128,32 @@ const onSubmit = handleSubmit(async (values) => {
 
           <form
             v-else
-            class="space-y-6"
+            class="space-y-4"
             @submit.prevent="onSubmit"
           >
             <div class="flex flex-col items-center gap-1 text-center">
               <h1 class="text-2xl font-bold">Lupa Password?</h1>
               <p class="text-muted-foreground text-sm text-balance">
-                Masukkan ID Pengguna Anda untuk menerima tautan reset password
+                Masukkan {{ authConfig.identifierLabel }} Anda untuk menerima
+                tautan reset password
               </p>
             </div>
 
             <FloatingField
               v-slot="{ componentField }"
               name="identifier"
-              label="ID Pengguna"
+              :label="authConfig.identifierLabel"
+              required
             >
-              <div class="content-start">
-                <FormControl>
-                  <Input
-                    id="identifier"
-                    type="text"
-                    v-bind="componentField"
-                  />
-                </FormControl>
-              </div>
+              <FormControl>
+                <Input
+                  v-bind="componentField"
+                  type="text"
+                  autocapitalize="none"
+                  autocomplete="username"
+                  spellcheck="false"
+                />
+              </FormControl>
             </FloatingField>
 
             <Button
