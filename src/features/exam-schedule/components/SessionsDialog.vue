@@ -107,7 +107,7 @@ watch(
         </p>
         <div
           v-if="error"
-          class="space-y-3 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-[length:var(--text-control,0.75rem)]"
+          class="space-y-3 rounded-md border p-3 text-[length:var(--text-control,0.75rem)]"
           role="alert"
         >
           <p>{{ error }}</p>
