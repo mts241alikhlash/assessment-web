@@ -321,6 +321,19 @@ describe('PackageDetailView', () => {
     wrapper.unmount()
   })
 
+  it('warns the creator that changing an approved package takes the approval back', async () => {
+    loadPackage.mockResolvedValue(view({ status: 'APPROVED' }))
+    const wrapper = await mountView()
+
+    expect(wrapper.text()).toContain('kembali menjadi draf')
+    wrapper.unmount()
+
+    loadPackage.mockResolvedValue(view({ status: 'DRAFT' }))
+    const draft = await mountView()
+    expect(draft.text()).not.toContain('kembali menjadi draf')
+    draft.unmount()
+  })
+
   it('shows the return note and the note of the returned question', async () => {
     loadPackage.mockResolvedValue(
       view({

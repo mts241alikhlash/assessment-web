@@ -25,7 +25,7 @@ import { useExamPackageStore } from '../stores/examPackageStore'
 import type { ExamPackageSummary } from '../types'
 
 const router = useRouter()
-const { hasPermission } = useAuthSession()
+const { hasPermission, user } = useAuthSession()
 const store = useExamPackageStore()
 const { subjectOptions, gradeOptions } = storeToRefs(store)
 
@@ -80,7 +80,10 @@ const columns = computed(() =>
   buildPackageColumns({
     subjectName: store.subjectName,
     gradeName: store.gradeName,
-    canDelete: hasPermission('exam-packages.delete'),
+    canDelete: (row) =>
+      hasPermission('exam-packages.delete') &&
+      (row.createdById === user.value?.id ||
+        hasPermission('exam-questions.manage-all')),
     canCopy: hasPermission('exam-packages.create'),
     onOpen: openPackage,
     onCopy: async (pkg) => {

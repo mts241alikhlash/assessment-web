@@ -9,7 +9,7 @@ import { packageStatusLabel, packageStatusTone } from '../types'
 export interface PackageColumnOptions {
   subjectName: (id: string) => string
   gradeName: (id: string) => string
-  canDelete: boolean
+  canDelete: (pkg: ExamPackageSummary) => boolean
   canCopy: boolean
   onOpen: (pkg: ExamPackageSummary) => void
   onCopy: (pkg: ExamPackageSummary) => void | Promise<void>
@@ -96,7 +96,8 @@ export function buildPackageColumns(
           hideEdit: true,
           viewLabel: 'Lihat',
           hideDelete:
-            !options.canDelete || !DELETABLE.includes(row.original.status),
+            !options.canDelete(row.original) ||
+            !DELETABLE.includes(row.original.status),
           deleteTitle: 'Hapus paket?',
           deleteDescription:
             'Paket yang dihapus tidak muncul lagi. Paket yang menunggu tinjauan atau sudah dijadwalkan tidak bisa dihapus.',

@@ -4,6 +4,7 @@ import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
 import { defineComponent } from 'vue'
 import { createPinia, setActivePinia } from 'pinia'
 import * as vueRouter from 'vue-router'
+import { useExamBankStore } from '@/features/exam-bank/stores/examBankStore'
 import PackageQuestionFormView from './PackageQuestionFormView.vue'
 import type { ExamPackageView } from '../types'
 
@@ -19,6 +20,8 @@ const {
   loadReferences,
   permissions,
   user,
+  bankReferences,
+  loadTeachers,
 } = vi.hoisted(() => ({
   push: vi.fn(),
   replace: vi.fn(),
@@ -29,6 +32,8 @@ const {
   loadReferences: vi.fn(),
   permissions: new Set<string>(),
   user: { value: { id: 'u1' } },
+  bankReferences: vi.fn(),
+  loadTeachers: vi.fn(),
 }))
 
 vi.mock('vue-router', async () => {
@@ -61,7 +66,7 @@ vi.mock('../services/examPackageService', () => ({
   },
 }))
 vi.mock('@/features/exam-bank/services/examBankService', () => ({
-  examBankService: { loadReferences: vi.fn(), loadTeachers: vi.fn() },
+  examBankService: { loadReferences: bankReferences, loadTeachers },
 }))
 
 const passthrough = defineComponent({ template: '<div><slot /></div>' })
@@ -214,6 +219,29 @@ describe('PackageQuestionFormView', () => {
       }),
     )
     expect(push).toHaveBeenCalledWith('/paket-soal/p1')
+    wrapper.unmount()
+  })
+
+  it('loads the scope before deciding to offer an author, so a fresh page load still shows it', async () => {
+    permissions.add('exam-questions.manage-all')
+    bankReferences.mockImplementation(() => {
+      useExamBankStore().scope = { all: true, employeeId: null, pairs: [] }
+      return Promise.resolve()
+    })
+    loadTeachers.mockResolvedValue([{ id: 'e1', name: 'Bu Sari' }])
+
+    const wrapper = await mountView()
+
+    expect(loadTeachers).toHaveBeenCalledWith('math')
+    expect(wrapper.text()).toContain('Penulis')
+    wrapper.unmount()
+  })
+
+  it('warns that a change to an approved package takes its approval back', async () => {
+    loadPackage.mockResolvedValue(view({ status: 'APPROVED' }))
+    const wrapper = await mountView()
+
+    expect(wrapper.text()).toContain('kembali menjadi draf')
     wrapper.unmount()
   })
 

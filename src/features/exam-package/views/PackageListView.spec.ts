@@ -31,6 +31,7 @@ const listState = {
 
 vi.mock('@/features/platform/auth', () => ({
   useAuthSession: () => ({
+    user: { value: { id: 'u1' } },
     hasPermission: (code: string) => permissions.has(code),
   }),
 }))
@@ -223,6 +224,21 @@ describe('PackageListView', () => {
     await flushPromises()
     expect(rowActionProps(without, pkg()).hideDelete).toBe(true)
     without.unmount()
+  })
+
+  it('hides delete on a colleague package unless the viewer manages every package', async () => {
+    const theirs = pkg({ id: 'p2', createdById: 'u2' })
+    listState.packages.value = [theirs]
+    const wrapper = mount(PackageListView, { global: { stubs } })
+    await flushPromises()
+    expect(rowActionProps(wrapper, theirs).hideDelete).toBe(true)
+    wrapper.unmount()
+
+    permissions.add('exam-questions.manage-all')
+    const manager = mount(PackageListView, { global: { stubs } })
+    await flushPromises()
+    expect(rowActionProps(manager, theirs).hideDelete).toBe(false)
+    manager.unmount()
   })
 
   it('shows the empty state, and a reset button when filters match nothing', async () => {

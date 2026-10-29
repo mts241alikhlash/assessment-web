@@ -32,6 +32,7 @@ import ScheduleFormDialog from '@/features/exam-schedule/components/ScheduleForm
 import { useAuthSession } from '@/features/platform/auth'
 import { buildBuilderColumns } from '../components/builderColumns'
 import RenamePackageDialog from '../components/RenamePackageDialog.vue'
+import ApprovedEditNotice from '../components/ApprovedEditNotice.vue'
 import ReturnedNotes from '../components/ReturnedNotes.vue'
 import TakeQuestionsDialog from '../components/TakeQuestionsDialog.vue'
 import { usePackageBuilder } from '../composables/usePackageBuilder'
@@ -231,6 +232,7 @@ onMounted(async () => {
           >
             {{ error }}
           </div>
+          <ApprovedEditNotice v-if="status === 'APPROVED' && canEdit" />
           <ReturnedNotes :review="builder.lastReturn.value" />
           <div
             class="flex flex-wrap items-center gap-2 text-[length:var(--text-control,0.75rem)]"

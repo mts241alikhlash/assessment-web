@@ -17,9 +17,9 @@ export function messageOf(err: unknown, fallback: string): string {
     status >= 400 &&
     status < 500 &&
     status !== 401 &&
-    status !== 403 &&
     typeof message === 'string' &&
-    message.trim() !== ''
+    message.trim() !== '' &&
+    message !== 'Forbidden resource'
   ) {
     return message
   }

@@ -25,7 +25,7 @@ function columns(
   return buildPackageColumns({
     subjectName: (id) => (id === 'math' ? 'Matematika' : '-'),
     gradeName: (id) => (id === 'g7' ? 'Kelas 7' : '-'),
-    canDelete: true,
+    canDelete: () => true,
     canCopy: true,
     onOpen: vi.fn(),
     onCopy: vi.fn(),
@@ -77,7 +77,16 @@ describe('buildPackageColumns', () => {
     for (const status of ['SUBMITTED', 'LOCKED'] as const) {
       expect(actions({}, pkg({ status })).hideDelete).toBe(true)
     }
-    expect(actions({ canDelete: false }, pkg()).hideDelete).toBe(true)
+    expect(actions({ canDelete: () => false }, pkg()).hideDelete).toBe(true)
+  })
+
+  it('asks per row whether the viewer may delete it, so a colleague package has no Hapus', () => {
+    const mine = pkg({ createdById: 'u1' })
+    const theirs = pkg({ id: 'p2', createdById: 'u2' })
+    const canDelete = (row: ExamPackageSummary) => row.createdById === 'u1'
+
+    expect(actions({ canDelete }, mine).hideDelete).toBe(false)
+    expect(actions({ canDelete }, theirs).hideDelete).toBe(true)
   })
 
   it('offers a copy entry only for an approved or scheduled package, with the permission', () => {

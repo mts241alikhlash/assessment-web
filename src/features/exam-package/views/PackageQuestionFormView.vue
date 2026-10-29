@@ -37,6 +37,7 @@ import {
   emptyContent,
   validateDraft,
 } from '@/features/exam-bank/utils/questionDraft'
+import ApprovedEditNotice from '../components/ApprovedEditNotice.vue'
 import { usePackageBuilder } from '../composables/usePackageBuilder'
 import { examPackageService } from '../services/examPackageService'
 
@@ -113,16 +114,14 @@ onMounted(async () => {
       return
     }
     applyDetail(loaded)
-  } else if (hasManageAll() && pkg.value) {
+  } else if (pkg.value) {
     await examBankService.loadReferences()
-    teachers.value = await examBankService.loadTeachers(pkg.value.subjectId)
+    if (store.manageAll) {
+      teachers.value = await examBankService.loadTeachers(pkg.value.subjectId)
+    }
   }
   loading.value = false
 })
-
-function hasManageAll(): boolean {
-  return store.manageAll
-}
 
 async function save() {
   const problem = validateDraft(
@@ -192,6 +191,8 @@ async function save() {
             Versi {{ detail.currentVersion }}
           </span>
         </div>
+
+        <ApprovedEditNotice v-if="pkg?.status === 'APPROVED' && canEdit" />
 
         <div
           v-if="note"

@@ -23,6 +23,7 @@ import { useBreadcrumbs } from '@mts241alikhlash/web-shared/composables/useBread
 import { examBankService } from '@/features/exam-bank/services/examBankService'
 import { useExamBankStore } from '@/features/exam-bank/stores/examBankStore'
 import type { ImportResult, NamedOption } from '@/features/exam-bank/types'
+import ApprovedEditNotice from '../components/ApprovedEditNotice.vue'
 import { usePackageBuilder } from '../composables/usePackageBuilder'
 
 const MAX_BYTES = 10 * 1024 * 1024
@@ -132,6 +133,7 @@ onMounted(async () => {
           Paket ini tidak bisa diubah, jadi soal tidak bisa diimpor ke dalamnya.
         </div>
         <template v-else>
+          <ApprovedEditNotice v-if="pkg?.status === 'APPROVED'" />
           <FloatingLabelField
             v-if="teachers.length > 0"
             label="Penulis"

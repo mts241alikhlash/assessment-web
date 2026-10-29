@@ -3,6 +3,7 @@ import { PAGINATION } from '@mts241alikhlash/web-shared/constants/pagination'
 import { getIndonesianErrorMessage } from '@mts241alikhlash/web-shared/utils/error-handler'
 import { subjectApi } from '@/features/lookup/subject'
 import { loadAssignments } from '@/features/lookup/teaching-assignment'
+import { messageOf } from '@/features/exam-package/utils/messageOf'
 import { examBankApi } from '../api/examBankApi'
 import { useExamBankStore } from '../stores/examBankStore'
 import type { ImportResult, NamedOption, TemplateFormat } from '../types'
@@ -84,7 +85,7 @@ export const examBankService = {
     } catch (err: unknown) {
       return {
         success: false,
-        error: getIndonesianErrorMessage(err, 'Gagal mengimpor soal.'),
+        error: messageOf(err, 'Gagal mengimpor soal.'),
       }
     }
   },
