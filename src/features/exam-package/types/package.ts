@@ -1,8 +1,16 @@
-import type { QuestionType } from '@/features/exam-bank/types'
+import type { QuestionContent, QuestionType } from '@/features/exam-bank/types'
 
-export const PACKAGE_STATUSES = ['DRAFT', 'LOCKED'] as const
+export const PACKAGE_STATUSES = [
+  'DRAFT',
+  'SUBMITTED',
+  'RETURNED',
+  'APPROVED',
+  'LOCKED',
+] as const
 
 export type ExamPackageStatus = (typeof PACKAGE_STATUSES)[number]
+
+export type QuestionMarker = 'NEW' | 'CHANGED' | 'COPIED'
 
 export interface ExamPackageSummary {
   id: string
@@ -22,30 +30,58 @@ export interface ExamPackageItemView {
   questionVersion: number
   position: number
   type: QuestionType
+  marker: QuestionMarker
   summary: string
   points: number
+}
+
+export interface PackageQuestionNote {
+  questionId: string
+  note: string
+}
+
+export interface PackageReview {
+  id: string
+  action: 'SUBMIT' | 'APPROVE' | 'RETURN'
+  byUserId: string
+  note: string | null
+  questionNotes: PackageQuestionNote[]
+  createdAt: string
 }
 
 export interface ExamPackageView extends Omit<ExamPackageSummary, 'itemCount'> {
   items: ExamPackageItemView[]
+  reviews: PackageReview[]
 }
 
-export interface PackageCandidate {
-  id: string
-  type: QuestionType
-  summary: string
-  points: number
-  approvedVersion: number
-}
-
-export interface ExamPackagePayload {
+export interface ExamPackageCreatePayload {
   title: string
+  subjectId: string
+  gradeId: string
+}
+
+export interface AddQuestionPayload {
+  type: QuestionType
+  bodyHtml: string
+  content: QuestionContent
+  points: number
+  authorEmployeeId?: string
+}
+
+export interface UpdateQuestionPayload {
+  bodyHtml?: string
+  content?: QuestionContent
+  points?: number
+}
+
+export interface TakePayload {
+  sourcePackageId: string
   questionIds: string[]
 }
 
-export interface ExamPackageCreatePayload extends ExamPackagePayload {
-  subjectId: string
-  gradeId: string
+export interface ReturnPayload {
+  note: string
+  questionNotes: PackageQuestionNote[]
 }
 
 export interface ExamPackageQueryParams {
@@ -55,12 +91,4 @@ export interface ExamPackageQueryParams {
   gradeId?: string
   status?: ExamPackageStatus
   search?: string
-}
-
-export interface CandidateQueryParams {
-  subjectId: string
-  gradeId: string
-  search?: string
-  page?: number
-  limit?: number
 }

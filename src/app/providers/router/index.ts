@@ -2,7 +2,6 @@ import '@mts241alikhlash/web-shared/types/router'
 import { createRouter, createWebHistory } from 'vue-router'
 import { ssoAuthRoutes } from '@/features/platform/auth'
 import { assessmentItemRoutes } from '@/features/assessment/assessment-item'
-import { examBankRoutes } from '@/features/exam-bank'
 import { examPackageRoutes } from '@/features/exam-package'
 import { examScoreRoutes } from '@/features/exam-score'
 import { examGradingRoutes } from '@/features/exam-grading'
@@ -29,7 +28,6 @@ const router = createRouter({
         ...myDashboardRoutes,
         ...assessmentItemRoutes,
         ...studentScoreRoutes,
-        ...examBankRoutes,
         ...examPackageRoutes,
         ...examScheduleRoutes,
         ...examGradingRoutes,

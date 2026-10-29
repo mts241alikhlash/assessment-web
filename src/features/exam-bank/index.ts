@@ -1,1 +1,0 @@
-export { examBankRoutes } from './routes'

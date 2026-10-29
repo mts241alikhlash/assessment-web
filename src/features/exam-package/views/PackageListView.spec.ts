@@ -31,6 +31,7 @@ const listState = {
 
 vi.mock('@/features/platform/auth', () => ({
   useAuthSession: () => ({
+    user: { value: { id: 'u1' } },
     hasPermission: (code: string) => permissions.has(code),
   }),
 }))
@@ -161,6 +162,39 @@ describe('PackageListView', () => {
     without.unmount()
   })
 
+  it('opens the create dialog from Tambah and goes to the new package', async () => {
+    const wrapper = mount(PackageListView, {
+      global: {
+        stubs: {
+          ...stubs,
+          PackageCreateDialog: defineComponent({
+            name: 'PackageCreateDialog',
+            props: { open: Boolean },
+            emits: ['update:open', 'created'],
+            template: '<div v-if="open" data-test="create-dialog" />',
+          }),
+        },
+      },
+    })
+    await flushPromises()
+    expect(wrapper.find('[data-test="create-dialog"]').exists()).toBe(false)
+
+    await wrapper
+      .findAll('button')
+      .find((candidate) => candidate.text() === 'Tambah')!
+      .trigger('click')
+    expect(wrapper.find('[data-test="create-dialog"]').exists()).toBe(true)
+
+    const created = wrapper.findComponent({ name: 'PackageCreateDialog' })
+    ;(
+      created.vm as unknown as { $emit: (event: string, value: string) => void }
+    ).$emit('created', 'p9')
+    await flushPromises()
+
+    expect(push).toHaveBeenCalledWith('/paket-soal/p9')
+    wrapper.unmount()
+  })
+
   it('opens the package when a row is clicked', async () => {
     const wrapper = mount(PackageListView, { global: { stubs } })
     await flushPromises()
@@ -190,6 +224,21 @@ describe('PackageListView', () => {
     await flushPromises()
     expect(rowActionProps(without, pkg()).hideDelete).toBe(true)
     without.unmount()
+  })
+
+  it('hides delete on a colleague package unless the viewer manages every package', async () => {
+    const theirs = pkg({ id: 'p2', createdById: 'u2' })
+    listState.packages.value = [theirs]
+    const wrapper = mount(PackageListView, { global: { stubs } })
+    await flushPromises()
+    expect(rowActionProps(wrapper, theirs).hideDelete).toBe(true)
+    wrapper.unmount()
+
+    permissions.add('exam-questions.manage-all')
+    const manager = mount(PackageListView, { global: { stubs } })
+    await flushPromises()
+    expect(rowActionProps(manager, theirs).hideDelete).toBe(false)
+    manager.unmount()
   })
 
   it('shows the empty state, and a reset button when filters match nothing', async () => {
@@ -243,7 +292,8 @@ describe('PackageListView', () => {
     )
     const wrapper = mount(PackageListView, { global: { stubs } })
     await flushPromises()
-    const items = rowActionProps(wrapper, pkg()).items as unknown as {
+    const items = rowActionProps(wrapper, pkg({ status: 'APPROVED' }))
+      .items as unknown as {
       label: string
       onClick: () => void
     }[]

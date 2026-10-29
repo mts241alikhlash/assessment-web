@@ -1,19 +1,49 @@
-import type { ExamPackageStatus } from './package'
+import type { ExamPackageStatus, QuestionMarker } from './package'
 
 export type PackageTone = 'neutral' | 'info' | 'success' | 'warning'
 
 const STATUS_LABELS: Record<ExamPackageStatus, string> = {
   DRAFT: 'Draf',
-  LOCKED: 'Terkunci',
+  SUBMITTED: 'Menunggu tinjauan',
+  RETURNED: 'Dikembalikan',
+  APPROVED: 'Disetujui',
+  LOCKED: 'Terjadwal',
 }
 
 const STATUS_TONES: Record<ExamPackageStatus, PackageTone> = {
   DRAFT: 'neutral',
-  LOCKED: 'success',
+  SUBMITTED: 'info',
+  RETURNED: 'warning',
+  APPROVED: 'success',
+  LOCKED: 'neutral',
 }
+
+const MARKER_LABELS: Record<QuestionMarker, string> = {
+  NEW: 'Baru',
+  CHANGED: 'Diubah',
+  COPIED: 'Salinan',
+}
+
+export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline'
+
+const TONE_VARIANT = {
+  neutral: 'outline',
+  info: 'secondary',
+  success: 'default',
+  warning: 'destructive',
+} as const satisfies Record<PackageTone, BadgeVariant>
+
+export const statusVariant = (status: ExamPackageStatus): BadgeVariant =>
+  TONE_VARIANT[STATUS_TONES[status]]
+
+export const markerVariant = (marker: QuestionMarker): BadgeVariant =>
+  marker === 'COPIED' ? 'outline' : 'default'
 
 export const packageStatusLabel = (status: ExamPackageStatus): string =>
   STATUS_LABELS[status]
 
 export const packageStatusTone = (status: ExamPackageStatus): PackageTone =>
   STATUS_TONES[status]
+
+export const markerLabel = (marker: QuestionMarker): string =>
+  MARKER_LABELS[marker]

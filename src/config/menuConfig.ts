@@ -6,11 +6,9 @@ import {
   Medal,
   FileText,
   LayoutDashboard,
-  Library,
   ListChecks,
   Package,
   SquareCheckBig,
-  Upload,
 } from '@lucide/vue'
 
 export type {
@@ -61,33 +59,6 @@ export const menuSections: MenuSection[] = [
     ],
   },
   {
-    key: 'exam-bank',
-    label: 'menu.section.examBank',
-    items: [
-      {
-        key: 'exam-questions',
-        title: 'menu.examQuestions',
-        url: '/bank-soal',
-        icon: Library,
-        requiredPermission: 'exam-questions.read',
-      },
-      {
-        key: 'exam-question-import',
-        title: 'menu.examQuestionImport',
-        url: '/bank-soal/impor',
-        icon: Upload,
-        requiredPermission: 'exam-questions.create',
-      },
-      {
-        key: 'exam-question-review',
-        title: 'menu.examQuestionReview',
-        url: '/bank-soal/persetujuan',
-        icon: SquareCheckBig,
-        requiredPermission: 'exam-questions.approve',
-      },
-    ],
-  },
-  {
     key: 'exam',
     label: 'menu.section.exam',
     items: [
@@ -97,6 +68,13 @@ export const menuSections: MenuSection[] = [
         url: '/paket-soal',
         icon: Package,
         requiredPermission: 'exam-packages.read',
+      },
+      {
+        key: 'exam-package-review',
+        title: 'menu.examPackageReview',
+        url: '/persetujuan-paket',
+        icon: SquareCheckBig,
+        requiredPermission: 'exam-questions.approve',
       },
       {
         key: 'exam-schedules',

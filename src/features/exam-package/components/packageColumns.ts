@@ -3,13 +3,13 @@ import type { ColumnDef } from '@tanstack/vue-table'
 import { ActionCell } from '@mts241alikhlash/ui'
 import { Badge } from '@mts241alikhlash/ui/badge'
 import { Copy } from '@lucide/vue'
-import type { ExamPackageSummary } from '../types'
-import { packageStatusLabel, packageStatusTone } from '../types'
+import type { ExamPackageStatus, ExamPackageSummary } from '../types'
+import { packageStatusLabel, statusVariant } from '../types'
 
 export interface PackageColumnOptions {
   subjectName: (id: string) => string
   gradeName: (id: string) => string
-  canDelete: boolean
+  canDelete: (pkg: ExamPackageSummary) => boolean
   canCopy: boolean
   onOpen: (pkg: ExamPackageSummary) => void
   onCopy: (pkg: ExamPackageSummary) => void | Promise<void>
@@ -19,12 +19,8 @@ export interface PackageColumnOptions {
   ) => void | Promise<void>
 }
 
-const BADGE_VARIANT = {
-  neutral: 'outline',
-  info: 'secondary',
-  success: 'default',
-  warning: 'destructive',
-} as const
+const DELETABLE: ExamPackageStatus[] = ['DRAFT', 'RETURNED', 'APPROVED']
+const COPYABLE: ExamPackageStatus[] = ['APPROVED', 'LOCKED']
 
 const itemsLabel = (pkg: ExamPackageSummary) => `${pkg.itemCount} soal`
 
@@ -78,10 +74,8 @@ export function buildPackageColumns(
           packageStatusLabel(row.status),
       },
       cell: ({ row }) =>
-        h(
-          Badge,
-          { variant: BADGE_VARIANT[packageStatusTone(row.original.status)] },
-          () => packageStatusLabel(row.original.status),
+        h(Badge, { variant: statusVariant(row.original.status) }, () =>
+          packageStatusLabel(row.original.status),
         ),
     },
     {
@@ -92,21 +86,24 @@ export function buildPackageColumns(
         h(ActionCell, {
           hideEdit: true,
           viewLabel: 'Lihat',
-          hideDelete: !options.canDelete || row.original.status !== 'DRAFT',
+          hideDelete:
+            !options.canDelete(row.original) ||
+            !DELETABLE.includes(row.original.status),
           deleteTitle: 'Hapus paket?',
           deleteDescription:
-            'Paket yang dihapus tidak muncul lagi. Paket yang sudah dijadwalkan tidak bisa dihapus.',
-          items: options.canCopy
-            ? [
-                {
-                  label: 'Salin',
-                  icon: Copy,
-                  onClick: () => {
-                    void options.onCopy(row.original)
+            'Paket yang dihapus tidak muncul lagi. Paket yang menunggu tinjauan atau sudah dijadwalkan tidak bisa dihapus.',
+          items:
+            options.canCopy && COPYABLE.includes(row.original.status)
+              ? [
+                  {
+                    label: 'Salin',
+                    icon: Copy,
+                    onClick: () => {
+                      void options.onCopy(row.original)
+                    },
                   },
-                },
-              ]
-            : [],
+                ]
+              : [],
           onView: () => options.onOpen(row.original),
           onDelete: (controls: {
             closeAlert: () => void

@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { examScheduleService } from './examScheduleService'
 
 const {
+  getPackages,
   createSchedule,
   cancelSchedule,
   getAccessCode,
@@ -10,6 +11,7 @@ const {
   releaseSession,
   error,
 } = vi.hoisted(() => ({
+  getPackages: vi.fn(),
   createSchedule: vi.fn(),
   cancelSchedule: vi.fn(),
   getAccessCode: vi.fn(),
@@ -29,6 +31,9 @@ vi.mock('../api/examScheduleApi', () => ({
     updateSchedule: vi.fn(),
   },
 }))
+vi.mock('@/features/exam-package/api/examPackageApi', () => ({
+  examPackageApi: { getPackages },
+}))
 vi.mock('vue-sonner', () => ({ toast: { success: vi.fn(), error } }))
 
 const refused = (status: number, message: string) => ({
@@ -38,6 +43,38 @@ const refused = (status: number, message: string) => ({
 
 describe('examScheduleService', () => {
   beforeEach(() => vi.clearAllMocks())
+
+  it('offers only approved and already scheduled packages, sorted by title', async () => {
+    getPackages.mockImplementation(({ status }: { status: string }) =>
+      Promise.resolve({
+        data: {
+          data:
+            status === 'APPROVED'
+              ? [{ id: 'a', title: 'UH Bab 2' }]
+              : status === 'LOCKED'
+                ? [{ id: 'l', title: 'UAS Ganjil' }]
+                : [{ id: 'd', title: 'Draf' }],
+        },
+      }),
+    )
+
+    const packages = await examScheduleService.loadPackages()
+
+    expect(getPackages).toHaveBeenCalledTimes(2)
+    expect(
+      getPackages.mock.calls
+        .map(([query]) => (query as { status: string }).status)
+        .sort(),
+    ).toEqual(['APPROVED', 'LOCKED'])
+    expect(packages.map((pkg) => pkg.id)).toEqual(['l', 'a'])
+  })
+
+  it('tells the user and returns nothing when the packages cannot load', async () => {
+    getPackages.mockRejectedValue(new Error('down'))
+
+    expect(await examScheduleService.loadPackages()).toEqual([])
+    expect(error).toHaveBeenCalled()
+  })
 
   it('hands the server message of a refused schedule to the form', async () => {
     createSchedule.mockRejectedValue(

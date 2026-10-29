@@ -26,10 +26,17 @@ export type SaveTarget = { mode: 'create' } | { mode: 'edit'; id: string }
 export const examScheduleService = {
   async loadPackages(): Promise<ExamPackageSummary[]> {
     try {
-      const response = await examPackageApi.getPackages({
-        limit: PAGINATION.REFERENCE_LIMIT,
-      })
-      return response.data?.data ?? []
+      const responses = await Promise.all(
+        (['APPROVED', 'LOCKED'] as const).map((status) =>
+          examPackageApi.getPackages({
+            status,
+            limit: PAGINATION.REFERENCE_LIMIT,
+          }),
+        ),
+      )
+      return responses
+        .flatMap((response) => response.data?.data ?? [])
+        .sort((a, b) => a.title.localeCompare(b.title))
     } catch (err: unknown) {
       toast.error(getIndonesianErrorMessage(err, 'Gagal memuat daftar paket.'))
       return []

@@ -73,18 +73,4 @@ describe('exam bank store', () => {
     expect(store.subjectName('ghost')).toBe('-')
     expect(store.gradeName('ghost')).toBe('-')
   })
-
-  it('lets a teacher change only their own questions, and a manager any', () => {
-    const store = useExamBankStore()
-    store.scope = { all: false, employeeId: 'emp-1', pairs: [] }
-
-    expect(store.canModify({ authorEmployeeId: 'emp-1' })).toBe(true)
-    expect(store.canModify({ authorEmployeeId: 'emp-2' })).toBe(false)
-
-    store.scope = { all: false, employeeId: null, pairs: [] }
-    expect(store.canModify({ authorEmployeeId: 'emp-1' })).toBe(false)
-
-    store.scope = { all: true, employeeId: null, pairs: [] }
-    expect(store.canModify({ authorEmployeeId: 'emp-2' })).toBe(true)
-  })
 })

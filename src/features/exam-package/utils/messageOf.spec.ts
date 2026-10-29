@@ -22,6 +22,18 @@ describe('messageOf', () => {
     )
   })
 
+  it('shows what the server wrote when it refuses a person for a reason', () => {
+    expect(
+      messageOf(
+        failure(
+          403,
+          'Anda tidak bisa menyetujui paket yang Anda susun sendiri',
+        ),
+        'Gagal',
+      ),
+    ).toBe('Anda tidak bisa menyetujui paket yang Anda susun sendiri')
+  })
+
   it('does not show a validation list written for developers', () => {
     const text = messageOf(failure(400, ['title must be a string']), 'Gagal')
 

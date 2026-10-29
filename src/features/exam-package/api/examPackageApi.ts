@@ -3,17 +3,21 @@ import type {
   ApiSingleResponse,
 } from '@mts241alikhlash/web-shared/types/api'
 import api from '@mts241alikhlash/web-shared/utils/api'
+import type { QuestionDetail } from '@/features/exam-bank/types'
 import type {
-  CandidateQueryParams,
+  AddQuestionPayload,
   ExamPackageCreatePayload,
-  ExamPackagePayload,
   ExamPackageQueryParams,
   ExamPackageSummary,
   ExamPackageView,
-  PackageCandidate,
+  ReturnPayload,
+  TakePayload,
+  UpdateQuestionPayload,
 } from '../types'
 
 const seg = encodeURIComponent
+
+const base = (id: string) => `/exam-packages/${seg(id)}`
 
 export const examPackageApi = {
   getPackages: (params?: ExamPackageQueryParams) =>
@@ -22,27 +26,65 @@ export const examPackageApi = {
     }),
 
   getPackage: (id: string) =>
-    api.get<ApiSingleResponse<ExamPackageView>>(`/exam-packages/${seg(id)}`),
+    api.get<ApiSingleResponse<ExamPackageView>>(base(id)),
 
-  getCandidates: (params: CandidateQueryParams) =>
-    api.get<ApiPaginatedResponse<PackageCandidate>>(
-      '/exam-packages/candidates',
-      { params },
+  getPackageQuestion: (id: string, questionId: string) =>
+    api.get<ApiSingleResponse<QuestionDetail>>(
+      `${base(id)}/questions/${seg(questionId)}`,
     ),
 
   createPackage: (payload: ExamPackageCreatePayload) =>
     api.post<ApiSingleResponse<ExamPackageView>>('/exam-packages', payload),
 
-  updatePackage: (id: string, payload: ExamPackagePayload) =>
-    api.patch<ApiSingleResponse<ExamPackageView>>(
-      `/exam-packages/${seg(id)}`,
+  renamePackage: (id: string, title: string) =>
+    api.patch<ApiSingleResponse<ExamPackageView>>(base(id), { title }),
+
+  deletePackage: (id: string) => api.delete(base(id)),
+
+  copyPackage: (id: string) =>
+    api.post<ApiSingleResponse<ExamPackageView>>(`${base(id)}/copy`),
+
+  addQuestion: (id: string, payload: AddQuestionPayload) =>
+    api.post<ApiSingleResponse<ExamPackageView>>(
+      `${base(id)}/questions`,
       payload,
     ),
 
-  deletePackage: (id: string) => api.delete(`/exam-packages/${seg(id)}`),
-
-  copyPackage: (id: string) =>
-    api.post<ApiSingleResponse<ExamPackageView>>(
-      `/exam-packages/${seg(id)}/copy`,
+  updateQuestion: (
+    id: string,
+    questionId: string,
+    payload: UpdateQuestionPayload,
+  ) =>
+    api.patch<ApiSingleResponse<ExamPackageView>>(
+      `${base(id)}/questions/${seg(questionId)}`,
+      payload,
     ),
+
+  removeQuestion: (id: string, questionId: string) =>
+    api.delete<ApiSingleResponse<ExamPackageView>>(
+      `${base(id)}/questions/${seg(questionId)}`,
+    ),
+
+  reorderQuestions: (id: string, questionIds: string[]) =>
+    api.put<ApiSingleResponse<ExamPackageView>>(`${base(id)}/questions/order`, {
+      questionIds,
+    }),
+
+  takeQuestions: (id: string, payload: TakePayload) =>
+    api.post<ApiSingleResponse<ExamPackageView>>(
+      `${base(id)}/questions/take`,
+      payload,
+    ),
+
+  submitPackage: (id: string) =>
+    api.post<ApiSingleResponse<ExamPackageView>>(`${base(id)}/submit`),
+
+  approvePackage: (id: string, note?: string) =>
+    api.post<ApiSingleResponse<ExamPackageView>>(
+      `${base(id)}/approve`,
+      note === undefined ? {} : { note },
+    ),
+
+  returnPackage: (id: string, payload: ReturnPayload) =>
+    api.post<ApiSingleResponse<ExamPackageView>>(`${base(id)}/return`, payload),
 }
