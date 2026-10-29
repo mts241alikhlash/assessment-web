@@ -4,6 +4,8 @@ import { mount, type VueWrapper } from '@vue/test-utils'
 import { defineComponent } from 'vue'
 import ReturnPackageDialog from './ReturnPackageDialog.vue'
 
+type Wrapper = Pick<VueWrapper, 'findAll' | 'get'>
+
 const passthrough = defineComponent({ template: '<div><slot /></div>' })
 const dialog = defineComponent({
   props: { open: Boolean },
@@ -36,7 +38,7 @@ const stubs = {
   Textarea: textarea,
 }
 
-const buttonByText = (host: VueWrapper, text: string) =>
+const buttonByText = (host: Wrapper, text: string) =>
   host.findAll('button').find((candidate) => candidate.text() === text)
 
 const open = (props: Record<string, unknown> = {}) =>

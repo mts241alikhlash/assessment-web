@@ -9,6 +9,8 @@ import { useExamPackageStore } from '../stores/examPackageStore'
 import type { ExamPackageView } from '../types'
 import { CARDS, cardRows } from '@/test/dataTableCards'
 
+type Wrapper = Pick<VueWrapper, 'findAll' | 'get'>
+
 const {
   push,
   loadPackage,
@@ -178,7 +180,7 @@ const view = (overrides: Partial<ExamPackageView> = {}): ExamPackageView => ({
 })
 
 const buttonByText = (host: unknown, text: string) =>
-  (host as VueWrapper)
+  (host as Wrapper)
     .findAll('button')
     .find(
       (candidateButton) =>

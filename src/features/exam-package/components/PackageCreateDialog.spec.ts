@@ -6,6 +6,8 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useExamBankStore } from '@/features/exam-bank/stores/examBankStore'
 import PackageCreateDialog from './PackageCreateDialog.vue'
 
+type Wrapper = Pick<VueWrapper, 'findAll' | 'get'>
+
 const { create, loadReferences } = vi.hoisted(() => ({
   create: vi.fn(),
   loadReferences: vi.fn(),
@@ -60,7 +62,7 @@ const stubs = {
   Input: textInput,
 }
 
-const buttonByText = (host: VueWrapper, text: string) =>
+const buttonByText = (host: Wrapper, text: string) =>
   host.findAll('button').find((candidate) => candidate.text() === text)
 
 function open() {

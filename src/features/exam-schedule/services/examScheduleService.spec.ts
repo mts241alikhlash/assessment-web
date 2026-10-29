@@ -45,22 +45,26 @@ describe('examScheduleService', () => {
   beforeEach(() => vi.clearAllMocks())
 
   it('offers only approved and already scheduled packages, sorted by title', async () => {
-    getPackages.mockImplementation(async ({ status }: { status: string }) => ({
-      data: {
-        data:
-          status === 'APPROVED'
-            ? [{ id: 'a', title: 'UH Bab 2' }]
-            : status === 'LOCKED'
-              ? [{ id: 'l', title: 'UAS Ganjil' }]
-              : [{ id: 'd', title: 'Draf' }],
-      },
-    }))
+    getPackages.mockImplementation(({ status }: { status: string }) =>
+      Promise.resolve({
+        data: {
+          data:
+            status === 'APPROVED'
+              ? [{ id: 'a', title: 'UH Bab 2' }]
+              : status === 'LOCKED'
+                ? [{ id: 'l', title: 'UAS Ganjil' }]
+                : [{ id: 'd', title: 'Draf' }],
+        },
+      }),
+    )
 
     const packages = await examScheduleService.loadPackages()
 
     expect(getPackages).toHaveBeenCalledTimes(2)
     expect(
-      getPackages.mock.calls.map(([query]) => query.status).sort(),
+      getPackages.mock.calls
+        .map(([query]) => (query as { status: string }).status)
+        .sort(),
     ).toEqual(['APPROVED', 'LOCKED'])
     expect(packages.map((pkg) => pkg.id)).toEqual(['l', 'a'])
   })

@@ -184,9 +184,10 @@ describe('PackageListView', () => {
       .trigger('click')
     expect(wrapper.find('[data-test="create-dialog"]').exists()).toBe(true)
 
-    wrapper
-      .findComponent({ name: 'PackageCreateDialog' })
-      .vm.$emit('created', 'p9')
+    const created = wrapper.findComponent({ name: 'PackageCreateDialog' })
+    ;(
+      created.vm as unknown as { $emit: (event: string, value: string) => void }
+    ).$emit('created', 'p9')
     await flushPromises()
 
     expect(push).toHaveBeenCalledWith('/paket-soal/p9')

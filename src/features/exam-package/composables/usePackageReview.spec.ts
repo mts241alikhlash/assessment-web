@@ -43,15 +43,17 @@ async function loaded(
   status: ExamPackageView['status'] = 'SUBMITTED',
 ) {
   loadPackage.mockResolvedValue(view(count, status))
-  loadQuestion.mockImplementation(async (_id: string, questionId: string) => ({
-    id: questionId,
-    type: 'TRUE_FALSE',
-    current: {
-      bodyHtml: `<p>${questionId}</p>`,
-      content: { answer: { value: true } },
-      points: 2,
-    },
-  }))
+  loadQuestion.mockImplementation((_id: string, questionId: string) =>
+    Promise.resolve({
+      id: questionId,
+      type: 'TRUE_FALSE',
+      current: {
+        bodyHtml: `<p>${questionId}</p>`,
+        content: { answer: { value: true } },
+        points: 2,
+      },
+    }),
+  )
   const review = usePackageReview(ref('p1'))
   await review.load()
   return review

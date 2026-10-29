@@ -7,6 +7,8 @@ import PackageReviewView from './PackageReviewView.vue'
 import { useExamPackageStore } from '../stores/examPackageStore'
 import type { ExamPackageView } from '../types'
 
+type Wrapper = Pick<VueWrapper, 'findAll' | 'get'>
+
 const {
   push,
   replace,
@@ -107,7 +109,7 @@ const view = (
   })),
 })
 
-const buttonByText = (host: VueWrapper, text: string) =>
+const buttonByText = (host: Wrapper, text: string) =>
   host.findAll('button').find((candidate) => candidate.text() === text)
 
 async function mountView() {
@@ -122,8 +124,8 @@ describe('PackageReviewView', () => {
     useExamPackageStore().subjects = [{ id: 'math', name: 'Matematika' }]
     vi.clearAllMocks()
     loadPackage.mockResolvedValue(view())
-    loadQuestion.mockImplementation(
-      async (_id: string, questionId: string) => ({
+    loadQuestion.mockImplementation((_id: string, questionId: string) =>
+      Promise.resolve({
         id: questionId,
         type: 'TRUE_FALSE',
         current: {

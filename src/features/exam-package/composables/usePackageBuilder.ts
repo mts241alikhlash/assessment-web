@@ -40,14 +40,13 @@ export function usePackageBuilder(id: MaybeRefOrGetter<string>) {
   const canSubmit = computed(
     () =>
       canEdit.value &&
-      pkg.value !== null &&
-      SUBMITTABLE.includes(pkg.value.status) &&
-      pkg.value.items.length > 0,
+      SUBMITTABLE.includes(pkg.value?.status ?? 'LOCKED') &&
+      (pkg.value?.items.length ?? 0) > 0,
   )
 
   const lastReturn = computed<PackageReview | null>(() => {
     const current = pkg.value
-    if (current === null || current.status !== 'RETURNED') return null
+    if (current?.status !== 'RETURNED') return null
     return (
       [...current.reviews].reverse().find((r) => r.action === 'RETURN') ?? null
     )

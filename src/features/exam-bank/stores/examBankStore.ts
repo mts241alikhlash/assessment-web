@@ -1,30 +1,16 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import type {
-  GradeRecord,
-  NamedOption,
-  QuestionAuthor,
-  QuestionScope,
-} from '../types'
+import type { GradeRecord, NamedOption, QuestionScope } from '../types'
 import { gradeLabel } from '../utils/labels'
 
 export const useExamBankStore = defineStore('examBank', () => {
   const scope = ref<QuestionScope | null>(null)
   const subjects = ref<NamedOption[]>([])
   const grades = ref<GradeRecord[]>([])
-  const authors = ref<QuestionAuthor[]>([])
   const scopeLoaded = ref(false)
 
   const manageAll = computed(() => scope.value?.all === true)
   const employeeId = computed(() => scope.value?.employeeId ?? null)
-
-  function canModify(question: { authorEmployeeId: string }): boolean {
-    return (
-      manageAll.value ||
-      (employeeId.value !== null &&
-        question.authorEmployeeId === employeeId.value)
-    )
-  }
 
   const gradeNames = computed(() => {
     const names = new Map<string, string>()
@@ -101,11 +87,9 @@ export const useExamBankStore = defineStore('examBank', () => {
     scope,
     subjects,
     grades,
-    authors,
     scopeLoaded,
     manageAll,
     employeeId,
-    canModify,
     subjectOptions,
     gradeOptions,
     gradeOptionsFor,

@@ -4,6 +4,8 @@ import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
 import { defineComponent } from 'vue'
 import RenamePackageDialog from './RenamePackageDialog.vue'
 
+type Wrapper = Pick<VueWrapper, 'findAll' | 'get'>
+
 const { rename } = vi.hoisted(() => ({ rename: vi.fn() }))
 vi.mock('../services/examPackageService', () => ({
   examPackageService: { rename },
@@ -41,7 +43,7 @@ const stubs = {
   Input: textInput,
 }
 
-const buttonByText = (host: VueWrapper, text: string) =>
+const buttonByText = (host: Wrapper, text: string) =>
   host.findAll('button').find((candidate) => candidate.text() === text)
 
 const open = () =>

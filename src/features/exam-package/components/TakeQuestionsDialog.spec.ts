@@ -4,6 +4,8 @@ import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
 import { defineComponent } from 'vue'
 import TakeQuestionsDialog from './TakeQuestionsDialog.vue'
 
+type Wrapper = Pick<VueWrapper, 'findAll' | 'get'>
+
 const { loadApprovedSources, loadPackage, take } = vi.hoisted(() => ({
   loadApprovedSources: vi.fn(),
   loadPackage: vi.fn(),
@@ -68,7 +70,7 @@ const items = ['Satu', 'Dua', 'Tiga'].map((summary, index) => ({
   points: 2,
 }))
 
-const buttonByText = (host: VueWrapper, text: string) =>
+const buttonByText = (host: Wrapper, text: string) =>
   host.findAll('button').find((candidate) => candidate.text().startsWith(text))
 
 async function open() {
@@ -77,9 +79,12 @@ async function open() {
     global: { stubs },
   })
   await flushPromises()
-  wrapper
-    .findComponent({ name: 'SelectStub' })
-    .vm.$emit('update:modelValue', 'p2')
+  const selectStub = wrapper.findComponent({ name: 'SelectStub' })
+  ;(
+    selectStub.vm as unknown as {
+      $emit: (event: string, value: string) => void
+    }
+  ).$emit('update:modelValue', 'p2')
   await flushPromises()
   return wrapper
 }

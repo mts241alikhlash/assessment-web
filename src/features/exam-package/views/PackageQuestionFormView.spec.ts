@@ -7,6 +7,8 @@ import * as vueRouter from 'vue-router'
 import PackageQuestionFormView from './PackageQuestionFormView.vue'
 import type { ExamPackageView } from '../types'
 
+type Wrapper = Pick<VueWrapper, 'findAll' | 'get'>
+
 const {
   push,
   replace,
@@ -164,7 +166,7 @@ const question = {
   },
 }
 
-const buttonByText = (host: VueWrapper, text: string) =>
+const buttonByText = (host: Wrapper, text: string) =>
   host.findAll('button').find((candidate) => candidate.text() === text)
 
 async function mountView() {

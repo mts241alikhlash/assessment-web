@@ -5,20 +5,7 @@ import { subjectApi } from '@/features/lookup/subject'
 import { loadAssignments } from '@/features/lookup/teaching-assignment'
 import { examBankApi } from '../api/examBankApi'
 import { useExamBankStore } from '../stores/examBankStore'
-import type {
-  ApprovalItem,
-  ApprovalResult,
-  ImportResult,
-  NamedOption,
-  QuestionCreatePayload,
-  QuestionDetail,
-  QuestionStatus,
-  QuestionUpdatePayload,
-  TemplateFormat,
-} from '../types'
-
-export type SaveResult =
-  { success: true; data: QuestionDetail } | { success: false; error: string }
+import type { ImportResult, NamedOption, TemplateFormat } from '../types'
 
 export const examBankService = {
   async loadReferences() {
@@ -42,75 +29,6 @@ export const examBankService = {
     }
   },
 
-  async loadAuthors(status?: QuestionStatus) {
-    const store = useExamBankStore()
-    try {
-      const response = await examBankApi.getAuthors(status)
-      store.authors = response.data?.data ?? []
-    } catch (err: unknown) {
-      toast.error(getIndonesianErrorMessage(err, 'Gagal memuat penulis soal.'))
-    }
-  },
-
-  async submitQuestion(id: string): Promise<boolean> {
-    try {
-      await examBankApi.submitQuestion(id)
-      toast.success('Soal diajukan untuk persetujuan.')
-      return true
-    } catch (err: unknown) {
-      toast.error(getIndonesianErrorMessage(err, 'Gagal mengajukan soal.'))
-      return false
-    }
-  },
-
-  async deleteQuestion(id: string): Promise<boolean> {
-    try {
-      await examBankApi.deleteQuestion(id)
-      toast.success('Soal dihapus.')
-      return true
-    } catch (err: unknown) {
-      toast.error(getIndonesianErrorMessage(err, 'Gagal menghapus soal.'))
-      return false
-    }
-  },
-
-  async loadQuestion(id: string): Promise<QuestionDetail | null> {
-    try {
-      const response = await examBankApi.getQuestion(id)
-      return response.data?.data ?? null
-    } catch (err: unknown) {
-      toast.error(getIndonesianErrorMessage(err, 'Gagal memuat soal.'))
-      return null
-    }
-  },
-
-  async createQuestion(payload: QuestionCreatePayload): Promise<SaveResult> {
-    try {
-      const response = await examBankApi.createQuestion(payload)
-      return { success: true, data: response.data.data }
-    } catch (err: unknown) {
-      return {
-        success: false,
-        error: getIndonesianErrorMessage(err, 'Gagal menyimpan soal.'),
-      }
-    }
-  },
-
-  async updateQuestion(
-    id: string,
-    payload: QuestionUpdatePayload,
-  ): Promise<SaveResult> {
-    try {
-      const response = await examBankApi.updateQuestion(id, payload)
-      return { success: true, data: response.data.data }
-    } catch (err: unknown) {
-      return {
-        success: false,
-        error: getIndonesianErrorMessage(err, 'Gagal menyimpan soal.'),
-      }
-    }
-  },
-
   async loadTeachers(subjectId: string): Promise<NamedOption[]> {
     try {
       const { rows } = await loadAssignments({
@@ -130,42 +48,6 @@ export const examBankService = {
     } catch (err: unknown) {
       toast.error(getIndonesianErrorMessage(err, 'Gagal memuat daftar guru.'))
       return []
-    }
-  },
-
-  async approveQuestion(id: string, revision: number): Promise<boolean> {
-    try {
-      await examBankApi.approveQuestion(id, revision)
-      toast.success('Soal disetujui.')
-      return true
-    } catch (err: unknown) {
-      toast.error(getIndonesianErrorMessage(err, 'Gagal menyetujui soal.'))
-      return false
-    }
-  },
-
-  async returnQuestion(
-    id: string,
-    note: string,
-    revision: number,
-  ): Promise<boolean> {
-    try {
-      await examBankApi.returnQuestion(id, note, revision)
-      toast.success('Soal dikembalikan ke penulis.')
-      return true
-    } catch (err: unknown) {
-      toast.error(getIndonesianErrorMessage(err, 'Gagal mengembalikan soal.'))
-      return false
-    }
-  },
-
-  async approveMany(items: ApprovalItem[]): Promise<ApprovalResult[] | null> {
-    try {
-      const response = await examBankApi.approveMany(items)
-      return response.data?.data ?? []
-    } catch (err: unknown) {
-      toast.error(getIndonesianErrorMessage(err, 'Gagal menyetujui soal.'))
-      return null
     }
   },
 

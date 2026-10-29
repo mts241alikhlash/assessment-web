@@ -6,6 +6,8 @@ import { createPinia, setActivePinia } from 'pinia'
 import PackageImportView from './PackageImportView.vue'
 import type { ExamPackageView } from '../types'
 
+type Wrapper = Pick<VueWrapper, 'findAll' | 'get'>
+
 const {
   push,
   replace,
@@ -100,7 +102,7 @@ const view = (overrides: Partial<ExamPackageView> = {}): ExamPackageView => ({
   ...overrides,
 })
 
-async function choose(host: VueWrapper, file: File) {
+async function choose(host: Wrapper, file: File) {
   const input = host.get('[data-testid="dropzone"]')
   Object.defineProperty(input.element, 'files', {
     value: [file],
@@ -109,7 +111,7 @@ async function choose(host: VueWrapper, file: File) {
   await input.trigger('change')
 }
 
-const findButton = (wrapper: VueWrapper, text: string) =>
+const findButton = (wrapper: Wrapper, text: string) =>
   wrapper.findAll('button').find((node) => node.text().includes(text))
 
 async function mountView() {

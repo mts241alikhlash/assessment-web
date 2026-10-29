@@ -49,14 +49,16 @@ describe('examPackageService', () => {
   })
 
   it('merges the approved and the scheduled packages of a subject and grade by title', async () => {
-    getPackages.mockImplementation(async ({ status }: { status: string }) => ({
-      data: {
-        data:
-          status === 'APPROVED'
-            ? [{ id: 'a', title: 'UAS' }]
-            : [{ id: 'b', title: 'Bank' }],
-      },
-    }))
+    getPackages.mockImplementation(({ status }: { status: string }) =>
+      Promise.resolve({
+        data: {
+          data:
+            status === 'APPROVED'
+              ? [{ id: 'a', title: 'UAS' }]
+              : [{ id: 'b', title: 'Bank' }],
+        },
+      }),
+    )
 
     const sources = await examPackageService.loadApprovedSources('s1', 'g1')
 
