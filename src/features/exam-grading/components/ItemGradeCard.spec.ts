@@ -131,4 +131,23 @@ describe('ItemGradeCard', () => {
       (wrapper.find('input[type="number"]').element as HTMLInputElement).value,
     ).toBe('9')
   })
+
+  it('does not offer a save for a note that only gained spaces', async () => {
+    const wrapper = mountCard(
+      item({ score: 7, note: 'cukup', needsGrading: false }),
+    )
+
+    await wrapper.find('input[maxlength="500"]').setValue('cukup   ')
+
+    expect(saveButton(wrapper).attributes('disabled')).toBeDefined()
+  })
+
+  it('treats an answer of another shape as an answer, not as a blank', () => {
+    const wrapper = mountCard(
+      item({ answer: { key: 'A' }, needsGrading: true }),
+    )
+
+    expect(wrapper.text()).not.toContain('Tidak dijawab')
+    expect(wrapper.find('input[type="number"]').exists()).toBe(true)
+  })
 })

@@ -36,7 +36,11 @@ watch(
 )
 
 const answer = computed(() => answerText(props.item.answer))
-const hasAnswer = computed(() => answer.value.trim() !== '')
+const hasAnswer = computed(
+  () =>
+    props.item.answer !== null &&
+    (!('text' in props.item.answer) || answer.value.trim() !== ''),
+)
 const valid = computed(
   () =>
     score.value !== undefined &&
@@ -47,7 +51,7 @@ const valid = computed(
 const changed = computed(
   () =>
     score.value !== (props.item.score ?? undefined) ||
-    note.value !== (props.item.note ?? ''),
+    note.value.trim() !== (props.item.note ?? ''),
 )
 const canSave = computed(
   () =>
