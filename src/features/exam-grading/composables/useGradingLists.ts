@@ -25,8 +25,8 @@ export function useGradingSessions(
   const list = usePagedList({
     page,
     pageSize,
-    scope: ['exam-grading', 'sessions', scheduleId.value],
-    filters: { status },
+    scope: ['exam-grading', 'sessions'],
+    filters: { scheduleId, status },
     fetchPage: async (current, limit) =>
       (
         await examGradingApi.getSessions(scheduleId.value, {
