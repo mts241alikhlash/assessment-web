@@ -45,20 +45,6 @@ export const examBankRoutes: RouteRecordRaw[] = [
     },
   },
   {
-    path: '/bank-soal/impor',
-    name: 'ExamQuestionImport',
-    component: () => import('./views/QuestionImportView.vue'),
-    meta: {
-      title: 'Impor Soal',
-      requiresAuth: true,
-      requiredPermission: 'exam-questions.create',
-      breadcrumbs: [
-        { title: 'Bank Soal', href: '#' },
-        { title: 'Impor', href: '/bank-soal/impor' },
-      ],
-    },
-  },
-  {
     path: '/bank-soal/:id',
     name: 'ExamQuestionEdit',
     component: () => import('./views/QuestionFormView.vue'),

@@ -10,7 +10,6 @@ import {
   ListChecks,
   Package,
   SquareCheckBig,
-  Upload,
 } from '@lucide/vue'
 
 export type {
@@ -70,13 +69,6 @@ export const menuSections: MenuSection[] = [
         url: '/bank-soal',
         icon: Library,
         requiredPermission: 'exam-questions.read',
-      },
-      {
-        key: 'exam-question-import',
-        title: 'menu.examQuestionImport',
-        url: '/bank-soal/impor',
-        icon: Upload,
-        requiredPermission: 'exam-questions.create',
       },
       {
         key: 'exam-question-review',

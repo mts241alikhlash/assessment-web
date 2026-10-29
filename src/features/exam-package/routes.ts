@@ -57,4 +57,18 @@ export const examPackageRoutes: RouteRecordRaw[] = [
       ],
     },
   },
+  {
+    path: '/paket-soal/:id/impor',
+    name: 'ExamPackageImport',
+    component: () => import('./views/PackageImportView.vue'),
+    meta: {
+      title: 'Impor Soal',
+      requiresAuth: true,
+      requiredPermission: 'exam-questions.create',
+      breadcrumbs: [
+        { title: 'Ujian', href: '#' },
+        { title: 'Paket Soal', href: '/paket-soal' },
+      ],
+    },
+  },
 ]

@@ -185,16 +185,14 @@ export const examBankService = {
 
   async importQuestions(input: {
     file: File
-    subjectId: string
-    gradeId: string
+    packageId: string
     authorEmployeeId?: string
   }): Promise<
     { success: true; data: ImportResult } | { success: false; error: string }
   > {
     const form = new FormData()
     form.append('file', input.file)
-    form.append('subjectId', input.subjectId)
-    form.append('gradeId', input.gradeId)
+    form.append('packageId', input.packageId)
     if (input.authorEmployeeId) {
       form.append('authorEmployeeId', input.authorEmployeeId)
     }
