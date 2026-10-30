@@ -6,6 +6,9 @@ import type {
 export interface GradingSchedule {
   id: string
   title: string
+  packageId: string
+  durationMinutes: number
+  kind: 'REGULAR' | 'MAKEUP'
   subjectId: string
   classroomId: string
   classroomName: string | null

@@ -9,6 +9,11 @@ const {
   rotateAccessCode,
   getSessions,
   releaseSession,
+  getAbsentees,
+  createMakeup,
+  getParticipants,
+  addParticipants,
+  removeParticipant,
   error,
 } = vi.hoisted(() => ({
   getPackages: vi.fn(),
@@ -18,6 +23,11 @@ const {
   rotateAccessCode: vi.fn(),
   getSessions: vi.fn(),
   releaseSession: vi.fn(),
+  getAbsentees: vi.fn(),
+  createMakeup: vi.fn(),
+  getParticipants: vi.fn(),
+  addParticipants: vi.fn(),
+  removeParticipant: vi.fn(),
   error: vi.fn(),
 }))
 vi.mock('../api/examScheduleApi', () => ({
@@ -28,6 +38,11 @@ vi.mock('../api/examScheduleApi', () => ({
     rotateAccessCode,
     getSessions,
     releaseSession,
+    getAbsentees,
+    createMakeup,
+    getParticipants,
+    addParticipants,
+    removeParticipant,
     updateSchedule: vi.fn(),
   },
 }))
@@ -167,5 +182,78 @@ describe('examScheduleService sessions', () => {
     const result = await examScheduleService.loadSessions('s1')
 
     expect(result).toMatchObject({ success: true, total: 1400 })
+  })
+
+  describe('examScheduleService makeups', () => {
+    beforeEach(() => vi.clearAllMocks())
+
+    const body = {
+      startsAt: '2026-11-05T01:00:00.000Z',
+      endsAt: '2026-11-05T04:00:00.000Z',
+      durationMinutes: 90,
+      participants: [{ studentId: 'st1', reason: 'SICK' as const }],
+    }
+
+    it('loads the absentees', async () => {
+      getAbsentees.mockResolvedValue({
+        data: { data: [{ studentId: 'st1', eligible: true }] },
+      })
+
+      expect(await examScheduleService.loadAbsentees('s1')).toEqual({
+        success: true,
+        data: [{ studentId: 'st1', eligible: true }],
+      })
+    })
+
+    it('hands the server message of a refused makeup to the dialog', async () => {
+      createMakeup.mockRejectedValue(
+        refused(400, 'Budi sudah mengikuti ujian ini'),
+      )
+
+      expect(await examScheduleService.createMakeup('s1', body)).toEqual({
+        success: false,
+        error: 'Budi sudah mengikuti ujian ini',
+      })
+    })
+
+    it('returns the created makeup', async () => {
+      createMakeup.mockResolvedValue({ data: { data: { id: 'm1' } } })
+
+      expect(await examScheduleService.createMakeup('s1', body)).toEqual({
+        success: true,
+        data: { id: 'm1' },
+      })
+    })
+
+    it('removes a participant and reports the server reason when refused', async () => {
+      removeParticipant.mockResolvedValueOnce({})
+      removeParticipant.mockRejectedValueOnce(
+        refused(409, 'Siswa sudah punya sesi, tidak bisa dihapus'),
+      )
+
+      expect(await examScheduleService.removeParticipant('m1', 'st1')).toEqual({
+        success: true,
+        data: null,
+      })
+      expect(await examScheduleService.removeParticipant('m1', 'st1')).toEqual({
+        success: false,
+        error: 'Siswa sudah punya sesi, tidak bisa dihapus',
+      })
+    })
+
+    it('adds participants and loads them', async () => {
+      addParticipants.mockResolvedValue({})
+      getParticipants.mockResolvedValue({
+        data: { data: [{ studentId: 'st1', status: 'WAITING' }] },
+      })
+
+      expect(
+        await examScheduleService.addParticipants('m1', body.participants),
+      ).toEqual({ success: true, data: null })
+      expect(await examScheduleService.loadParticipants('m1')).toEqual({
+        success: true,
+        data: [{ studentId: 'st1', status: 'WAITING' }],
+      })
+    })
   })
 })

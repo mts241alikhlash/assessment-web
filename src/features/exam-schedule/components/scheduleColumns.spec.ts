@@ -16,6 +16,8 @@ const schedule = (overrides: Partial<ExamSchedule> = {}): ExamSchedule => ({
   endsAt: toInstant('2026-11-02', '11:00'),
   durationMinutes: 90,
   status: 'SCHEDULED',
+  kind: 'REGULAR' as const,
+  makeupOfId: null,
   hasSessions: false,
   createdById: 'u1',
   createdAt: '2026-10-30T00:00:00.000Z',
@@ -174,5 +176,76 @@ describe('buildScheduleColumns', () => {
         ),
       ),
     ).not.toContain('Sesi')
+  })
+
+  describe('makeups', () => {
+    const ended = { now: () => new Date(toInstant('2026-11-02', '12:00')) }
+
+    it('offers a makeup of a regular schedule, even after it ended', () => {
+      expect(
+        labels(actionProps({ ...ended, canMakeup: true }, schedule())),
+      ).toEqual(['Susulan'])
+      expect(
+        labels(
+          actionProps({ canMakeup: true }, schedule({ hasSessions: true })),
+        ),
+      ).toContain('Susulan')
+    })
+
+    it('does not offer a makeup of a makeup, of a cancelled schedule, or without the permission', () => {
+      const options = { ...ended, canMakeup: true }
+
+      expect(
+        labels(
+          actionProps(options, schedule({ kind: 'MAKEUP', makeupOfId: 's0' })),
+        ),
+      ).not.toContain('Susulan')
+      expect(
+        labels(actionProps(options, schedule({ status: 'CANCELLED' }))),
+      ).not.toContain('Susulan')
+      expect(labels(actionProps(ended, schedule()))).not.toContain('Susulan')
+    })
+
+    it('offers the participants of a makeup', () => {
+      const makeup = schedule({ kind: 'MAKEUP', makeupOfId: 's0' })
+
+      expect(
+        labels(actionProps({ ...ended, canParticipants: true }, makeup)),
+      ).toEqual(['Peserta'])
+      expect(labels(actionProps(ended, makeup))).toEqual([])
+    })
+
+    it('calls the handlers with the row', () => {
+      const onMakeup = vi.fn()
+      const onParticipants = vi.fn()
+      const regular = schedule()
+      const makeup = schedule({ kind: 'MAKEUP', makeupOfId: 's0' })
+      const items = (row: ExamSchedule) =>
+        actionProps(
+          { canMakeup: true, canParticipants: true, onMakeup, onParticipants },
+          row,
+        ).items as { label: string; onClick: () => void }[]
+
+      items(regular)
+        .find((item) => item.label === 'Susulan')!
+        .onClick()
+      items(makeup)
+        .find((item) => item.label === 'Peserta')!
+        .onClick()
+
+      expect(onMakeup).toHaveBeenCalledWith(regular)
+      expect(onParticipants).toHaveBeenCalledWith(makeup)
+    })
+
+    it('tells a makeup apart in the type column', () => {
+      const type = columns().find((column) => column.id === 'type')!
+      const text = (type.meta as { mobileValue: (row: ExamSchedule) => string })
+        .mobileValue
+
+      expect(text(schedule({ kind: 'MAKEUP', makeupOfId: 's0' }))).toBe(
+        'UTS · Susulan',
+      )
+      expect(text(schedule())).toBe('UTS')
+    })
   })
 })

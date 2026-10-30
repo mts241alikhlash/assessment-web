@@ -56,6 +56,24 @@ vi.mock('../components/AccessCodeDialog.vue', () => ({
   }),
 }))
 
+vi.mock('../components/MakeupDialog.vue', () => ({
+  default: defineComponent({
+    name: 'MakeupDialogStub',
+    props: { open: Boolean, schedule: Object },
+    emits: ['update:open', 'created'],
+    template:
+      '<div data-test="makeup-dialog" :data-schedule="schedule.id"><button data-test="made" @click="$emit(\'created\', \'m9\')" /></div>',
+  }),
+}))
+vi.mock('../components/MakeupParticipantsDialog.vue', () => ({
+  default: defineComponent({
+    name: 'MakeupParticipantsDialogStub',
+    props: { open: Boolean, scheduleId: String, title: String },
+    template:
+      '<div data-test="participants-dialog" :data-schedule="scheduleId" />',
+  }),
+}))
+
 const passthrough = defineComponent({ template: '<div><slot /></div>' })
 const button = defineComponent({
   props: { variant: String, disabled: Boolean },
@@ -118,6 +136,8 @@ const schedule = (overrides: Partial<ExamSchedule> = {}): ExamSchedule => ({
   endsAt: toInstant('2030-11-02', '11:00'),
   durationMinutes: 90,
   status: 'SCHEDULED',
+  kind: 'REGULAR' as const,
+  makeupOfId: null,
   hasSessions: false,
   createdById: 'u1',
   createdAt: '2026-10-30T00:00:00.000Z',
@@ -131,6 +151,8 @@ describe('ScheduleListView', () => {
     ;['read', 'create', 'update', 'cancel', 'access-code'].forEach((action) =>
       permissions.add(`exam-schedules.${action}`),
     )
+    permissions.add('exam-grading.read')
+    permissions.add('exam-grading.grade')
     listState.schedules.value = [schedule()]
     listState.totalItems.value = 1
     listState.loading.value = false
@@ -277,8 +299,7 @@ describe('ScheduleListView', () => {
     const items = rowActionProps(wrapper, schedule()).items as unknown as {
       label: string
     }[]
-
-    expect(items.map((entry) => entry.label)).toEqual(['Batalkan'])
+    expect(items.map((entry) => entry.label)).toEqual(['Batalkan', 'Susulan'])
     wrapper.unmount()
   })
 
@@ -291,6 +312,60 @@ describe('ScheduleListView', () => {
         .findAll('button')
         .some((candidate) => candidate.text().includes('Filter')),
     ).toBe(true)
+    wrapper.unmount()
+  })
+
+  it('opens the makeup dialog for the schedule when Susulan is chosen, and refreshes after it is made', async () => {
+    const wrapper = mount(ScheduleListView, { global: { stubs } })
+    await flushPromises()
+    expect(wrapper.find('[data-test="makeup-dialog"]').exists()).toBe(false)
+
+    const items = rowActionProps(wrapper, schedule()).items as unknown as {
+      label: string
+      onClick: () => void
+    }[]
+    items.find((entry) => entry.label === 'Susulan')!.onClick()
+    await flushPromises()
+
+    expect(
+      wrapper.get('[data-test="makeup-dialog"]').attributes('data-schedule'),
+    ).toBe('s1')
+    await wrapper.get('[data-test="made"]').trigger('click')
+    expect(refresh).toHaveBeenCalled()
+    wrapper.unmount()
+  })
+
+  it('offers no Susulan action without exam-grading.grade', async () => {
+    permissions.delete('exam-grading.grade')
+    const wrapper = mount(ScheduleListView, { global: { stubs } })
+    await flushPromises()
+
+    const items = rowActionProps(wrapper, schedule()).items as unknown as {
+      label: string
+    }[]
+
+    expect(items.map((entry) => entry.label)).not.toContain('Susulan')
+    wrapper.unmount()
+  })
+
+  it('opens the participants of a makeup when Peserta is chosen', async () => {
+    const makeup = schedule({ id: 'm1', kind: 'MAKEUP', makeupOfId: 's1' })
+    listState.schedules.value = [makeup]
+    const wrapper = mount(ScheduleListView, { global: { stubs } })
+    await flushPromises()
+
+    const items = rowActionProps(wrapper, makeup).items as unknown as {
+      label: string
+      onClick: () => void
+    }[]
+    items.find((entry) => entry.label === 'Peserta')!.onClick()
+    await flushPromises()
+
+    expect(
+      wrapper
+        .get('[data-test="participants-dialog"]')
+        .attributes('data-schedule'),
+    ).toBe('m1')
     wrapper.unmount()
   })
 })

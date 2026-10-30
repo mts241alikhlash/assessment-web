@@ -20,6 +20,8 @@ const existing: ExamSchedule = {
   endsAt: toInstant('2026-11-02', '11:00'),
   durationMinutes: 90,
   status: 'SCHEDULED',
+  kind: 'REGULAR' as const,
+  makeupOfId: null,
   hasSessions: false,
   createdById: 'u1',
   createdAt: '2026-10-30T00:00:00.000Z',
@@ -178,5 +180,19 @@ describe('useScheduleForm', () => {
     const form = useScheduleForm({ mode: 'edit', schedule: existing })
 
     expect(form.multiDay).toBe(false)
+  })
+
+  it('locks the type of a makeup even before anyone started it', () => {
+    const form = useScheduleForm({
+      mode: 'edit',
+      schedule: {
+        ...existing,
+        kind: 'MAKEUP',
+        makeupOfId: 's0',
+        hasSessions: false,
+      },
+    })
+
+    expect(form.typeLocked).toBe(true)
   })
 })

@@ -9,7 +9,11 @@ import { semesterApi } from '@/features/lookup/semester'
 import { examScheduleApi } from '../api/examScheduleApi'
 import type {
   AccessCode,
+  Absentee,
   ExamSchedule,
+  MakeupCreatePayload,
+  MakeupParticipant,
+  MakeupParticipantInput,
   ScheduleCreatePayload,
   SchedulePayload,
   ScheduleSession,
@@ -20,6 +24,9 @@ export type SaveResult =
 
 export type AccessCodeResult =
   { success: true; data: AccessCode } | { success: false; error: string }
+
+export type Outcome<T> =
+  { success: true; data: T } | { success: false; error: string }
 
 export type SaveTarget = { mode: 'create' } | { mode: 'edit'; id: string }
 
@@ -80,6 +87,75 @@ export const examScheduleService = {
       return {
         success: false,
         error: messageOf(err, 'Gagal menyimpan jadwal.'),
+      }
+    }
+  },
+
+  async loadAbsentees(id: string): Promise<Outcome<Absentee[]>> {
+    try {
+      const response = await examScheduleApi.getAbsentees(id)
+      return { success: true, data: response.data?.data ?? [] }
+    } catch (err: unknown) {
+      return {
+        success: false,
+        error: messageOf(err, 'Gagal memuat siswa yang belum mengerjakan.'),
+      }
+    }
+  },
+
+  async createMakeup(
+    id: string,
+    payload: MakeupCreatePayload,
+  ): Promise<Outcome<ExamSchedule>> {
+    try {
+      const response = await examScheduleApi.createMakeup(id, payload)
+      return { success: true, data: response.data.data }
+    } catch (err: unknown) {
+      return {
+        success: false,
+        error: messageOf(err, 'Gagal membuat ujian susulan.'),
+      }
+    }
+  },
+
+  async loadParticipants(id: string): Promise<Outcome<MakeupParticipant[]>> {
+    try {
+      const response = await examScheduleApi.getParticipants(id)
+      return { success: true, data: response.data?.data ?? [] }
+    } catch (err: unknown) {
+      return {
+        success: false,
+        error: messageOf(err, 'Gagal memuat peserta susulan.'),
+      }
+    }
+  },
+
+  async addParticipants(
+    id: string,
+    participants: MakeupParticipantInput[],
+  ): Promise<Outcome<null>> {
+    try {
+      await examScheduleApi.addParticipants(id, participants)
+      return { success: true, data: null }
+    } catch (err: unknown) {
+      return {
+        success: false,
+        error: messageOf(err, 'Gagal menambah peserta susulan.'),
+      }
+    }
+  },
+
+  async removeParticipant(
+    id: string,
+    studentId: string,
+  ): Promise<Outcome<null>> {
+    try {
+      await examScheduleApi.removeParticipant(id, studentId)
+      return { success: true, data: null }
+    } catch (err: unknown) {
+      return {
+        success: false,
+        error: messageOf(err, 'Gagal menghapus peserta susulan.'),
       }
     }
   },

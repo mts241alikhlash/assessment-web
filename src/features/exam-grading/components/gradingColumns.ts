@@ -1,6 +1,8 @@
 import { h } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
+import { ActionCell } from '@mts241alikhlash/ui'
 import { Badge } from '@mts241alikhlash/ui/badge'
+import { UserRoundPlus, Users } from '@lucide/vue'
 import { Button } from '@mts241alikhlash/ui/button'
 import {
   examTypeLabel,
@@ -10,7 +12,10 @@ import { formatWindow } from '@/features/exam-schedule/utils/formatWindow'
 import type { GradingSchedule, GradingSessionRow } from '../types'
 import { publicationLabel } from '../types'
 
-const typeText = (row: GradingSchedule) => examTypeLabel(row.type)
+const typeText = (row: GradingSchedule) =>
+  row.kind === 'MAKEUP'
+    ? `${examTypeLabel(row.type)} · Susulan`
+    : examTypeLabel(row.type)
 const exitText = (row: GradingSessionRow) =>
   row.violationCount > 0 ? `${row.violationCount}×` : '-'
 const classroomText = (row: GradingSchedule) => row.classroomName ?? '-'
@@ -19,6 +24,10 @@ const windowText = (row: GradingSchedule) =>
 
 export function buildGradingScheduleColumns(options: {
   onOpen: (schedule: GradingSchedule) => void
+  canMakeup?: boolean
+  canParticipants?: boolean
+  onMakeup?: (schedule: GradingSchedule) => void
+  onParticipants?: (schedule: GradingSchedule) => void
 }): ColumnDef<GradingSchedule>[] {
   return [
     {
@@ -87,16 +96,41 @@ export function buildGradingScheduleColumns(options: {
       id: 'actions',
       header: 'Aksi',
       enableSorting: false,
-      cell: ({ row }) =>
-        h(
-          Button,
-          {
-            size: 'sm',
-            variant: 'outline',
-            onClick: () => options.onOpen(row.original),
-          },
-          () => 'Buka',
-        ),
+      cell: ({ row }) => {
+        const items = []
+        if (options.canMakeup && row.original.kind === 'REGULAR') {
+          items.push({
+            label: 'Susulan',
+            icon: UserRoundPlus,
+            onClick: () => options.onMakeup?.(row.original),
+          })
+        }
+        if (options.canParticipants && row.original.kind === 'MAKEUP') {
+          items.push({
+            label: 'Peserta',
+            icon: Users,
+            onClick: () => options.onParticipants?.(row.original),
+          })
+        }
+        if (items.length === 0) {
+          return h(
+            Button,
+            {
+              size: 'sm',
+              variant: 'outline',
+              onClick: () => options.onOpen(row.original),
+            },
+            () => 'Buka',
+          )
+        }
+        return h(ActionCell, {
+          viewLabel: 'Buka',
+          hideEdit: true,
+          hideDelete: true,
+          items,
+          onView: () => options.onOpen(row.original),
+        })
+      },
     },
   ]
 }

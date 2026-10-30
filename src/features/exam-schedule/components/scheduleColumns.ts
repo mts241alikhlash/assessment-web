@@ -2,7 +2,7 @@ import { h } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
 import { ActionCell } from '@mts241alikhlash/ui'
 import { Badge } from '@mts241alikhlash/ui/badge'
-import { Ban, KeyRound, Users } from '@lucide/vue'
+import { Ban, KeyRound, UserRoundPlus, Users } from '@lucide/vue'
 import type { ExamSchedule } from '../types'
 import { examTypeLabel, phaseLabel, phaseTone } from '../types'
 import { formatWindow } from '../utils/formatWindow'
@@ -13,11 +13,15 @@ export interface ScheduleColumnOptions {
   canCancel: boolean
   canAccessCode: boolean
   canSessions: boolean
+  canMakeup?: boolean
+  canParticipants?: boolean
   now: () => Date
   onEdit: (schedule: ExamSchedule) => void
   onCancel: (schedule: ExamSchedule) => void
   onAccessCode: (schedule: ExamSchedule) => void
   onSessions: (schedule: ExamSchedule) => void
+  onMakeup?: (schedule: ExamSchedule) => void
+  onParticipants?: (schedule: ExamSchedule) => void
 }
 
 const BADGE_VARIANT = {
@@ -27,7 +31,10 @@ const BADGE_VARIANT = {
   warning: 'destructive',
 } as const
 
-const typeText = (schedule: ExamSchedule) => examTypeLabel(schedule.type)
+const typeText = (schedule: ExamSchedule) =>
+  schedule.kind === 'MAKEUP'
+    ? `${examTypeLabel(schedule.type)} · Susulan`
+    : examTypeLabel(schedule.type)
 const classroomText = (schedule: ExamSchedule) => schedule.classroomName ?? '-'
 const windowText = (schedule: ExamSchedule) =>
   formatWindow(schedule.startsAt, schedule.endsAt)
@@ -45,7 +52,13 @@ export function buildScheduleColumns(
       id: 'package',
       header: 'Paket',
       meta: { align: 'left', strong: true },
-      cell: ({ row }) => row.original.packageTitle,
+      cell: ({ row }) =>
+        row.original.kind === 'MAKEUP'
+          ? h('span', { class: 'flex items-center gap-2' }, [
+              row.original.packageTitle,
+              h(Badge, { variant: 'outline' }, () => 'Susulan'),
+            ])
+          : row.original.packageTitle,
     },
     {
       id: 'type',
@@ -125,6 +138,28 @@ export function buildScheduleColumns(
             icon: Ban,
             destructive: true,
             onClick: () => options.onCancel(row.original),
+          })
+        }
+        if (
+          row.original.kind === 'REGULAR' &&
+          row.original.status === 'SCHEDULED' &&
+          options.canMakeup
+        ) {
+          items.push({
+            label: 'Susulan',
+            icon: UserRoundPlus,
+            onClick: () => options.onMakeup?.(row.original),
+          })
+        }
+        if (
+          row.original.kind === 'MAKEUP' &&
+          row.original.status === 'SCHEDULED' &&
+          options.canParticipants
+        ) {
+          items.push({
+            label: 'Peserta',
+            icon: Users,
+            onClick: () => options.onParticipants?.(row.original),
           })
         }
         return h(ActionCell, {

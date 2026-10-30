@@ -6,6 +6,10 @@ export const SCHEDULE_STATUSES = ['SCHEDULED', 'CANCELLED'] as const
 
 export type ExamScheduleStatus = (typeof SCHEDULE_STATUSES)[number]
 
+export const SCHEDULE_KINDS = ['REGULAR', 'MAKEUP'] as const
+
+export type ExamScheduleKind = (typeof SCHEDULE_KINDS)[number]
+
 export type SchedulePhase = 'CANCELLED' | 'UPCOMING' | 'RUNNING' | 'ENDED'
 
 export interface ExamSchedule {
@@ -16,6 +20,8 @@ export interface ExamSchedule {
   classroomName: string | null
   semesterId: string
   type: ExamType
+  kind: ExamScheduleKind
+  makeupOfId: string | null
   startsAt: string
   endsAt: string
   durationMinutes: number
@@ -74,4 +80,53 @@ export interface ScheduleSession {
   maxScore: number | null
   deviceBound: boolean
   violationCount: number
+}
+
+export const MAKEUP_REASONS = ['SICK', 'PERMITTED', 'ABSENT', 'OTHER'] as const
+
+export type MakeupReason = (typeof MAKEUP_REASONS)[number]
+
+export type MakeupRefusal = 'ALREADY_SAT' | 'IN_PROGRESS' | 'ON_LIVE_MAKEUP'
+
+export interface Absentee {
+  studentId: string
+  name: string | null
+  nis: string | null
+  eligible: boolean
+  reason: MakeupRefusal | null
+}
+
+export interface MakeupParticipantInput {
+  studentId: string
+  reason: MakeupReason
+  note?: string | null
+}
+
+export interface MakeupCreatePayload {
+  packageId?: string
+  startsAt: string
+  endsAt: string
+  durationMinutes: number
+  participants: MakeupParticipantInput[]
+}
+
+export type ParticipantStatus =
+  'WAITING' | 'SAT_REGULAR' | 'IN_PROGRESS' | 'DONE'
+
+export interface MakeupParticipant {
+  studentId: string
+  name: string | null
+  nis: string | null
+  reason: MakeupReason
+  note: string | null
+  status: ParticipantStatus
+}
+
+export interface MakeupOrigin {
+  id: string
+  packageId: string
+  packageTitle: string
+  classroomName: string | null
+  durationMinutes: number
+  endsAt: string
 }

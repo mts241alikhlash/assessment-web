@@ -15,7 +15,9 @@ export function useScheduleForm(options: ScheduleFormOptions) {
 
   const multiDay = start !== null && end !== null && start.date !== end.date
 
-  const typeLocked = options.mode === 'edit' && options.schedule.hasSessions
+  const typeLocked =
+    options.mode === 'edit' &&
+    (options.schedule.hasSessions || options.schedule.kind === 'MAKEUP')
 
   const packageId = ref('')
   const type = ref<ExamType | ''>(

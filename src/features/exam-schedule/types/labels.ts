@@ -1,5 +1,8 @@
 import type {
   ExamScheduleStatus,
+  MakeupReason,
+  MakeupRefusal,
+  ParticipantStatus,
   ExamType,
   ExamSessionStatus,
   SchedulePhase,
@@ -52,3 +55,32 @@ const SESSION_LABELS: Record<ExamSessionStatus, string> = {
 
 export const sessionStatusLabel = (status: ExamSessionStatus): string =>
   SESSION_LABELS[status]
+
+const REASON_LABELS: Record<MakeupReason, string> = {
+  SICK: 'Sakit',
+  PERMITTED: 'Izin',
+  ABSENT: 'Tanpa keterangan',
+  OTHER: 'Lainnya',
+}
+
+const REFUSAL_LABELS: Record<MakeupRefusal, string> = {
+  ALREADY_SAT: 'Sudah mengikuti ujian',
+  IN_PROGRESS: 'Sedang mengerjakan',
+  ON_LIVE_MAKEUP: 'Sudah di susulan lain',
+}
+
+const PARTICIPANT_LABELS: Record<ParticipantStatus, string> = {
+  WAITING: 'Menunggu',
+  SAT_REGULAR: 'Sudah ikut ujian utama',
+  IN_PROGRESS: 'Mengerjakan',
+  DONE: 'Selesai',
+}
+
+export const reasonLabel = (reason: MakeupReason): string =>
+  REASON_LABELS[reason]
+
+export const refusalLabel = (refusal: MakeupRefusal): string =>
+  REFUSAL_LABELS[refusal]
+
+export const participantStatusLabel = (status: ParticipantStatus): string =>
+  PARTICIPANT_LABELS[status]
