@@ -5,7 +5,11 @@ import type {
 import api from '@mts241alikhlash/web-shared/utils/api'
 import type {
   AccessCode,
+  Absentee,
   ExamSchedule,
+  MakeupCreatePayload,
+  MakeupParticipant,
+  MakeupParticipantInput,
   ScheduleCreatePayload,
   SchedulePayload,
   ScheduleQueryParams,
@@ -45,6 +49,28 @@ export const examScheduleApi = {
 
   releaseSession: (sessionId: string) =>
     api.post(`/exam-sessions/${seg(sessionId)}/release`),
+
+  getAbsentees: (id: string) =>
+    api.get<ApiSingleResponse<Absentee[]>>(
+      `/exam-schedules/${seg(id)}/absentees`,
+    ),
+
+  createMakeup: (id: string, payload: MakeupCreatePayload) =>
+    api.post<ApiSingleResponse<ExamSchedule>>(
+      `/exam-schedules/${seg(id)}/makeups`,
+      payload,
+    ),
+
+  getParticipants: (id: string) =>
+    api.get<ApiSingleResponse<MakeupParticipant[]>>(
+      `/exam-schedules/${seg(id)}/participants`,
+    ),
+
+  addParticipants: (id: string, participants: MakeupParticipantInput[]) =>
+    api.post(`/exam-schedules/${seg(id)}/participants`, { participants }),
+
+  removeParticipant: (id: string, studentId: string) =>
+    api.delete(`/exam-schedules/${seg(id)}/participants/${seg(studentId)}`),
 
   rotateAccessCode: (id: string) =>
     api.post<ApiSingleResponse<AccessCode>>(
