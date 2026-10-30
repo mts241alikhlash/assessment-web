@@ -28,6 +28,9 @@ const error = ref<string | null>(null)
 const loading = ref(false)
 const now = ref(new Date())
 
+/** The seat shown full screen, or null for the grid. */
+const expanded = ref<ScheduleStream | null>(null)
+
 const players = new Map<string, Hls>()
 const videoEls = new Map<string, HTMLVideoElement>()
 
@@ -103,6 +106,17 @@ watch(
   { immediate: true },
 )
 
+function openFullscreen(row: ScheduleStream) {
+  expanded.value = row
+}
+
+function closeFullscreen() {
+  expanded.value = null
+  // The full-screen video unmounts, so its hls instance has to go with it or it
+  // keeps polling a playlist nobody is watching.
+  detachPlayers()
+}
+
 onBeforeUnmount(() => {
   stopTimers()
   detachPlayers()
@@ -152,11 +166,23 @@ onBeforeUnmount(() => {
               <video
                 v-if="row.playbackUrl && !isSeatDead(row.lastSeenAt, now)"
                 :ref="(el) => attach(el as HTMLVideoElement | null, row.playbackUrl)"
-                class="h-full w-full object-cover"
+                class="h-full w-full cursor-zoom-in object-cover"
                 autoplay
                 muted
                 playsinline
+                data-testid="seat-video"
+                :title="`Perbesar ${row.studentName ?? row.studentNis ?? ''}`"
+                @click="openFullscreen(row)"
               />
+              <button
+                v-if="row.playbackUrl && !isSeatDead(row.lastSeenAt, now)"
+                type="button"
+                class="absolute right-1 top-1 rounded bg-black/60 px-2 py-1 text-[length:var(--text-control,0.75rem)] text-white"
+                data-testid="seat-expand"
+                @click.stop="openFullscreen(row)"
+              >
+                Perbesar
+              </button>
               <p
                 v-else
                 class="flex h-full items-center justify-center text-center text-[length:var(--text-control,0.75rem)] text-white"
@@ -181,6 +207,36 @@ onBeforeUnmount(() => {
               </p>
             </div>
           </article>
+        </div>
+        <div
+          v-if="expanded"
+          class="fixed inset-0 z-50 flex flex-col bg-black/95"
+          role="dialog"
+          aria-modal="true"
+          data-testid="seat-fullscreen"
+          @click.self="closeFullscreen"
+        >
+          <div class="flex items-center justify-between p-3 text-white">
+            <p class="text-[length:var(--text-control,0.875rem)] font-medium">
+              {{ expanded.studentName ?? expanded.studentNis ?? expanded.sessionId }}
+            </p>
+            <Button
+              variant="outline"
+              data-testid="seat-fullscreen-close"
+              @click="closeFullscreen"
+            >
+              Tutup
+            </Button>
+          </div>
+          <video
+            v-if="expanded?.playbackUrl"
+            :ref="(el) => attach(el as HTMLVideoElement | null, expanded?.playbackUrl ?? null)"
+            class="min-h-0 flex-1 w-full object-contain"
+            autoplay
+            muted
+            playsinline
+            controls
+          />
         </div>
       </DialogBody>
       <DialogFooter standard>

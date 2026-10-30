@@ -19,6 +19,7 @@ export default {
     attendance: 'Attendance',
     attendanceInput: 'Record Attendance',
     attendanceRecap: 'Attendance Summary',
+    myExams: 'My Exams',
     myScores: 'My Scores',
     myReportCard: 'My Report Card',
     myAttendance: 'My Attendance',

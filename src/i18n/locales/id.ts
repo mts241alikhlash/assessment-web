@@ -19,6 +19,7 @@ export default {
     attendance: 'Presensi',
     attendanceInput: 'Input Presensi',
     attendanceRecap: 'Rekapitulasi',
+    myExams: 'Ujian Saya',
     myScores: 'Nilai Saya',
     myReportCard: 'Rapor Saya',
     myAttendance: 'Presensi Saya',
