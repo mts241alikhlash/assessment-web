@@ -1,5 +1,27 @@
 # assessment-web
 
+## 1.6.0
+
+### Minor Changes
+
+- 893de8f: Match admission-web's shell and page styling: the shared `@mts241alikhlash/ui`
+  theme tokens, a fixed top bar with the app switcher and `NavUser`, an inset
+  sidebar, the flat list wrapper, and admission's auth and profile screens
+  (including the hero images). `profileRoutes` is now registered, so `/profile`
+  and `/profile/edit` resolve instead of falling through to the 404 page.
+- 4c51871: Add the exam grading and exam score screens. Teachers open Penilaian Ujian to see the exams of their classes with how many students wait for a grade, open an exam to list its students, and grade each short answer and essay (score up to the question points, optional note) next to the question, its grading guide and the student's answer. The last grade closes the session and its score is sent to the assessment. Nilai Ujian lists the exam scores of the classes the teacher teaches. Schedules with sessions lose Batalkan and gain Sesi, a dialog that lists each student with status, score and device and lets staff with exam-sessions.release free the device of a session in progress. Routes /penilaian-ujian and /nilai-ujian, menu items in the Ujian section, gateway prefixes /exam-grading and /exam-scores.
+- bf74215: Ujian susulan. Di Jadwal Ujian, jadwal utama punya aksi Susulan: guru memilih siswa kelas yang belum mengerjakan (siswa yang sudah mengikuti, sedang mengerjakan, atau sudah ada di susulan lain ditandai alasannya), mengisi alasan, tanggal, jam, durasi, dan paket, lalu jadwal susulan dibuat dengan token sendiri. Jadwal susulan ditandai "Susulan" di kolom jenis dan punya aksi Peserta yang menampilkan alasan dan status tiap siswa (menunggu, sudah ikut ujian utama, mengerjakan, selesai) dan menghapus siswa yang belum punya sesi. Guru yang mengajar kelasnya juga bisa membuat susulan dan melihat pesertanya dari halaman Penilaian Ujian, tanpa izin jadwal; pilihan paket dibatasi ke mapel dan tingkat yang sama, dan setiap siswa punya alasan dan catatan sendiri.
+- eb7bb81: Add the exam package and exam schedule screens: build a package from approved questions of one subject and grade, copy, change and delete a draft, schedule a package for a classroom with a date, times and duration, change or cancel a schedule, and read or replace the access code students enter. Routes /paket-soal and /jadwal-ujian, menu section Ujian, gateway prefixes /exam-packages, /exam-schedules, /exam-sessions, /me/exams and /student-exams (the last two serve the Android exam app through the same gateway).
+- 5240e00: A schedule now has a Jenis ujian (Ulangan Harian, Quiz, Tugas, UTS or UAS), chosen in Tambah Jadwal and Ubah Jadwal and locked once students have started. The schedule list and the Penilaian Ujian list show it in a Jenis column. It needs exam-service with the exam type, which rejects a schedule without one.
+
+  The Sesi dialog and the session list of Penilaian Ujian gain a Keluar column with how many times the app reported the student leaving the exam; an exam the app handed in after more than three exits shows 4× or more.
+
+- 70243c0: Questions now live inside a question package. The Bank Soal section is gone. A teacher creates a package for a subject and grade, then builds it on its own page: add a new question, import from Excel or Word, take questions from another approved package (copied, with their origin shown as Baru, Diubah or Salinan), reorder, remove, rename and submit. A reviewer opens Persetujuan Paket, reads every question of a submitted package, leaves a note on any of them, then approves or returns the whole package; the teacher sees the notes on the package and on each question. Schedules offer approved and already scheduled packages. Routes /paket-soal/:id/soal/baru, /paket-soal/:id/soal/:questionId, /paket-soal/:id/impor, /persetujuan-paket and /persetujuan-paket/:id replace /bank-soal.
+
+### Patch Changes
+
+- 11316e1: Keep `@mts241alikhlash/ui` out of the Vite dependency pre-bundle, as admission-web does, so the sidebar context is one module instance in development and the layout no longer fails with `Symbol(SidebarContext) not found`.
+
 ## 1.5.0
 
 ### Minor Changes
