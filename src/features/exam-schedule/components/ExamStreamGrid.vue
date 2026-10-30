@@ -43,7 +43,10 @@ const ordered = computed(() =>
   ),
 )
 
-const blockedLabel: Record<NonNullable<ScheduleStream['cameraBlocked']>, string> = {
+const blockedLabel: Record<
+  NonNullable<ScheduleStream['cameraBlocked']>,
+  string
+> = {
   network: 'Jaringan bermasalah',
   permission: 'Izin kamera ditolak',
   battery: 'Baterai lemah',
@@ -165,7 +168,9 @@ onBeforeUnmount(() => {
             <div class="relative aspect-video bg-black">
               <video
                 v-if="row.playbackUrl && !isSeatDead(row.lastSeenAt, now)"
-                :ref="(el) => attach(el as HTMLVideoElement | null, row.playbackUrl)"
+                :ref="
+                  (el) => attach(el as HTMLVideoElement | null, row.playbackUrl)
+                "
                 class="h-full w-full cursor-zoom-in object-cover"
                 autoplay
                 muted
@@ -191,7 +196,9 @@ onBeforeUnmount(() => {
                 Kamera mati
               </p>
             </div>
-            <div class="space-y-1 p-2 text-[length:var(--text-control,0.75rem)]">
+            <div
+              class="space-y-1 p-2 text-[length:var(--text-control,0.75rem)]"
+            >
               <p class="font-medium">
                 {{ row.studentName ?? row.studentNis ?? row.sessionId }}
               </p>
@@ -200,7 +207,11 @@ onBeforeUnmount(() => {
                 v-if="isSeatDead(row.lastSeenAt, now)"
                 class="text-red-600"
               >
-                {{ row.cameraBlocked ? blockedLabel[row.cameraBlocked] : 'Tidak ada kabar' }}
+                {{
+                  row.cameraBlocked
+                    ? blockedLabel[row.cameraBlocked]
+                    : 'Tidak ada kabar'
+                }}
               </p>
               <p v-if="row.violationCount > 0">
                 Keluar aplikasi: {{ row.violationCount }}×
@@ -218,7 +229,11 @@ onBeforeUnmount(() => {
         >
           <div class="flex items-center justify-between p-3 text-white">
             <p class="text-[length:var(--text-control,0.875rem)] font-medium">
-              {{ expanded.studentName ?? expanded.studentNis ?? expanded.sessionId }}
+              {{
+                expanded.studentName ??
+                expanded.studentNis ??
+                expanded.sessionId
+              }}
             </p>
             <Button
               variant="outline"
@@ -230,7 +245,13 @@ onBeforeUnmount(() => {
           </div>
           <video
             v-if="expanded?.playbackUrl"
-            :ref="(el) => attach(el as HTMLVideoElement | null, expanded?.playbackUrl ?? null)"
+            :ref="
+              (el) =>
+                attach(
+                  el as HTMLVideoElement | null,
+                  expanded?.playbackUrl ?? null,
+                )
+            "
             class="min-h-0 flex-1 w-full object-contain"
             autoplay
             muted

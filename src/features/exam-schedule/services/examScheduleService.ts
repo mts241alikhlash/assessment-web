@@ -221,9 +221,7 @@ export const examScheduleService = {
     }
   },
 
-  async loadStreams(
-    id: string,
-  ): Promise<Outcome<ScheduleStream[]>> {
+  async loadStreams(id: string): Promise<Outcome<ScheduleStream[]>> {
     try {
       const response = await examScheduleApi.getStreams(id)
       return { success: true, data: response.data?.data ?? [] }

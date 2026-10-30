@@ -5,18 +5,31 @@ import ExamStreamGrid from './ExamStreamGrid.vue'
 
 const { loadStreams } = vi.hoisted(() => ({ loadStreams: vi.fn() }))
 
-
 vi.mock('../services/examScheduleService', () => ({
   examScheduleService: { loadStreams },
 }))
-vi.mock('hls.js', () => ({ default: class { static isSupported() { return false } } }))
+vi.mock('hls.js', () => ({
+  default: class {
+    static isSupported() {
+      return false
+    }
+  },
+}))
 
 vi.mock('@mts241alikhlash/ui/dialog', async () => {
   const { defineComponent } = await import('vue')
-  const passthrough = defineComponent({ setup: (_p, { slots }) => () => slots.default?.() })
+  const passthrough = defineComponent({
+    setup:
+      (_p, { slots }) =>
+      () =>
+        slots.default?.(),
+  })
   const dialog = defineComponent({
     props: { open: Boolean },
-    setup: (props, { slots }) => () => (props.open ? slots.default?.() : null),
+    setup:
+      (props, { slots }) =>
+      () =>
+        props.open ? slots.default?.() : null,
   })
   return {
     Dialog: dialog,
@@ -33,8 +46,10 @@ vi.mock('@mts241alikhlash/ui/button', async () => {
   return {
     Button: defineComponent({
       emits: ['click'],
-      setup: (_p, { slots, emit }) => () =>
-        h('button', { onClick: () => emit('click') }, slots.default?.()),
+      setup:
+        (_p, { slots, emit }) =>
+        () =>
+          h('button', { onClick: () => emit('click') }, slots.default?.()),
     }),
   }
 })
@@ -100,7 +115,10 @@ describe('ExamStreamGrid', () => {
 
   it('does not offer full screen for a dead seat', async () => {
     const wrapper = await mountGrid([
-      row({ lastSeenAt: new Date(Date.now() - 120_000).toISOString(), playbackUrl: null }),
+      row({
+        lastSeenAt: new Date(Date.now() - 120_000).toISOString(),
+        playbackUrl: null,
+      }),
     ])
 
     expect(wrapper.find('[data-testid="seat-dead"]').exists()).toBe(true)
