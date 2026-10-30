@@ -33,6 +33,8 @@ import {
 import { Filter, Plus } from '@lucide/vue'
 import { useAuthSession } from '@/features/platform/auth'
 import { buildScheduleColumns } from '../components/scheduleColumns'
+import MakeupDialog from '../components/MakeupDialog.vue'
+import MakeupParticipantsDialog from '../components/MakeupParticipantsDialog.vue'
 import AccessCodeDialog from '../components/AccessCodeDialog.vue'
 import ScheduleFormDialog from '../components/ScheduleFormDialog.vue'
 import SessionsDialog from '../components/SessionsDialog.vue'
@@ -65,6 +67,8 @@ const editing = ref<ExamSchedule | null>(null)
 const cancelTarget = ref<ExamSchedule | null>(null)
 const accessTarget = ref<ExamSchedule | null>(null)
 const sessionsTarget = ref<ExamSchedule | null>(null)
+const makeupTarget = ref<ExamSchedule | null>(null)
+const participantsTarget = ref<ExamSchedule | null>(null)
 const cancelling = ref(false)
 
 function openCreate() {
@@ -100,6 +104,8 @@ const columns = computed(() =>
     canCancel: hasPermission('exam-schedules.cancel'),
     canAccessCode: hasPermission('exam-schedules.access-code'),
     canSessions: hasPermission('exam-sessions.read'),
+    canMakeup: hasPermission('exam-schedules.create'),
+    canParticipants: hasPermission('exam-schedules.read'),
     now: () => new Date(),
     onEdit: openEdit,
     onCancel: (schedule) => {
@@ -110,6 +116,12 @@ const columns = computed(() =>
     },
     onSessions: (schedule) => {
       sessionsTarget.value = schedule
+    },
+    onMakeup: (schedule) => {
+      makeupTarget.value = schedule
+    },
+    onParticipants: (schedule) => {
+      participantsTarget.value = schedule
     },
   }),
 )
@@ -287,6 +299,22 @@ const columns = computed(() =>
       :schedule-id="accessTarget.id"
       :title="`${accessTarget.packageTitle} · ${accessTarget.classroomName ?? '-'}`"
       @update:open="(value: boolean) => !value && (accessTarget = null)"
+    />
+
+    <MakeupDialog
+      v-if="makeupTarget"
+      :open="true"
+      :schedule="makeupTarget"
+      @update:open="(value: boolean) => !value && (makeupTarget = null)"
+      @created="refresh()"
+    />
+
+    <MakeupParticipantsDialog
+      v-if="participantsTarget"
+      :open="true"
+      :schedule-id="participantsTarget.id"
+      :title="`${participantsTarget.packageTitle} · ${participantsTarget.classroomName ?? '-'}`"
+      @update:open="(value: boolean) => !value && (participantsTarget = null)"
     />
 
     <SessionsDialog
