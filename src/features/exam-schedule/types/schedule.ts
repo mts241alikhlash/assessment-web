@@ -121,3 +121,12 @@ export interface MakeupParticipant {
   note: string | null
   status: ParticipantStatus
 }
+
+export interface MakeupOrigin {
+  id: string
+  packageId: string
+  packageTitle: string
+  classroomName: string | null
+  durationMinutes: number
+  endsAt: string
+}

@@ -24,10 +24,10 @@ import {
 import type { ExamPackageSummary } from '@/features/exam-package/types'
 import { useMakeupForm } from '../composables/useMakeupForm'
 import { examScheduleService } from '../services/examScheduleService'
-import type { ExamSchedule, MakeupReason } from '../types'
+import type { MakeupOrigin, MakeupReason } from '../types'
 import { MAKEUP_REASONS, reasonLabel, refusalLabel } from '../types'
 
-const props = defineProps<{ open: boolean; schedule: ExamSchedule }>()
+const props = defineProps<{ open: boolean; schedule: MakeupOrigin }>()
 
 const emit = defineEmits<{
   'update:open': [value: boolean]
@@ -40,7 +40,15 @@ const fieldId = useId()
 
 onMounted(async () => {
   void form.load()
-  packages.value = await examScheduleService.loadPackages()
+  const all = await examScheduleService.loadPackages()
+  const origin = all.find((item) => item.id === props.schedule.packageId)
+  packages.value = origin
+    ? all.filter(
+        (item) =>
+          item.subjectId === origin.subjectId &&
+          item.gradeId === origin.gradeId,
+      )
+    : all
 })
 
 async function create() {

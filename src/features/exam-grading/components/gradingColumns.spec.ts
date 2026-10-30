@@ -9,6 +9,9 @@ import type { GradingSchedule, GradingSessionRow } from '../types'
 const schedule: GradingSchedule = {
   id: 's1',
   title: 'UTS Matematika',
+  packageId: 'p1',
+  durationMinutes: 90,
+  kind: 'REGULAR',
   subjectId: 'sub',
   classroomId: 'c1',
   classroomName: 'VII A',
@@ -55,6 +58,75 @@ describe('grading columns', () => {
     expect(text('graded')).toBe('20')
     expect(text('classroom')).toBe('VII A')
     expect(text('type')).toBe('UTS')
+  })
+
+  describe('makeups', () => {
+    const makeup: GradingSchedule = { ...schedule, id: 'm1', kind: 'MAKEUP' }
+    const actions = (
+      options: Partial<Parameters<typeof buildGradingScheduleColumns>[0]>,
+      row: GradingSchedule,
+    ) =>
+      (
+        buildGradingScheduleColumns({ onOpen: vi.fn(), ...options }).find(
+          (column) => column.id === 'actions',
+        )!.cell as Cell<GradingSchedule>
+      )({ row: { original: row } }) as VNode
+
+    it('keeps one Buka button when nothing else is offered', () => {
+      expect(actions({}, schedule).props).toHaveProperty('onClick')
+    })
+
+    it('offers Susulan on a regular exam and Peserta on a makeup, only with the permission', () => {
+      const labels = (
+        options: Partial<Parameters<typeof buildGradingScheduleColumns>[0]>,
+        row: GradingSchedule,
+      ) =>
+        (
+          (actions(options, row).props as { items?: { label: string }[] })
+            .items ?? []
+        ).map((item) => item.label)
+
+      expect(labels({ canMakeup: true }, schedule)).toEqual(['Susulan'])
+      expect(labels({ canMakeup: true }, makeup)).toEqual([])
+      expect(labels({ canParticipants: true }, makeup)).toEqual(['Peserta'])
+      expect(labels({ canParticipants: true }, schedule)).toEqual([])
+    })
+
+    it('calls the handlers with the row, and still opens the exam', () => {
+      const onMakeup = vi.fn()
+      const onParticipants = vi.fn()
+      const onOpen = vi.fn()
+      const props = (row: GradingSchedule) =>
+        actions(
+          {
+            canMakeup: true,
+            canParticipants: true,
+            onMakeup,
+            onParticipants,
+            onOpen,
+          },
+          row,
+        ).props as {
+          items: { label: string; onClick: () => void }[]
+          onView: () => void
+        }
+
+      props(schedule).items[0].onClick()
+      props(makeup).items[0].onClick()
+      props(schedule).onView()
+
+      expect(onMakeup).toHaveBeenCalledWith(schedule)
+      expect(onParticipants).toHaveBeenCalledWith(makeup)
+      expect(onOpen).toHaveBeenCalledWith(schedule)
+    })
+
+    it('marks a makeup in the type column', () => {
+      const type = buildGradingScheduleColumns({ onOpen: vi.fn() }).find(
+        (column) => column.id === 'type',
+      )!.meta as { mobileValue: (row: GradingSchedule) => string }
+
+      expect(type.mobileValue(makeup)).toBe('UTS · Susulan')
+    })
   })
 
   it('opens the exam of the row', () => {

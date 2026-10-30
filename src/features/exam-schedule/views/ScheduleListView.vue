@@ -104,8 +104,8 @@ const columns = computed(() =>
     canCancel: hasPermission('exam-schedules.cancel'),
     canAccessCode: hasPermission('exam-schedules.access-code'),
     canSessions: hasPermission('exam-sessions.read'),
-    canMakeup: hasPermission('exam-schedules.create'),
-    canParticipants: hasPermission('exam-schedules.read'),
+    canMakeup: hasPermission('exam-grading.grade'),
+    canParticipants: hasPermission('exam-grading.read'),
     now: () => new Date(),
     onEdit: openEdit,
     onCancel: (schedule) => {

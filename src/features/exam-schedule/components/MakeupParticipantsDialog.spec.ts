@@ -82,7 +82,7 @@ describe('MakeupParticipantsDialog', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     permissions.clear()
-    permissions.add('exam-schedules.create')
+    permissions.add('exam-grading.grade')
     loadParticipants.mockResolvedValue({ success: true, data: rows })
   })
 

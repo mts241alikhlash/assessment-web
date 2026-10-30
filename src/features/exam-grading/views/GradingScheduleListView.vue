@@ -4,10 +4,29 @@ import { useRouter } from 'vue-router'
 import { DataTable } from '@mts241alikhlash/ui'
 import { Button } from '@mts241alikhlash/ui/button'
 import { Card } from '@mts241alikhlash/ui/card'
+import { useAuthSession } from '@/features/platform/auth'
+import MakeupDialog from '@/features/exam-schedule/components/MakeupDialog.vue'
+import MakeupParticipantsDialog from '@/features/exam-schedule/components/MakeupParticipantsDialog.vue'
+import type { MakeupOrigin } from '@/features/exam-schedule/types'
+import type { GradingSchedule } from '../types'
 import { buildGradingScheduleColumns } from '../components/gradingColumns'
 import { useGradingSchedules } from '../composables/useGradingLists'
 
 const router = useRouter()
+const { hasPermission } = useAuthSession()
+const makeupTarget = ref<MakeupOrigin | null>(null)
+const participantsTarget = ref<GradingSchedule | null>(null)
+
+function originOf(schedule: GradingSchedule): MakeupOrigin {
+  return {
+    id: schedule.id,
+    packageId: schedule.packageId,
+    packageTitle: schedule.title,
+    classroomName: schedule.classroomName,
+    durationMinutes: schedule.durationMinutes,
+    endsAt: schedule.endsAt,
+  }
+}
 const page = ref(1)
 const pageSize = ref(10)
 
@@ -16,6 +35,14 @@ const { schedules, totalItems, loading, listError, refresh } =
 
 const columns = computed(() =>
   buildGradingScheduleColumns({
+    canMakeup: hasPermission('exam-grading.grade'),
+    canParticipants: hasPermission('exam-grading.read'),
+    onMakeup: (schedule) => {
+      makeupTarget.value = originOf(schedule)
+    },
+    onParticipants: (schedule) => {
+      participantsTarget.value = schedule
+    },
     onOpen: (schedule) =>
       void router.push({
         path: `/penilaian-ujian/${schedule.id}`,
@@ -71,5 +98,21 @@ function changePageSize(size: number) {
         </DataTable>
       </div>
     </Card>
+
+    <MakeupDialog
+      v-if="makeupTarget"
+      :open="true"
+      :schedule="makeupTarget"
+      @update:open="(value: boolean) => !value && (makeupTarget = null)"
+      @created="refresh()"
+    />
+
+    <MakeupParticipantsDialog
+      v-if="participantsTarget"
+      :open="true"
+      :schedule-id="participantsTarget.id"
+      :title="`${participantsTarget.title} · ${participantsTarget.classroomName ?? '-'}`"
+      @update:open="(value: boolean) => !value && (participantsTarget = null)"
+    />
   </div>
 </template>

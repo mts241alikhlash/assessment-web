@@ -52,7 +52,13 @@ export function buildScheduleColumns(
       id: 'package',
       header: 'Paket',
       meta: { align: 'left', strong: true },
-      cell: ({ row }) => row.original.packageTitle,
+      cell: ({ row }) =>
+        row.original.kind === 'MAKEUP'
+          ? h('span', { class: 'flex items-center gap-2' }, [
+              row.original.packageTitle,
+              h(Badge, { variant: 'outline' }, () => 'Susulan'),
+            ])
+          : row.original.packageTitle,
     },
     {
       id: 'type',

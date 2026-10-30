@@ -1,10 +1,15 @@
 import { computed, ref } from 'vue'
 import { examScheduleService } from '../services/examScheduleService'
-import type { Absentee, ExamSchedule, MakeupReason } from '../types'
+import type {
+  Absentee,
+  ExamSchedule,
+  MakeupOrigin,
+  MakeupReason,
+} from '../types'
 import { toInstant } from '../utils/instant'
 import { validateSchedule } from '../utils/validateSchedule'
 
-export function useMakeupForm(original: ExamSchedule) {
+export function useMakeupForm(original: MakeupOrigin) {
   const absentees = ref<Absentee[]>([])
   const loading = ref(false)
   const loadError = ref<string | null>(null)

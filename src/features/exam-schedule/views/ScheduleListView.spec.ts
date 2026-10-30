@@ -151,6 +151,8 @@ describe('ScheduleListView', () => {
     ;['read', 'create', 'update', 'cancel', 'access-code'].forEach((action) =>
       permissions.add(`exam-schedules.${action}`),
     )
+    permissions.add('exam-grading.read')
+    permissions.add('exam-grading.grade')
     listState.schedules.value = [schedule()]
     listState.totalItems.value = 1
     listState.loading.value = false
@@ -333,8 +335,8 @@ describe('ScheduleListView', () => {
     wrapper.unmount()
   })
 
-  it('offers no Susulan action without exam-schedules.create', async () => {
-    permissions.delete('exam-schedules.create')
+  it('offers no Susulan action without exam-grading.grade', async () => {
+    permissions.delete('exam-grading.grade')
     const wrapper = mount(ScheduleListView, { global: { stubs } })
     await flushPromises()
 

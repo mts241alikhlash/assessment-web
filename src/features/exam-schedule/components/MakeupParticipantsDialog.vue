@@ -76,7 +76,7 @@ async function confirmRemove() {
 
 const columns = computed(() =>
   buildParticipantColumns({
-    canRemove: hasPermission('exam-schedules.create'),
+    canRemove: hasPermission('exam-grading.grade'),
     onRemove: (participant) => {
       removeTarget.value = participant
     },
