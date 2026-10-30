@@ -108,10 +108,9 @@ async function open() {
 }
 
 async function fillWindow(wrapper: Wrapper) {
-  const inputs = wrapper.findAll('input:not([type="checkbox"])')
-  await inputs[0].setValue('2026-11-04')
-  await inputs[2].setValue('08:00')
-  await inputs[3].setValue('11:00')
+  await wrapper.get('input[id$="-date"]').setValue('2026-11-04')
+  await wrapper.get('input[id$="-start"]').setValue('08:00')
+  await wrapper.get('input[id$="-end"]').setValue('11:00')
 }
 
 describe('MakeupDialog', () => {
@@ -223,5 +222,29 @@ describe('MakeupDialog', () => {
     const empty = await open()
     expect(empty.text()).toContain('Tidak ada siswa di kelas ini')
     empty.unmount()
+  })
+
+  it('shows a reason and a note for each chosen student and sends them', async () => {
+    createMakeup.mockResolvedValue({ success: true, data: { id: 'm1' } })
+    const wrapper = await open()
+    expect(
+      wrapper.find('input[placeholder="Catatan (opsional)"]').exists(),
+    ).toBe(false)
+    await wrapper.findAll('input[type="checkbox"]')[0].setValue(true)
+
+    await wrapper
+      .get('input[placeholder="Catatan (opsional)"]')
+      .setValue('Demam')
+    await fillWindow(wrapper)
+    await buttonByText(wrapper, 'Buat susulan')!.trigger('click')
+    await flushPromises()
+
+    expect(createMakeup).toHaveBeenCalledWith(
+      's1',
+      expect.objectContaining({
+        participants: [{ studentId: 'a', reason: 'SICK', note: 'Demam' }],
+      }),
+    )
+    wrapper.unmount()
   })
 })

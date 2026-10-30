@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { flushPromises } from '@vue/test-utils'
-import type { Absentee, ExamSchedule } from '../types'
+import type { Absentee, ExamSchedule, MakeupCreatePayload } from '../types'
 import { toInstant } from '../utils/instant'
 import { useMakeupForm } from './useMakeupForm'
 
@@ -149,5 +149,40 @@ describe('useMakeupForm', () => {
 
     expect(form.loadError.value).toBe('Gagal memuat')
     expect(form.absentees.value).toEqual([])
+  })
+
+  it('lets one student have another reason and a note while the rest follow the default', async () => {
+    const form = await ready()
+    form.toggle('a')
+    form.toggle('b')
+    form.reason.value = 'PERMITTED'
+    form.setReason('a', 'SICK')
+    form.setNote('a', '  Demam  ')
+    form.setNote('b', '   ')
+    form.date.value = '2026-11-04'
+    form.startTime.value = '08:00'
+    form.endTime.value = '11:00'
+    createMakeup.mockResolvedValue({ success: true, data: { id: 'm1' } })
+
+    await form.submit()
+
+    const sent = createMakeup.mock.calls[0][1] as MakeupCreatePayload
+
+    expect(sent.participants).toEqual([
+      { studentId: 'a', reason: 'SICK', note: 'Demam' },
+      { studentId: 'b', reason: 'PERMITTED' },
+    ])
+  })
+
+  it('forgets the reason and note of a student who is unchosen', async () => {
+    const form = await ready()
+    form.toggle('a')
+    form.setReason('a', 'ABSENT')
+    form.setNote('a', 'x')
+    form.toggle('a')
+    form.toggle('a')
+
+    expect(form.reasonOf('a')).toBe('SICK')
+    expect(form.notes.value.a).toBeUndefined()
   })
 })

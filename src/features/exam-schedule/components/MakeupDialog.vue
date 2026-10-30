@@ -24,7 +24,7 @@ import {
 import type { ExamPackageSummary } from '@/features/exam-package/types'
 import { useMakeupForm } from '../composables/useMakeupForm'
 import { examScheduleService } from '../services/examScheduleService'
-import type { ExamSchedule } from '../types'
+import type { ExamSchedule, MakeupReason } from '../types'
 import { MAKEUP_REASONS, reasonLabel, refusalLabel } from '../types'
 
 const props = defineProps<{ open: boolean; schedule: ExamSchedule }>()
@@ -75,7 +75,7 @@ async function create() {
 
         <div
           v-if="form.loadError.value"
-          class="rounded-md border p-3 text-[length:var(--text-control,0.75rem)]"
+          class="rounded-md border border-destructive/40 bg-destructive/5 p-3 text-[length:var(--text-control,0.75rem)] text-destructive"
           role="alert"
         >
           {{ form.loadError.value }}
@@ -135,13 +135,43 @@ async function create() {
               >
                 {{ refusalLabel(row.reason) }}
               </span>
+              <template v-if="form.selected.value.has(row.studentId)">
+                <Select
+                  :model-value="form.reasonOf(row.studentId)"
+                  @update:model-value="
+                    form.setReason(row.studentId, $event as MakeupReason)
+                  "
+                >
+                  <SelectTrigger class="w-36">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem
+                      v-for="option in MAKEUP_REASONS"
+                      :key="option"
+                      :value="option"
+                    >
+                      {{ reasonLabel(option) }}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                <Input
+                  :model-value="form.notes.value[row.studentId] ?? ''"
+                  class="w-40"
+                  maxlength="200"
+                  placeholder="Catatan (opsional)"
+                  @update:model-value="
+                    form.setNote(row.studentId, String($event ?? ''))
+                  "
+                />
+              </template>
             </li>
           </ul>
         </template>
 
         <div class="grid gap-5 sm:grid-cols-2">
           <FloatingLabelField
-            label="Alasan"
+            label="Alasan untuk semua"
             :for="`${fieldId}-reason`"
             floating
           >

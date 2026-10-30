@@ -10,6 +10,8 @@ export function useMakeupForm(original: ExamSchedule) {
   const loadError = ref<string | null>(null)
   const selected = ref<Set<string>>(new Set())
   const reason = ref<MakeupReason>('SICK')
+  const overrides = ref<Record<string, MakeupReason>>({})
+  const notes = ref<Record<string, string>>({})
   const packageId = ref(original.packageId)
   const date = ref('')
   const startTime = ref('')
@@ -37,9 +39,27 @@ export function useMakeupForm(original: ExamSchedule) {
   function toggle(studentId: string) {
     if (!eligible(studentId)) return
     const next = new Set(selected.value)
-    if (next.has(studentId)) next.delete(studentId)
-    else next.add(studentId)
+    if (next.has(studentId)) {
+      next.delete(studentId)
+      const { [studentId]: _reason, ...keptReasons } = overrides.value
+      const { [studentId]: _note, ...keptNotes } = notes.value
+      overrides.value = keptReasons
+      notes.value = keptNotes
+    } else {
+      next.add(studentId)
+    }
     selected.value = next
+  }
+
+  const reasonOf = (studentId: string): MakeupReason =>
+    overrides.value[studentId] ?? reason.value
+
+  function setReason(studentId: string, value: MakeupReason) {
+    overrides.value = { ...overrides.value, [studentId]: value }
+  }
+
+  function setNote(studentId: string, value: string) {
+    notes.value = { ...notes.value, [studentId]: value }
   }
 
   function selectAll() {
@@ -50,6 +70,8 @@ export function useMakeupForm(original: ExamSchedule) {
 
   function clear() {
     selected.value = new Set()
+    overrides.value = {}
+    notes.value = {}
   }
 
   const problem = computed<string | null>(() => {
@@ -79,10 +101,14 @@ export function useMakeupForm(original: ExamSchedule) {
       startsAt: toInstant(date.value, startTime.value),
       endsAt: toInstant(date.value, endTime.value),
       durationMinutes: durationMinutes.value ?? 0,
-      participants: [...selected.value].map((studentId) => ({
-        studentId,
-        reason: reason.value,
-      })),
+      participants: [...selected.value].map((studentId) => {
+        const note = (notes.value[studentId] ?? '').trim()
+        return {
+          studentId,
+          reason: reasonOf(studentId),
+          ...(note === '' ? {} : { note }),
+        }
+      }),
     })
     saving.value = false
     if (!result.success) {
@@ -98,6 +124,10 @@ export function useMakeupForm(original: ExamSchedule) {
     loadError,
     selected,
     reason,
+    notes,
+    reasonOf,
+    setReason,
+    setNote,
     packageId,
     date,
     startTime,

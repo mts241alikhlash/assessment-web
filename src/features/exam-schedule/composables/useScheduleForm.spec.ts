@@ -181,4 +181,18 @@ describe('useScheduleForm', () => {
 
     expect(form.multiDay).toBe(false)
   })
+
+  it('locks the type of a makeup even before anyone started it', () => {
+    const form = useScheduleForm({
+      mode: 'edit',
+      schedule: {
+        ...existing,
+        kind: 'MAKEUP',
+        makeupOfId: 's0',
+        hasSessions: false,
+      },
+    })
+
+    expect(form.typeLocked).toBe(true)
+  })
 })
