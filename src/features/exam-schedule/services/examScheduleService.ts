@@ -17,6 +17,7 @@ import type {
   ScheduleCreatePayload,
   SchedulePayload,
   ScheduleSession,
+  ScheduleStream,
 } from '../types'
 
 export type SaveResult =
@@ -216,6 +217,20 @@ export const examScheduleService = {
       return {
         success: false,
         error: messageOf(err, 'Gagal memuat daftar sesi.'),
+      }
+    }
+  },
+
+  async loadStreams(
+    id: string,
+  ): Promise<Outcome<ScheduleStream[]>> {
+    try {
+      const response = await examScheduleApi.getStreams(id)
+      return { success: true, data: response.data?.data ?? [] }
+    } catch (err: unknown) {
+      return {
+        success: false,
+        error: messageOf(err, 'Gagal memuat status kamera.'),
       }
     }
   },

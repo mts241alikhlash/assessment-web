@@ -14,6 +14,7 @@ import type {
   SchedulePayload,
   ScheduleQueryParams,
   ScheduleSession,
+  ScheduleStream,
 } from '../types'
 
 const seg = encodeURIComponent
@@ -71,6 +72,11 @@ export const examScheduleApi = {
 
   removeParticipant: (id: string, studentId: string) =>
     api.delete(`/exam-schedules/${seg(id)}/participants/${seg(studentId)}`),
+
+  getStreams: (id: string) =>
+    api.get<ApiSingleResponse<ScheduleStream[]>>(
+      `/exam-schedules/${seg(id)}/streams`,
+    ),
 
   rotateAccessCode: (id: string) =>
     api.post<ApiSingleResponse<AccessCode>>(
