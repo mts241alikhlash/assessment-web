@@ -138,7 +138,8 @@ export interface ScheduleStream {
   studentNis: string | null
   status: 'IN_PROGRESS' | 'SUBMITTED' | 'EXPIRED' | 'GRADED'
   violationCount: number
-  cameraBlocked: 'network' | 'permission' | 'battery' | 'stopped' | 'cameraBusy' | null
+  cameraBlocked:
+    'network' | 'permission' | 'battery' | 'stopped' | 'cameraBusy' | null
   lastSeenAt: string | null
   playbackUrl: string | null
 }
