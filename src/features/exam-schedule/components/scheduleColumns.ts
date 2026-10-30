@@ -2,7 +2,7 @@ import { h } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
 import { ActionCell } from '@mts241alikhlash/ui'
 import { Badge } from '@mts241alikhlash/ui/badge'
-import { Ban, KeyRound, UserRoundPlus, Users } from '@lucide/vue'
+import { Ban, KeyRound, UserRoundPlus, Users, Video } from '@lucide/vue'
 import type { ExamSchedule } from '../types'
 import { examTypeLabel, phaseLabel, phaseTone } from '../types'
 import { formatWindow } from '../utils/formatWindow'
@@ -15,6 +15,7 @@ export interface ScheduleColumnOptions {
   canSessions: boolean
   canMakeup?: boolean
   canParticipants?: boolean
+  canCamera?: boolean
   now: () => Date
   onEdit: (schedule: ExamSchedule) => void
   onCancel: (schedule: ExamSchedule) => void
@@ -22,6 +23,7 @@ export interface ScheduleColumnOptions {
   onSessions: (schedule: ExamSchedule) => void
   onMakeup?: (schedule: ExamSchedule) => void
   onParticipants?: (schedule: ExamSchedule) => void
+  onCamera?: (schedule: ExamSchedule) => void
 }
 
 const BADGE_VARIANT = {
@@ -126,6 +128,13 @@ export function buildScheduleColumns(
             label: 'Sesi',
             icon: Users,
             onClick: () => options.onSessions(row.original),
+          })
+        }
+        if (current === 'RUNNING' && options.canCamera && options.onCamera) {
+          items.push({
+            label: 'Kamera',
+            icon: Video,
+            onClick: () => options.onCamera?.(row.original),
           })
         }
         if (

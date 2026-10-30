@@ -130,3 +130,16 @@ export interface MakeupOrigin {
   durationMinutes: number
   endsAt: string
 }
+
+export interface ScheduleStream {
+  sessionId: string
+  studentId: string
+  studentName: string | null
+  studentNis: string | null
+  status: 'IN_PROGRESS' | 'SUBMITTED' | 'EXPIRED' | 'GRADED'
+  violationCount: number
+  cameraBlocked:
+    'network' | 'permission' | 'battery' | 'stopped' | 'cameraBusy' | null
+  lastSeenAt: string | null
+  playbackUrl: string | null
+}

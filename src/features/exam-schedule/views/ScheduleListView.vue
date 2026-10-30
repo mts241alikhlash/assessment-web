@@ -38,6 +38,7 @@ import MakeupParticipantsDialog from '../components/MakeupParticipantsDialog.vue
 import AccessCodeDialog from '../components/AccessCodeDialog.vue'
 import ScheduleFormDialog from '../components/ScheduleFormDialog.vue'
 import SessionsDialog from '../components/SessionsDialog.vue'
+import ExamStreamGrid from '../components/ExamStreamGrid.vue'
 import { useScheduleList } from '../composables/useScheduleList'
 import { examScheduleService } from '../services/examScheduleService'
 import { SCHEDULE_STATUSES, scheduleStatusLabel } from '../types'
@@ -67,6 +68,7 @@ const editing = ref<ExamSchedule | null>(null)
 const cancelTarget = ref<ExamSchedule | null>(null)
 const accessTarget = ref<ExamSchedule | null>(null)
 const sessionsTarget = ref<ExamSchedule | null>(null)
+const cameraTarget = ref<ExamSchedule | null>(null)
 const makeupTarget = ref<ExamSchedule | null>(null)
 const participantsTarget = ref<ExamSchedule | null>(null)
 const cancelling = ref(false)
@@ -104,6 +106,7 @@ const columns = computed(() =>
     canCancel: hasPermission('exam-schedules.cancel'),
     canAccessCode: hasPermission('exam-schedules.access-code'),
     canSessions: hasPermission('exam-sessions.read'),
+    canCamera: hasPermission('exam-sessions.read'),
     canMakeup: hasPermission('exam-grading.grade'),
     canParticipants: hasPermission('exam-grading.read'),
     now: () => new Date(),
@@ -116,6 +119,9 @@ const columns = computed(() =>
     },
     onSessions: (schedule) => {
       sessionsTarget.value = schedule
+    },
+    onCamera: (schedule) => {
+      cameraTarget.value = schedule
     },
     onMakeup: (schedule) => {
       makeupTarget.value = schedule
@@ -323,6 +329,14 @@ const columns = computed(() =>
       :schedule-id="sessionsTarget.id"
       :title="`${sessionsTarget.packageTitle} · ${sessionsTarget.classroomName ?? '-'}`"
       @update:open="(value: boolean) => !value && (sessionsTarget = null)"
+    />
+
+    <ExamStreamGrid
+      v-if="cameraTarget"
+      :open="true"
+      :schedule-id="cameraTarget.id"
+      :title="`${cameraTarget.packageTitle} · ${cameraTarget.classroomName ?? '-'}`"
+      @update:open="(value: boolean) => !value && (cameraTarget = null)"
     />
 
     <AlertDialog

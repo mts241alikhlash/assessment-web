@@ -10,6 +10,10 @@ import { attendanceRoutes } from '@/features/assessment/attendance'
 import { myDashboardRoutes } from '@/features/assessment/my-dashboard'
 import { raporRoutes } from '@/features/assessment/rapor/routes'
 import { studentScoreRoutes } from '@/features/assessment/student-score'
+import {
+  studentExamFocusRoutes,
+  studentExamRoutes,
+} from '@/features/student-exam/routes'
 import { menuSections } from '@/config/menuConfig'
 import en from '@/i18n/locales/en'
 import id from '@/i18n/locales/id'
@@ -27,6 +31,7 @@ const ALL: RouteRecordRaw[] = [
   ...examScoreRoutes,
   ...raporRoutes,
   ...attendanceRoutes,
+  ...studentExamRoutes,
 ]
 
 function buildRouter(children: RouteRecordRaw[]) {
@@ -65,13 +70,36 @@ describe('assessment route tree', () => {
     expect(stale.map((route) => route.path)).toEqual([])
   })
 
-  it('states a trail on every route that renders a view', () => {
+  it('states a trail on every route inside the layout', () => {
+    // Rute fokus (lembar ujian) sengaja tanpa layout dan tanpa breadcrumb.
+    const focus = new Set(studentExamFocusRoutes.map((route) => route.name))
     for (const route of ALL) {
-      if (route.redirect) continue
+      if (route.redirect || focus.has(route.name)) continue
       expect(
         route.meta?.breadcrumbs,
         `${String(route.name)} has no trail`,
       ).toBeDefined()
+    }
+  })
+
+  it('keeps the exam sheet outside the app layout', () => {
+    // Susunan sama seperti router asli: rute fokus didaftarkan sebelum layout.
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/', redirect: '/dashboard' },
+        ...studentExamFocusRoutes,
+        { path: '/', component: Layout, children: ALL },
+        { path: '/:pathMatch(.*)*', name: 'not-found', component: Stub },
+      ],
+    })
+    for (const route of studentExamFocusRoutes) {
+      const resolved = router.resolve(route.path)
+      expect(
+        resolved.matched,
+        `${String(route.name)} must not render inside the layout`,
+      ).toHaveLength(1)
+      expect(resolved.matched[0]?.components?.default).not.toBe(Layout)
     }
   })
 })

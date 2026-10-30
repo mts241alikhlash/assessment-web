@@ -128,6 +128,13 @@ export const menuSections: MenuSection[] = [
     label: 'menu.section.mine',
     items: [
       {
+        key: 'my-exams',
+        title: 'menu.myExams',
+        url: '/ujian',
+        icon: ListChecks,
+        requiredPermission: 'exam-sessions.take',
+      },
+      {
         key: 'my-scores',
         title: 'menu.myScores',
         url: '/my/scores',
