@@ -51,6 +51,7 @@ const blockedLabel: Record<
   permission: 'Izin kamera ditolak',
   battery: 'Baterai lemah',
   stopped: 'Dihentikan siswa',
+  cameraBusy: 'Kamera dipakai aplikasi lain',
 }
 
 function detachPlayers() {
